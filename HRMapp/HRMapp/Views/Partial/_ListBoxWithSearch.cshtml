@@ -1,0 +1,14 @@
+@using HRMapp.Models
+@model List<SelectListItem>
+
+<input type="text" placeholder="Search..." />
+<div>
+    @Html.DropDownList("lbox", Model, new { size = 5 })
+</div>
+
+<script>
+    function getListBoxSelectedItemId() {
+        var listBox = document.getElementById('lbox');
+        return listBox.options[listBox.selectedIndex].value;
+    }
+</script>

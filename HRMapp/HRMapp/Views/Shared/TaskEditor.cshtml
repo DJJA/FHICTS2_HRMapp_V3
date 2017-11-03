@@ -1,0 +1,129 @@
+@using HRMapp.ViewModels
+@model TaskEditorViewModel
+
+@{
+    ViewData["Title"] = "TaskEditor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Model.FormTitle</h2>
+
+@if (!String.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <p class="text-danger">@Model.ErrorMessage</p>
+}
+
+<form asp-action="@Model.FormAction" method="post">
+    <div class="form-group">
+        <label asp-for="@Model.Title" class="control-label"></label>
+        <input asp-for="@Model.Title" class="form-control" placeholder="Naam" />
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Description" class="control-label"></label>
+        <textarea asp-for="@Model.Description" class="form-control" placeholder="Typ hier een omschrijving..."></textarea>
+    </div>
+    <div class="form-group">
+        <label class="control-label" for="Duration">Duur:</label>
+        <div id="Duration" name="Duration">
+            <div class="form-group">
+                <label asp-for="@Model.DurationHours" class="control-label"></label>
+                <input asp-for="@Model.DurationHours" class="form-control" type="number" min="0" />
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.DurationMinutes" class="control-label"></label>
+                <input asp-for="@Model.DurationMinutes" class="form-control" type="number" min="0" max="59" />
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div>
+            <label class="control-label" for="lboxAvailableSkillsets">Skillsets:</label>
+            @Html.ListBox("lboxAvailableSkillsets", Model.AvailableSkillsetListItems, new { @class = "form-control", size = 10 })
+        </div>
+        <div>
+            <a id="btnSkillsetsMoveToRequired" class="btn btn-default">>></a>
+            <a id="btnSkillsetsMoveFromRequired" class="btn btn-default"><<</a>
+        </div>
+        <div>
+            <label class="control-label" for="lboxRequiredSkillsets">Nodige skillsets:</label>
+            @Html.ListBox("lboxRequiredSkillsets", Model.RequiredSkillsetListItems, new { @class = "form-control", size = 10 })
+        </div>
+    </div>
+    <div class="form-group">
+        <button id="btnSubmit" type="submit" class="btn btn-default">Opslaan</button>
+        <a id="btnCancel" class="btn btn-default">Annuleren</a>
+    </div>
+</form>
+
+<script>
+    var userInputChanged = false;
+
+    document.getElementById('Title').oninput = function () { userInputChanged = true; }
+    document.getElementById('Description').oninput = function () { userInputChanged = true; }
+    document.getElementById('DurationHours').oninput = function () { userInputChanged = true; }
+    document.getElementById('DurationMinutes').oninput = function () { userInputChanged = true; }
+    document.getElementById('btnCancel').onclick = function () { window.location.href = '/Home/Task'; }
+
+    document.getElementById('btnSubmit').onclick = function () {
+        userInputChanged = false;
+        selectAllOptions(document.getElementById('lboxRequiredSkillsets'));
+    }
+
+    document.getElementById('btnSkillsetsMoveToRequired').onclick = function () {
+        userInputChanged = true;
+        moveSelectedOptionsBetweenSelects(document.getElementById('lboxAvailableSkillsets'), document.getElementById('lboxRequiredSkillsets'));
+    }
+
+    document.getElementById('btnSkillsetsMoveFromRequired').onclick = function () {
+        userInputChanged = true;
+        moveSelectedOptionsBetweenSelects(document.getElementById('lboxRequiredSkillsets'), document.getElementById('lboxAvailableSkillsets'));
+    }
+
+    window.onbeforeunload = function (event) {
+        if (userInputChanged) {
+            var message = 'Er zijn wijzigingen niet opgeslagen. Weet u zeker dat u de pagina wilt verlaten?';
+            return message;
+        }
+    }
+
+    function moveSelectedOptionsBetweenSelects(selectElementFrom, selectElementTo) {
+        var selectedItems = getSelectValues(selectElementFrom);
+
+        for (var i = 0; i < selectedItems.length; i++) {
+            selectElementFrom.remove(getOptionIndexByValue(selectElementFrom, selectedItems[i].value));  // Could be more efficient perhaps
+            selectElementTo.add(selectedItems[i]);
+        }
+    }
+
+    // Return an array of the selected opion values
+    // select is an HTML select element
+    function getSelectValues(selectElement) {
+        var result = [];
+        var options = selectElement && selectElement.options;   // If I understand correctly, it checks if selectElement is not undefined, if it's not, it assigns the next statement to options
+        var opt;
+
+        for (var i = 0, iLen = options.length; i < iLen; i++) {
+            opt = options[i];
+
+            if (opt.selected) {
+                result.push(opt);
+            }
+        }
+        return result;
+    }
+
+    function getOptionIndexByValue(selectElement, id) {
+        for (var i = 0; i < selectElement.options.length; i++) {
+            if (selectElement.options[i].value == id) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    function selectAllOptions(selectElement) {
+        for (var i = 0; i < selectElement.options.length; i++) {
+            selectElement.options[i].selected = true;
+        }
+    }
+</script>

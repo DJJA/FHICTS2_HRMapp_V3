@@ -1,0 +1,47 @@
+@using HRMapp.Models
+@using HRMapp.ViewModels
+@model SkillsetCollectionViewModel
+
+@{
+    ViewData["Title"] = "Skillset";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Skillsets</h2>
+
+<div class="row">
+    <div class="col-md-3">
+        @Html.Partial("../Partial/_ListboxWithSearch.cshtml", Model.ListItems)
+    </div>
+    <div class="col-md-9">
+        <div class="row">
+            @Html.Partial("../Partial/_CrudButtons.cshtml")
+        </div>
+        <div id="skillsetContent" class="row">
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('lbox').onchange = listBoxItemSelectionChanged;
+    document.getElementById('btnCrudAdd').onclick = function () { window.location.href = '/Home/NewSkillset'; }
+    document.getElementById('btnCrudEdit').onclick = function () { window.location.href = '/Home/EditSkillset/' + getListBoxSelectedItemId(); }
+
+    listBoxItemSelectionChanged();
+
+    function listBoxItemSelectionChanged() {
+        var selectedSkillsetId = getListBoxSelectedItemId();
+
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/Home/SkillsetView/' + selectedSkillsetId, true);
+
+        xhr.onload = function () {
+            if (this.status == 200) {
+                document.getElementById('skillsetContent').innerHTML = xhr.responseText;
+            }
+        }
+
+        xhr.send();
+    }
+</script>
