@@ -62,7 +62,8 @@ namespace HRMapp.DAL.Contexts
         public IEnumerable<Skillset> GetAll()
         {
             var skillsets = new List<Skillset>();
-            string query = "SELECT * FROM Skillset;";
+            //string query = "SELECT * FROM Skillset;";
+            string query = "sp_GetSkillsets;";
 
             try
             {
@@ -98,14 +99,22 @@ namespace HRMapp.DAL.Contexts
         public Skillset GetById(int id)
         {
             Skillset skillset = null;
-            string query = "SELECT * FROM Skillset WHERE Id = @Id;";
+            //string query = "SELECT * FROM Skillset WHERE Id = @Id;";
+            string query = "sp_GetSkillsetById;";
 
             try
             {
                 using (var connection = new SqlConnection(connectionString))
                 using (var adapter = new SqlDataAdapter(query, connection))
                 {
-                    connection.Open();
+                    //connection.Open();
+                    adapter.SelectCommand.CommandType = CommandType.StoredProcedure;
+                    
+                    //SqlParameter param = new SqlParameter("@Id", id);
+                    //param.Direction = ParameterDirection.Input;
+                    //param.DbType = DbType.Int32;
+                    //adapter.SelectCommand.Parameters.Add(param);
+
                     adapter.SelectCommand.Parameters.AddWithValue("@Id", id);
 
                     DataTable dt = new DataTable();

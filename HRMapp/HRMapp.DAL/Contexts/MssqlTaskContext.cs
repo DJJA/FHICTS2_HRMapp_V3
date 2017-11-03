@@ -105,6 +105,8 @@ namespace HRMapp.DAL.Contexts
             {
 
             }
+
+            UpdateRequiredSkillsets(value);
             return addedTask;
         }
 
@@ -150,6 +152,8 @@ namespace HRMapp.DAL.Contexts
 
                     command.ExecuteNonQuery();
                 }
+                UpdateRequiredSkillsets(value);
+
                 return true;
             }
             catch (SqlException sqlEx)
@@ -189,7 +193,7 @@ namespace HRMapp.DAL.Contexts
             }
             catch (SqlException sqlEx)
             {
-                
+
             }
 
             return skillsets;
@@ -197,16 +201,99 @@ namespace HRMapp.DAL.Contexts
 
         public bool UpdateRequiredSkillsets(ProductionTask task)
         {
-            throw new NotImplementedException();
+            bool success = true;
+            //throw new NotImplementedException();
             // Get all required skillsets that you need to add
             // Add these
+
+            var taskInDb = GetById(task.Id);
+
+            string query = "";
+            foreach (var skillset in task.RequiredSkillsets)
+            {
+                if (taskInDb.RequiredSkillsets.All(s => s.Id != skillset.Id))
+                {
+                    AddSkillsetTaskLink(task, skillset);
+                }
+            }
+
+            //foreach (var skillset in task.RequiredSkillsets)
+            //{
+            //    if (!AddSkillsetTaskLink(task, skillset))
+            //    {
+            //        success = false;
+            //    }
+            //}
+
             // Get all required skillsets that are not required anymore
             // Remove these
 
             // Parameters: taskId, [*]skillsetId
+            if (!RemoveSkillsetTaskLinks(task))
+            {
+                success = false;
+            }
+            return success;
+        }
+
+        private bool AddSkillsetTaskLink(ProductionTask task, Skillset skillset)
+        {
+            string query = "INSERT INTO Skillset_Task (SkillsetId, TaskId)" +
+                            "VALUES(@SkillsetId, @TaskId);";
+            try
+            {
+                using (var connection = new SqlConnection(connectionString))
+                using (var command = new SqlCommand(query, connection))
+                {
+                    connection.Open();
+                    command.Parameters.AddWithValue("@SkillsetId", skillset.Id);
+                    command.Parameters.AddWithValue("@TaskId", task.Id);
+
+                    command.ExecuteNonQuery();
+                }
+                return true;
+            }
+            catch (SqlException sqlEx)
+            {
+                return false;
+            }
+        }
+
+        private bool RemoveSkillsetTaskLinks(ProductionTask task)
+        {
             string query = "DELETE FROM Skillset_Task " +
-                           "WHERE TaskId = @TaskId;";
-            
+                    "WHERE TaskId = @TaskId AND SkillsetId NOT IN(";
+
+
+
+            for (int i = 0; i < task.RequiredSkillsets.Count; i++)
+            {
+                query += $"{(i > 0 ? "," : "")}@SkillsetId{i}";
+            }
+
+            query += ");";
+
+            try
+            {
+                using (var connection = new SqlConnection(connectionString))
+                using (var command = new SqlCommand(query, connection))
+                {
+                    connection.Open();
+
+                    command.Parameters.AddWithValue("@TaskId", task.Id);
+                    for (int i = 0; i < task.RequiredSkillsets.Count; i++)
+                    {
+                        command.Parameters.AddWithValue($"@SkillsetId{i}", task.RequiredSkillsets[i].Id);
+                    }
+
+                    command.ExecuteNonQuery();
+                }
+                return true;
+            }
+            catch (SqlException sqlEx)
+            {
+                return false;
+            }
         }
     }
 }
