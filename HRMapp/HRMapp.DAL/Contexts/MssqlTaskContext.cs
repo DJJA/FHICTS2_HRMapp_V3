@@ -14,27 +14,20 @@ namespace HRMapp.DAL.Contexts
         public IEnumerable<ProductionTask> GetAll()
         {
             var tasks = new List<ProductionTask>();
-            string query = "SELECT * FROM Task;";
 
             try
             {
-                using (var connection = new SqlConnection(connectionString))
-                using (var adapter = new SqlDataAdapter(query, connection))
-                {
-                    DataTable dt = new DataTable();
-                    adapter.Fill(dt);
+                //using (var connection = new SqlConnection(connectionString))
+                //using (var adapter = new SqlDataAdapter("sp_GetTasks", connection))
+                //{
+                //    adapter.SelectCommand.CommandType = CommandType.StoredProcedure;
+                //    var dt = new DataTable();
+                //    adapter.Fill(dt);
+                //    tasks.AddRange(from DataRow row in dt.Rows select GetTaskFromDataRow(row));
+                //}
 
-                    for (int i = 0; i < dt.Rows.Count; i++)
-                    {
-                        var row = dt.Rows[i];
-                        var id = Convert.ToInt32(row["Id"]);
-                        var name = row["Name"].ToString();
-                        var description = row["Description"].ToString();
-                        var duration = new TimeSpan(0, Convert.ToInt32(row["Duration"]), 0);
-                        var requiredSkillsets = GetRequiredSkillsets(id).ToList();
-                        tasks.Add(new ProductionTask(id, name, description, duration, requiredSkillsets));
-                    }
-                }
+                var dataTable = GetDataViaProcedure("sp_GetTasks");
+                tasks.AddRange(from DataRow row in dataTable.Rows select GetTaskFromDataRow(row));
             }
             catch (SqlException sqlEx)
             {
@@ -47,29 +40,29 @@ namespace HRMapp.DAL.Contexts
         public ProductionTask GetById(int id)
         {
             ProductionTask task = null;
-            string query = "SELECT * FROM Task WHERE Id = @Id;";
 
             try
             {
-                using (var connection = new SqlConnection(connectionString))
-                using (var adapter = new SqlDataAdapter(query, connection))
+                //using (var connection = new SqlConnection(connectionString))
+                //using (var adapter = new SqlDataAdapter("sp_GetTaskById", connection))
+                //{
+                //    connection.Open();
+                //    adapter.SelectCommand.CommandType = CommandType.StoredProcedure;
+                //    adapter.SelectCommand.Parameters.AddWithValue("@Id", id);
+
+                //    var dt = new DataTable();
+                //    adapter.Fill(dt);
+
+                //    if (dt.Rows.Count > 0)
+                //    {
+                //        task = GetTaskFromDataRow(dt.Rows[0]);
+                //    }
+                //}
+
+                var dataTable = GetDataViaProcedure("sp_GetTaskById", new SqlParameter("@Id", id));
+                if (dataTable.Rows.Count > 0)
                 {
-                    connection.Open();
-                    adapter.SelectCommand.Parameters.AddWithValue("@Id", id);
-
-                    DataTable dt = new DataTable();
-                    adapter.Fill(dt);
-
-                    if (dt.Rows.Count > 0)
-                    {
-                        var row = dt.Rows[0];
-                        var taskId = Convert.ToInt32(row["Id"]);
-                        var name = row["Name"].ToString();
-                        var description = row["Description"].ToString();
-                        var duration = new TimeSpan(0, Convert.ToInt32(row["Duration"]), 0);
-                        var requiredSkillsets = GetRequiredSkillsets(taskId).ToList();
-                        task = new ProductionTask(taskId, name, description, duration, requiredSkillsets);
-                    }
+                    task = GetTaskFromDataRow(dataTable.Rows[0]);
                 }
             }
             catch (SqlException sqlEx)
@@ -80,34 +73,30 @@ namespace HRMapp.DAL.Contexts
             return task;
         }
 
-        public int Add(ProductionTask value)
+        public int Add(ProductionTask task)
         {
-            string query = "INSERT INTO Task (Name, Description, Duration)" +
-                           "VALUES (@Name, @Description, @Duration);" +
-                           "SELECT SCOPE_IDENTITY();";
-            int addedTask = -1;
+            int addedTaskId = -1;
             try
             {
-                using (var connection = new SqlConnection(connectionString))
-                using (var command = new SqlCommand(query, connection))
-                {
-                    connection.Open();
-                    command.Parameters.AddWithValue("@Name", value.Name);
-                    command.Parameters.AddWithValue("@Description", value.Description);
-                    command.Parameters.AddWithValue("@Duration", (value.Duration.Hours * 60) + value.Duration.Minutes);
+                //using (var connection = new SqlConnection(connectionString))
+                //using (var command = new SqlCommand("sp_AddTask", connection))
+                //{
+                //    connection.Open();
+                //    command.CommandType = CommandType.StoredProcedure;
+                //    command.Parameters.AddRange(GetSqlParametersFromTask(task, false));
 
-                    var obj = command.ExecuteScalar();
-                    addedTask = Convert.ToInt32(obj);
-                }
-
+                //    var obj = command.ExecuteScalar();
+                //    addedTaskId = Convert.ToInt32(obj);
+                //}
+                addedTaskId = ExecuteProcedureWithReturnValue("sp_AddTask", GetSqlParametersFromTask(task, false));
             }
             catch (SqlException sqlEx)
             {
 
             }
 
-            UpdateRequiredSkillsets(value);
-            return addedTask;
+            UpdateRequiredSkillsets(task);
+            return addedTaskId;
         }
 
         public bool Delete(ProductionTask value)
@@ -133,26 +122,24 @@ namespace HRMapp.DAL.Contexts
             }
         }
 
-        public bool Update(ProductionTask value)
+        public bool Update(ProductionTask task)
         {
-            string query = "UPDATE Task " +
-                           "SET Name = @Name, Description = @Description, Duration = @Duration " +
-                           "WHERE Id = @Id;";
-
             try
             {
-                using (var connection = new SqlConnection(connectionString))
-                using (var command = new SqlCommand(query, connection))
-                {
-                    connection.Open();
-                    command.Parameters.AddWithValue("@Id", value.Id);
-                    command.Parameters.AddWithValue("@Name", value.Name);
-                    command.Parameters.AddWithValue("@Description", value.Description);
-                    command.Parameters.AddWithValue("@Duration", (value.Duration.Hours * 60) + value.Duration.Minutes);
+                //using (var connection = new SqlConnection(connectionString))
+                //using (var command = new SqlCommand("sp_UpdateTask", connection))
+                //{
+                //    connection.Open();
+                //    command.CommandType = CommandType.StoredProcedure;
+                //    //command.Parameters.AddWithValue("@Id", task.Id);
+                //    command.Parameters.AddRange(GetSqlParametersFromTask(task, true).ToArray());
 
-                    command.ExecuteNonQuery();
-                }
-                UpdateRequiredSkillsets(value);
+                //    command.ExecuteNonQuery();
+                //}
+
+                ExecuteProcedure("sp_UpdateTask", GetSqlParametersFromTask(task, true));
+
+                UpdateRequiredSkillsets(task);
 
                 return true;
             }
@@ -199,6 +186,7 @@ namespace HRMapp.DAL.Contexts
             return skillsets;
         }
 
+        #region Update Task Skillset Links
         public bool UpdateRequiredSkillsets(ProductionTask task)
         {
             bool success = true;
@@ -211,7 +199,7 @@ namespace HRMapp.DAL.Contexts
             string query = "";
             foreach (var skillset in task.RequiredSkillsets)
             {
-                if (taskInDb.RequiredSkillsets.All(s => s.Id != skillset.Id))
+                if (taskInDb == null || taskInDb.RequiredSkillsets.All(s => s.Id != skillset.Id))
                 {
                     AddSkillsetTaskLink(task, skillset);
                 }
@@ -294,6 +282,32 @@ namespace HRMapp.DAL.Contexts
             {
                 return false;
             }
+        }
+        #endregion
+
+        private ProductionTask GetTaskFromDataRow(DataRow row)
+        {
+            var id = Convert.ToInt32(row["Id"]);
+            var name = row["Name"].ToString();
+            var description = row["Description"].ToString();
+            var duration = new TimeSpan(0, Convert.ToInt32(row["Duration"]), 0);
+            var requiredSkillsets = GetRequiredSkillsets(id).ToList();
+            return new ProductionTask(id, name, description, duration, requiredSkillsets);
+        }
+
+        private IEnumerable<SqlParameter> GetSqlParametersFromTask(ProductionTask task, bool withId)
+        {
+            var parameters = new List<SqlParameter>()
+            {
+                new SqlParameter("@Name", task.Name),
+                new SqlParameter("@Description", task.Description),
+                new SqlParameter("@Duration", (task.Duration.Hours * 60) + task.Duration.Minutes),
+            };
+            if (withId)
+            {
+                parameters.Add(new SqlParameter("@Id", task.Id));
+            }
+            return parameters;
         }
     }
 }
