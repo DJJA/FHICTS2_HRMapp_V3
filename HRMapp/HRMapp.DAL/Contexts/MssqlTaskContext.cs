@@ -17,15 +17,6 @@ namespace HRMapp.DAL.Contexts
 
             try
             {
-                //using (var connection = new SqlConnection(connectionString))
-                //using (var adapter = new SqlDataAdapter("sp_GetTasks", connection))
-                //{
-                //    adapter.SelectCommand.CommandType = CommandType.StoredProcedure;
-                //    var dt = new DataTable();
-                //    adapter.Fill(dt);
-                //    tasks.AddRange(from DataRow row in dt.Rows select GetTaskFromDataRow(row));
-                //}
-
                 var dataTable = GetDataViaProcedure("sp_GetTasks");
                 tasks.AddRange(from DataRow row in dataTable.Rows select GetTaskFromDataRow(row));
             }
@@ -43,22 +34,6 @@ namespace HRMapp.DAL.Contexts
 
             try
             {
-                //using (var connection = new SqlConnection(connectionString))
-                //using (var adapter = new SqlDataAdapter("sp_GetTaskById", connection))
-                //{
-                //    connection.Open();
-                //    adapter.SelectCommand.CommandType = CommandType.StoredProcedure;
-                //    adapter.SelectCommand.Parameters.AddWithValue("@Id", id);
-
-                //    var dt = new DataTable();
-                //    adapter.Fill(dt);
-
-                //    if (dt.Rows.Count > 0)
-                //    {
-                //        task = GetTaskFromDataRow(dt.Rows[0]);
-                //    }
-                //}
-
                 var dataTable = GetDataViaProcedure("sp_GetTaskById", new SqlParameter("@Id", id));
                 if (dataTable.Rows.Count > 0)
                 {
@@ -78,16 +53,6 @@ namespace HRMapp.DAL.Contexts
             int addedTaskId = -1;
             try
             {
-                //using (var connection = new SqlConnection(connectionString))
-                //using (var command = new SqlCommand("sp_AddTask", connection))
-                //{
-                //    connection.Open();
-                //    command.CommandType = CommandType.StoredProcedure;
-                //    command.Parameters.AddRange(GetSqlParametersFromTask(task, false));
-
-                //    var obj = command.ExecuteScalar();
-                //    addedTaskId = Convert.ToInt32(obj);
-                //}
                 addedTaskId = ExecuteProcedureWithReturnValue("sp_AddTask", GetSqlParametersFromTask(task, false));
             }
             catch (SqlException sqlEx)
@@ -126,17 +91,6 @@ namespace HRMapp.DAL.Contexts
         {
             try
             {
-                //using (var connection = new SqlConnection(connectionString))
-                //using (var command = new SqlCommand("sp_UpdateTask", connection))
-                //{
-                //    connection.Open();
-                //    command.CommandType = CommandType.StoredProcedure;
-                //    //command.Parameters.AddWithValue("@Id", task.Id);
-                //    command.Parameters.AddRange(GetSqlParametersFromTask(task, true).ToArray());
-
-                //    command.ExecuteNonQuery();
-                //}
-
                 ExecuteProcedure("sp_UpdateTask", GetSqlParametersFromTask(task, true));
 
                 UpdateRequiredSkillsets(task);

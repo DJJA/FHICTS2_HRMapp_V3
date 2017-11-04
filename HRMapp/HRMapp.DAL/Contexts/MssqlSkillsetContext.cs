@@ -10,17 +10,12 @@ namespace HRMapp.DAL.Contexts
 {
     public class MssqlSkillsetContext : MssqlDatabase, ISkillsetContext
     {
-        public int Add(Skillset value)
+        public int Add(Skillset skillset)
         {
             int addedSkillset = -1;
             try
             {
-                var parameters = new List<SqlParameter>()
-                {
-                    new SqlParameter("@Name", value.Name),
-                    new SqlParameter("@Description", value.Description)
-                };
-                addedSkillset = ExecuteProcedureWithReturnValue("sp_AddSkillset", parameters);
+                addedSkillset = ExecuteProcedureWithReturnValue("sp_AddSkillset", GetSqlParametersFromSkillset(skillset, false));
             }
             catch (SqlException sqlEx)
             {
@@ -81,7 +76,6 @@ namespace HRMapp.DAL.Contexts
             try
             {
                 var dt = GetDataViaProcedure("sp_GetSkillsetById", new SqlParameter("@Id", id));
-
                 if (dt.Rows.Count > 0)
                 {
                     skillset = GetSkillsetFromDataRow(dt.Rows[0]);
@@ -95,17 +89,11 @@ namespace HRMapp.DAL.Contexts
             return skillset;
         }
 
-        public bool Update(Skillset value)
+        public bool Update(Skillset skillset)
         {
             try
             {
-                var parameters = new List<SqlParameter>()
-                {
-                    new SqlParameter("@Id", value.Id),
-                    new SqlParameter("@Name", value.Name),
-                    new SqlParameter("@Description", value.Description)
-                };
-                ExecuteProcedure("sp_UpdateSkillset", parameters);
+                ExecuteProcedure("sp_UpdateSkillset", GetSqlParametersFromSkillset(skillset, true));
                 return true;
             }
             catch (SqlException sqlEx)
@@ -122,7 +110,19 @@ namespace HRMapp.DAL.Contexts
             return new Skillset(skillsetId, name, descriptiom);
         }
 
-
+        private List<SqlParameter> GetSqlParametersFromSkillset(Skillset skillset, bool withId)
+        {
+            var parameters = new List<SqlParameter>()
+            {
+                new SqlParameter("@Name", skillset.Name),
+                new SqlParameter("@Description", skillset.Description)
+            };
+            if (withId)
+            {
+                parameters.Add(new SqlParameter("@Id", skillset.Id));
+            }
+            return parameters;
+        }
 
 
         //public void OutputParamTest()
