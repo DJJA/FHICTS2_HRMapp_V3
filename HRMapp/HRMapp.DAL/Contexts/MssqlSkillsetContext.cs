@@ -102,7 +102,7 @@ namespace HRMapp.DAL.Contexts
             }
         }
 
-        private Skillset GetSkillsetFromDataRow(DataRow row)
+        public static Skillset GetSkillsetFromDataRow(DataRow row)
         {
             var skillsetId = Convert.ToInt32(row["Id"]);
             var name = row["Name"].ToString();

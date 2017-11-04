@@ -103,34 +103,15 @@ namespace HRMapp.DAL.Contexts
             }
         }
 
+        #region Task Skillset Links
         public IEnumerable<Skillset> GetRequiredSkillsets(int taskId)
         {
             var skillsets = new List<Skillset>();
-            string query = "SELECT * FROM Skillset " +
-                           "WHERE Id IN" +
-                           "(SELECT SkillsetId FROM Skillset_Task " +
-                           "WHERE TaskId = @TaskId);";
 
             try
             {
-                using (var connection = new SqlConnection(connectionString))
-                using (var adapter = new SqlDataAdapter(query, connection))
-                {
-                    //connection.Open();
-                    adapter.SelectCommand.Parameters.AddWithValue("@TaskId", taskId);
-
-                    DataTable dt = new DataTable();
-                    adapter.Fill(dt);
-
-                    for (int i = 0; i < dt.Rows.Count; i++)
-                    {
-                        var row = dt.Rows[i];
-                        var id = Convert.ToInt32(row["Id"]);
-                        var name = row["Name"].ToString();
-                        var description = row["Description"].ToString();
-                        skillsets.Add(new Skillset(id, name, description));
-                    }
-                }
+                var dataTable = GetDataViaProcedure("sp_GetRequiredSkillsets", new SqlParameter("@TaskId", taskId));
+                skillsets.AddRange(from DataRow row in dataTable.Rows select MssqlSkillsetContext.GetSkillsetFromDataRow(row));
             }
             catch (SqlException sqlEx)
             {
@@ -140,96 +121,29 @@ namespace HRMapp.DAL.Contexts
             return skillsets;
         }
 
-        #region Update Task Skillset Links
+        
         public bool UpdateRequiredSkillsets(ProductionTask task)
         {
-            bool success = true;
-            //throw new NotImplementedException();
-            // Get all required skillsets that you need to add
-            // Add these
+            var dt = new DataTable();
+            dt.Columns.Add("Id");
 
-            var taskInDb = GetById(task.Id);
-
-            string query = "";
             foreach (var skillset in task.RequiredSkillsets)
             {
-                if (taskInDb == null || taskInDb.RequiredSkillsets.All(s => s.Id != skillset.Id))
-                {
-                    AddSkillsetTaskLink(task, skillset);
-                }
+                dt.Rows.Add(skillset.Id);
             }
 
-            //foreach (var skillset in task.RequiredSkillsets)
-            //{
-            //    if (!AddSkillsetTaskLink(task, skillset))
-            //    {
-            //        success = false;
-            //    }
-            //}
+            SqlParameter listWithRequiredSkillsetIds = new SqlParameter("@List", dt);
+            listWithRequiredSkillsetIds.SqlDbType = SqlDbType.Structured;
 
-            // Get all required skillsets that are not required anymore
-            // Remove these
-
-            // Parameters: taskId, [*]skillsetId
-            if (!RemoveSkillsetTaskLinks(task))
+            var parameters = new List<SqlParameter>()
             {
-                success = false;
-            }
-            return success;
-        }
-
-        private bool AddSkillsetTaskLink(ProductionTask task, Skillset skillset)
-        {
-            string query = "INSERT INTO Skillset_Task (SkillsetId, TaskId)" +
-                            "VALUES(@SkillsetId, @TaskId);";
-            try
-            {
-                using (var connection = new SqlConnection(connectionString))
-                using (var command = new SqlCommand(query, connection))
-                {
-                    connection.Open();
-                    command.Parameters.AddWithValue("@SkillsetId", skillset.Id);
-                    command.Parameters.AddWithValue("@TaskId", task.Id);
-
-                    command.ExecuteNonQuery();
-                }
-                return true;
-            }
-            catch (SqlException sqlEx)
-            {
-                return false;
-            }
-        }
-
-        private bool RemoveSkillsetTaskLinks(ProductionTask task)
-        {
-            string query = "DELETE FROM Skillset_Task " +
-                    "WHERE TaskId = @TaskId AND SkillsetId NOT IN(";
-
-
-
-            for (int i = 0; i < task.RequiredSkillsets.Count; i++)
-            {
-                query += $"{(i > 0 ? "," : "")}@SkillsetId{i}";
-            }
-
-            query += ");";
+                listWithRequiredSkillsetIds,
+                new SqlParameter("@TaskId", task.Id)
+            };
 
             try
             {
-                using (var connection = new SqlConnection(connectionString))
-                using (var command = new SqlCommand(query, connection))
-                {
-                    connection.Open();
-
-                    command.Parameters.AddWithValue("@TaskId", task.Id);
-                    for (int i = 0; i < task.RequiredSkillsets.Count; i++)
-                    {
-                        command.Parameters.AddWithValue($"@SkillsetId{i}", task.RequiredSkillsets[i].Id);
-                    }
-
-                    command.ExecuteNonQuery();
-                }
+                ExecuteProcedure("sp_UpdateRequiredSkillsets", parameters);
                 return true;
             }
             catch (SqlException sqlEx)
