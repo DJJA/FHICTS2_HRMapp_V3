@@ -19,7 +19,7 @@ namespace HRMapp.Models
                 }
                 else
                 {
-                    throw new ArgumentException("Skillset name must be set.");
+                    throw new ArgumentException("Skillset naam moet ingevuld worden.");
                 }
             }
         }
@@ -34,7 +34,7 @@ namespace HRMapp.Models
                 }
                 else
                 {
-                    throw new ArgumentException("Skillset description must be set.");
+                    throw new ArgumentException("Skillset omschrijving moet ingevuld worden.");
                 }
             }
         }

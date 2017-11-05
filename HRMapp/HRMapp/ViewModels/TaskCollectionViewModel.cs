@@ -9,6 +9,7 @@ namespace HRMapp.ViewModels
 {
     public class TaskCollectionViewModel
     {
+        public string InfoMessage { get; set; }
         private List<ProductionTask> tasks;
         private int selectedItemId;
 

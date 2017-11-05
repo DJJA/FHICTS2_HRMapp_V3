@@ -10,7 +10,7 @@ namespace HRMapp.DAL
     public abstract class MssqlDatabase
     {
         protected readonly string connectionString = "Server=tcp:djjaserver.database.windows.net,1433;Initial Catalog=HRMapp;Persist Security Info=False;User ID=djja;Password=DrEh437u;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
-        
+
         #region GetDataViaProcedure
         protected DataTable GetDataViaProcedure(string procedure, IEnumerable<SqlParameter> procedureParameters)
         {
@@ -130,6 +130,40 @@ namespace HRMapp.DAL
         {
             return ExecuteProcedureWithReturnValue(procedure, new List<SqlParameter>() { procedureParameter });
         }
+        #endregion
+
+        #region OutputParamTest Example
+        //public void OutputParamTest()
+        //{
+        //    string output = string.Empty;
+
+        //    string query = "sp_OutParamTest";
+
+        //    try
+        //    {
+        //        using (var connection = new SqlConnection(connectionString))
+        //        using (var command = new SqlCommand(query, connection))
+        //        {
+        //            connection.Open();  // Scalar needs open connection
+        //            command.CommandType = CommandType.StoredProcedure;
+
+        //            command.Parameters.AddWithValue("@Id", 1);
+        //            //command.Parameters.AddWithValue("@Name", SqlDbType.VarChar).Direction = ParameterDirection.Output;
+        //            var param = new SqlParameter("@Name", SqlDbType.VarChar, 30);
+
+        //            param.Direction = ParameterDirection.Output;
+        //            command.Parameters.Add(param);
+
+        //            var obj = command.ExecuteNonQuery();
+        //            output = command.Parameters["@Name"].Value.ToString();
+        //        }
+
+        //    }
+        //    catch (SqlException sqlEx)
+        //    {
+
+        //    }
+        //}
         #endregion
     }
 }

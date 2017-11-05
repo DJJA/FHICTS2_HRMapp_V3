@@ -1,0 +1,19 @@
+﻿@model string
+@if (!String.IsNullOrEmpty(Model.InfoMessage))
+{
+    <div id="visualAlert" class="alert alert-success">@Model.InfoMessage</div>
+    
+    <script>
+        hideVisualAlertAfterXSeconds(3);
+
+        function hideVisualAlertAfterXSeconds(seconds) {
+            setTimeout(hideVisualAlart, seconds*1000);
+        }
+
+        function hideVisualAlart() {
+            var element = document.getElementById('visualAlert');
+            element.className = '';
+            element.innerHTML = '';
+        }
+    </script>
+}

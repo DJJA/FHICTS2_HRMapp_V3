@@ -9,6 +9,7 @@ namespace HRMapp.ViewModels
 {
     public class SkillsetCollectionViewModel
     {
+        public string InfoMessage { get; set; }
         private List<Skillset> skillsets;
         private int selectedItemId;
 

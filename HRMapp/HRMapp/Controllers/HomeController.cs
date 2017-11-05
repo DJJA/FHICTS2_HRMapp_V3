@@ -13,6 +13,7 @@ namespace HRMapp.Controllers
     {
         //private static CrossActionMessageHolder errorMessage = null;
         private static CrossActionMessageHolder errorMessage = new CrossActionMessageHolder();  // Wordt niet opnieuw geïnstantieerd?
+        private static CrossActionMessageHolder infoMessage = new CrossActionMessageHolder();
         private SkillsetLogic skillsetLogic = new SkillsetLogic();
         private TaskLogic taskLogic = new TaskLogic();
 
@@ -34,7 +35,7 @@ namespace HRMapp.Controllers
             {
                 id = skillsets[0].Id;
             }
-            var model = new SkillsetCollectionViewModel(id, skillsets);    // Where do I use a List and where an IEnumerable? Where do I convert?
+            var model = new SkillsetCollectionViewModel(id, skillsets) { InfoMessage = infoMessage.Message };    // Where do I use a List and where an IEnumerable? Where do I convert?
             return View(model);
         }
 
@@ -52,23 +53,21 @@ namespace HRMapp.Controllers
         [HttpPost]
         public IActionResult NewSkillset(SkillsetEditorViewModel model)
         {
-            //var addedSkillsetId = skillsetLogic.Add(model.ToSkillset());
-            //return RedirectToAction("Skillset", new { id = addedSkillsetId });
             try
             {
                 var addedSkillsetId = skillsetLogic.Add(model.ToSkillset());
+                infoMessage.Message = $"'{model.Title}' is toegevoegd aan het systeem.";
                 return RedirectToAction("Skillset", new { id = addedSkillsetId });
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException argEx)
             {
-                errorMessage.Message = ex.Message;
+                errorMessage.Message = argEx.Message;
                 return RedirectToAction("NewSkillset");
             }
         }
 
         public IActionResult EditSkillset(int id)
         {
-            //ViewData["ErrorMessage"] = TempData["ErrorMessage"];
             var skillset = skillsetLogic.GetById(id);
             return View("../Shared/SkillsetEditor", new SkillsetEditorViewModel(skillset) { ErrorMessage = errorMessage.Message });
         }
@@ -76,16 +75,15 @@ namespace HRMapp.Controllers
         [HttpPost]
         public IActionResult EditSkillset(SkillsetEditorViewModel model)
         {
-            //var success = skillsetLogic.Update(model.ToSkillset());
-            //return RedirectToAction("Skillset", new { id = model.Id });
             try
             {
                 var success = skillsetLogic.Update(model.ToSkillset());
+                infoMessage.Message = $"'{model.Title}' is bewerkt.";
                 return RedirectToAction("Skillset", new { id = model.Id });
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException argEx)
             {
-                errorMessage.Message = ex.Message;
+                errorMessage.Message = argEx.Message;
                 return RedirectToAction("EditSkillset", new { id = model.Id });
             }
 
@@ -99,7 +97,7 @@ namespace HRMapp.Controllers
             {
                 id = tasks[0].Id;
             }
-            var model = new TaskCollectionViewModel(id, tasks.ToList());    // Where do I use a List and where an IEnumerable? Where do I convert?
+            var model = new TaskCollectionViewModel(id, tasks.ToList()) { InfoMessage = infoMessage.Message };    // Where do I use a List and where an IEnumerable? Where do I convert?
             return View(model);
         }
 
@@ -117,12 +115,10 @@ namespace HRMapp.Controllers
         [HttpPost]
         public IActionResult NewTask(TaskEditorViewModel model)
         {
-            //var addedTaskId = taskLogic.Add(new ProductionTask(-1, model.Title, model.Description));
-            //var addedTaskId = taskLogic.Add(model.ToTask(skillsetLogic.GetAll().ToList()));
-            //return RedirectToAction("Task", new { id = addedTaskId });
             try
             {
                 var addedTaskId = taskLogic.Add(model.ToTask(skillsetLogic.GetAll().ToList()));
+                infoMessage.Message = $"'{model.Title}' is toegevoegd aan het systeem.";
                 return RedirectToAction("Task", new { id = addedTaskId });
             }
             catch (ArgumentException ex)
@@ -141,11 +137,10 @@ namespace HRMapp.Controllers
         [HttpPost]
         public IActionResult EditTask(TaskEditorViewModel model)
         {
-            //var success = taskLogic.Update(model.ToTask(skillsetLogic.GetAll().ToList()));
-            //return RedirectToAction("Task", new { id = model.Id });
             try
             {
                 var success = taskLogic.Update(model.ToTask(skillsetLogic.GetAll().ToList()));
+                infoMessage.Message = $"'{model.Title}' is bewerkt.";
                 return RedirectToAction("Task", new { id = model.Id });
             }
             catch (ArgumentException ex)
