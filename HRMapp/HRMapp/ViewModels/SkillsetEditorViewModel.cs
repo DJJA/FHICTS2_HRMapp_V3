@@ -20,13 +20,13 @@ namespace HRMapp.ViewModels
 
         public SkillsetEditorViewModel()
         {
-            FormAction = "NewSkillset";
+            FormAction = "New";
             FormTitle = "Nieuwe skillset toevoegen";
         }
 
         public SkillsetEditorViewModel(Skillset skillset)
         {
-            FormAction = "EditSkillset";
+            FormAction = "Edit";
             FormTitle = "Skillset bewerken";
 
             Id = skillset.Id;

@@ -44,8 +44,8 @@
 
 <script>
     document.getElementById('lbox').onchange = listBoxItemSelectionChanged;
-    document.getElementById('btnCrudAdd').onclick = function () { window.location.href = '/Home/NewSkillset'; }
-    document.getElementById('btnCrudEdit').onclick = function () { window.location.href = '/Home/EditSkillset/' + getListBoxSelectedItemId(); }
+    document.getElementById('btnCrudAdd').onclick = function () { window.location.href = '/Skillset/New'; }
+    document.getElementById('btnCrudEdit').onclick = function () { window.location.href = '/Skillset/Edit/' + getListBoxSelectedItemId(); }
 
     listBoxItemSelectionChanged();
 
@@ -54,7 +54,7 @@
 
 
         var xhr = new XMLHttpRequest();
-        xhr.open('GET', '/Home/SkillsetView/' + selectedSkillsetId, true);
+        xhr.open('GET', '/Skillset/SkillsetView/' + selectedSkillsetId, true);
 
         xhr.onload = function () {
             if (this.status == 200) {

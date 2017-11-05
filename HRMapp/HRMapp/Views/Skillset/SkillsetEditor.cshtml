@@ -35,7 +35,7 @@
     document.getElementById('Title').oninput = function () { userInputChanged = true; }
     document.getElementById('Description').oninput = function () { userInputChanged = true; }
     document.getElementById('btnSubmit').onclick = function () { userInputChanged = false; }
-    document.getElementById('btnCancel').onclick = function () { window.location.href = '/Home/Skillset'; }
+    document.getElementById('btnCancel').onclick = function () { window.location.href = '/Skillset/Skillset'; }
 
     window.onbeforeunload = function (event) {
         if (userInputChanged) {
