@@ -5,6 +5,7 @@ using System.Text;
 using HRMapp.Models;
 using System.Data.SqlClient;
 using System.Linq;
+using HRMapp.Models.Exceptions;
 
 namespace HRMapp.DAL.Contexts
 {
@@ -58,12 +59,11 @@ namespace HRMapp.DAL.Contexts
             }
             catch (SqlException sqlEx)
             {
-                //switch (sqlEx.Number)
-                //{
-                //    //case 4:
-                //    //    throw new DBJobOpeningException("Nu ff deze error bestaat nog niet.");
-                //    //    break;
-                //}
+                switch (sqlEx.Number)
+                {
+                    case 11001: throw new DBException("Kan geen verbinding maken met de server.");
+                    default:    throw new DBException("Er is iets mis gegaan.");
+                }
             }
 
             return skillsets;
