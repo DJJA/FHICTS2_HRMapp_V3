@@ -35,7 +35,13 @@
     document.getElementById('Title').oninput = function () { userInputChanged = true; }
     document.getElementById('Description').oninput = function () { userInputChanged = true; }
     document.getElementById('btnSubmit').onclick = function () { userInputChanged = false; }
-    document.getElementById('btnCancel').onclick = function () { window.location.href = '/Skillset/Skillset'; }
+    document.getElementById('btnCancel').onclick = function() {
+        if (@Model.Id > -1) {
+            window.location.href = '/Skillset/Index/@Model.Id';
+        } else {
+            window.location.href = '/Skillset';
+        }
+    }
 
     window.onbeforeunload = function (event) {
         if (userInputChanged) {

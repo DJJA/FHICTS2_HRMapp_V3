@@ -81,14 +81,14 @@ namespace HRMapp.ViewModels
         public TaskEditorViewModel(List<Skillset> availableSkillsets)   // Used for new
         {
             this.availableSkillsets = availableSkillsets;
-            FormAction = "NewTask";
+            FormAction = "New";
             FormTitle = "Nieuwe taak toevoegen";
         }
 
         public TaskEditorViewModel(List<Skillset> availableSkillsets, ProductionTask task)  // Used for edit
         {
             this.availableSkillsets = availableSkillsets;
-            FormAction = "EditTask";
+            FormAction = "Edit";
             FormTitle = "Taak bewerken";
 
             Id = task.Id;

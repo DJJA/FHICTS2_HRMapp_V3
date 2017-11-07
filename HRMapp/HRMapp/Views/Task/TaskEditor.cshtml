@@ -62,7 +62,14 @@
     document.getElementById('Description').oninput = function () { userInputChanged = true; }
     document.getElementById('DurationHours').oninput = function () { userInputChanged = true; }
     document.getElementById('DurationMinutes').oninput = function () { userInputChanged = true; }
-    document.getElementById('btnCancel').onclick = function () { window.location.href = '/Home/Task'; }
+    document.getElementById('btnCancel').onclick = function() {
+        if (@Model.Id > -1) {
+            window.location.href = '/Task/Index/@Model.Id';
+        } else {
+            window.location.href = '/Task';
+        }
+        
+    }
 
     document.getElementById('btnSubmit').onclick = function () {
         userInputChanged = false;
