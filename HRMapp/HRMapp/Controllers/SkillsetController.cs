@@ -18,7 +18,7 @@ namespace HRMapp.Controllers
         public IActionResult Index(int id)
         {
             var skillsets = skillsetLogic.GetAll().ToList();    // Where do I use a List and where an IEnumerable? Where do I convert?
-            if (id == 0 && skillsets.Count > 0)                 // Default id, no parameter passed
+            if (id == 0 && skillsets.Count > 0)                 // 0 Is the default id, no parameter passed
             {
                 id = skillsets[0].Id;
             }
@@ -43,7 +43,7 @@ namespace HRMapp.Controllers
             try
             {
                 var addedSkillsetId = skillsetLogic.Add(model.ToSkillset());
-                infoMessage.Message = $"'{model.Title}' is toegevoegd aan het systeem.";
+                infoMessage.Message = $"'{model.Name}' is toegevoegd aan het systeem.";
                 return RedirectToAction("Index", new {id = addedSkillsetId});
             }
             catch (ArgumentException argEx)
@@ -70,7 +70,7 @@ namespace HRMapp.Controllers
             try
             {
                 var success = skillsetLogic.Update(model.ToSkillset());
-                infoMessage.Message = $"'{model.Title}' is bewerkt.";
+                infoMessage.Message = $"'{model.Name}' is bewerkt.";
                 return RedirectToAction("Index", new { id = model.Id });
             }
             catch (ArgumentException argEx)

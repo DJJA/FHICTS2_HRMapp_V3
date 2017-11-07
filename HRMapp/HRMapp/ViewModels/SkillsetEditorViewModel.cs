@@ -13,8 +13,8 @@ namespace HRMapp.ViewModels
         public string FormAction { get; private set; }
         public string FormTitle { get; private set; }
         public int Id { get; set; }
-        [DisplayName("Titel:")]
-        public string Title { get; set; }
+        [DisplayName("Naam:")]
+        public string Name { get; set; }
         [DisplayName("Omschrijving:")]
         public string Description { get; set; }
 
@@ -30,13 +30,13 @@ namespace HRMapp.ViewModels
             FormTitle = "Skillset bewerken";
 
             Id = skillset.Id;
-            Title = skillset.Name;
+            Name = skillset.Name;
             Description = skillset.Description;
         }
 
         public Skillset ToSkillset()
         {
-            return new Skillset(Id, Title, Description);
+            return new Skillset(Id, Name, Description);
         }
     }
 }

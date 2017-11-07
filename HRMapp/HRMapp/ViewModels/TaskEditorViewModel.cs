@@ -17,8 +17,8 @@ namespace HRMapp.ViewModels
         public string FormAction { get; private set; }
         public string FormTitle { get; private set; }
         public int Id { get; set; }
-        [DisplayName("Titel:")]
-        public string Title { get; set; }
+        [DisplayName("Naam:")]
+        public string Name { get; set; }
         [DisplayName("Omschrijving:")]
         public string Description { get; set; }
         [DisplayName("Aantal uren:")]
@@ -92,7 +92,7 @@ namespace HRMapp.ViewModels
             FormTitle = "Taak bewerken";
 
             Id = task.Id;
-            Title = task.Name;
+            Name = task.Name;
             Description = task.Description;
             Duration = task.Duration;
             requiredSkillsets = task.RequiredSkillsets;
@@ -105,7 +105,7 @@ namespace HRMapp.ViewModels
             {
                 requiredSkillsets.Add(skillsets.Single(skillset => skillset.Id == id));
             }
-            return new ProductionTask(Id, Title, Description, Duration, requiredSkillsets);
+            return new ProductionTask(Id, Name, Description, Duration, requiredSkillsets);
         }
     }
 }

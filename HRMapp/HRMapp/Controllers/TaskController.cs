@@ -43,7 +43,7 @@ namespace HRMapp.Controllers
             try
             {
                 var addedTaskId = taskLogic.Add(model.ToTask(skillsetLogic.GetAll().ToList()));
-                infoMessage.Message = $"'{model.Title}' is toegevoegd aan het systeem.";
+                infoMessage.Message = $"'{model.Name}' is toegevoegd aan het systeem.";
                 return RedirectToAction("Index", new { id = addedTaskId });
             }
             catch (ArgumentException ex)
@@ -65,7 +65,7 @@ namespace HRMapp.Controllers
             try
             {
                 var success = taskLogic.Update(model.ToTask(skillsetLogic.GetAll().ToList()));
-                infoMessage.Message = $"'{model.Title}' is bewerkt.";
+                infoMessage.Message = $"'{model.Name}' is bewerkt.";
                 return RedirectToAction("Index", new { id = model.Id });
             }
             catch (ArgumentException ex)
