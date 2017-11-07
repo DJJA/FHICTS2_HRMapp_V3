@@ -4,7 +4,7 @@ using System.Text;
 
 namespace HRMapp.DAL
 {
-    public interface IContext <T>
+    internal interface IContext <T>
     {
         IEnumerable<T> GetAll();
         T GetById(int id);

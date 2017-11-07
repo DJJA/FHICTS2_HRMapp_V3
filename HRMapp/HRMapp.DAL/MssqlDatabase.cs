@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HRMapp.Models.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -7,9 +8,9 @@ using System.Text;
 
 namespace HRMapp.DAL
 {
-    public abstract class MssqlDatabase
+    internal abstract class MssqlDatabase
     {
-        protected readonly string connectionString = "Server=tcp:djjaserver.database.windows.net,1433;Initial Catalog=HRMapp;Persist Security Info=False;User ID=djja;Password=DrEh437u;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+        private readonly string connectionString = "Server=tcp:djjaserver.database.windows.net,1433;Initial Catalog=HRMapp;Persist Security Info=False;User ID=djja;Password=DrEh437u;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
 
         #region GetDataViaProcedure
         protected DataTable GetDataViaProcedure(string procedure, IEnumerable<SqlParameter> procedureParameters)
@@ -165,5 +166,14 @@ namespace HRMapp.DAL
         //    }
         //}
         #endregion
+
+        protected DBException HandleGenericSqlException(SqlException sqlEx)
+        {
+            switch (sqlEx.Number)
+            {
+                case 11001: return new DBException("Kan geen verbinding maken met de server.");
+                default: return new DBException("Er is iets mis gegaan.");
+            }
+        }
     }
 }

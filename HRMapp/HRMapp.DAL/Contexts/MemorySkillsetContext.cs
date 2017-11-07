@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace HRMapp.DAL
 {
-    public class MemorySkillsetContext : ISkillsetContext
+    internal class MemorySkillsetContext : ISkillsetContext
     {
         private static List<Skillset> skillsets = new List<Skillset>();  // Static because the homecontroller gets reïnstatiated every request, so does the entire repository pattern
 

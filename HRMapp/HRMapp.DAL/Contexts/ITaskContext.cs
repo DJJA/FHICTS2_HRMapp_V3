@@ -5,7 +5,7 @@ using System.Text;
 
 namespace HRMapp.DAL
 {
-    public interface ITaskContext : IContext<ProductionTask>
+    internal interface ITaskContext : IContext<ProductionTask>
     {
         IEnumerable<Skillset> GetRequiredSkillsets(int taskId);
         bool UpdateRequiredSkillsets(ProductionTask task);

@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace HRMapp.DAL
 {
-    public class MemoryTaskContext : ITaskContext
+    internal class MemoryTaskContext : ITaskContext
     {
         private static List<ProductionTask> tasks = new List<ProductionTask>();
 

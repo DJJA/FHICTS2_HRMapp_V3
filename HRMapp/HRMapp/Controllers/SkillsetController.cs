@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HRMapp.Logic;
+using HRMapp.Models.Exceptions;
 using HRMapp.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,18 +11,18 @@ namespace HRMapp.Controllers
 {
     public class SkillsetController : Controller
     {
-        private static CrossActionMessageHolder errorMessage = new CrossActionMessageHolder();  // Wordt niet opnieuw geïnstantieerd?
+        private static CrossActionMessageHolder errorMessage = new CrossActionMessageHolder();
         private static CrossActionMessageHolder infoMessage = new CrossActionMessageHolder();
         private SkillsetLogic skillsetLogic = new SkillsetLogic();
 
         public IActionResult Index(int id)
         {
-            var skillsets = skillsetLogic.GetAll().ToList();
-            if (id == 0 && skillsets.Count > 0)    // Default id, no parameter passed
+            var skillsets = skillsetLogic.GetAll().ToList();    // Where do I use a List and where an IEnumerable? Where do I convert?
+            if (id == 0 && skillsets.Count > 0)                 // Default id, no parameter passed
             {
                 id = skillsets[0].Id;
             }
-            var model = new SkillsetCollectionViewModel(id, skillsets) { InfoMessage = infoMessage.Message };    // Where do I use a List and where an IEnumerable? Where do I convert?
+            var model = new SkillsetCollectionViewModel(id, skillsets) { InfoMessage = infoMessage.Message };    
             return View("Skillset", model);
         }
 
@@ -43,11 +44,16 @@ namespace HRMapp.Controllers
             {
                 var addedSkillsetId = skillsetLogic.Add(model.ToSkillset());
                 infoMessage.Message = $"'{model.Title}' is toegevoegd aan het systeem.";
-                return RedirectToAction("Index", new { id = addedSkillsetId });
+                return RedirectToAction("Index", new {id = addedSkillsetId});
             }
             catch (ArgumentException argEx)
             {
                 errorMessage.Message = argEx.Message;
+                return RedirectToAction("New");
+            }
+            catch (DBException dbEx)
+            {
+                errorMessage.Message = dbEx.Message;
                 return RedirectToAction("New");
             }
         }

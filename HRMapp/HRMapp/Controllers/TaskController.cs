@@ -10,7 +10,7 @@ namespace HRMapp.Controllers
 {
     public class TaskController : Controller
     {
-        private static CrossActionMessageHolder errorMessage = new CrossActionMessageHolder();  // Wordt niet opnieuw geïnstantieerd?
+        private static CrossActionMessageHolder errorMessage = new CrossActionMessageHolder();
         private static CrossActionMessageHolder infoMessage = new CrossActionMessageHolder();
         private SkillsetLogic skillsetLogic = new SkillsetLogic();
         private TaskLogic taskLogic = new TaskLogic();
@@ -22,7 +22,7 @@ namespace HRMapp.Controllers
             {
                 id = tasks[0].Id;
             }
-            var model = new TaskCollectionViewModel(id, tasks.ToList()) { InfoMessage = infoMessage.Message };    // Where do I use a List and where an IEnumerable? Where do I convert?
+            var model = new TaskCollectionViewModel(id, tasks.ToList()) { InfoMessage = infoMessage.Message };
             return View("Task", model);
         }
 

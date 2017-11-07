@@ -9,8 +9,13 @@ using HRMapp.Models.Exceptions;
 
 namespace HRMapp.DAL.Contexts
 {
-    public class MssqlSkillsetContext : MssqlDatabase, ISkillsetContext
+    internal class MssqlSkillsetContext : MssqlDatabase, ISkillsetContext
     {
+        /// <summary>
+        /// Adds new skillset to the system
+        /// </summary>
+        /// <param name="skillset"></param>
+        /// <returns>The index of the newly added skillset</returns>
         public int Add(Skillset skillset)
         {
             int addedSkillset = -1;
@@ -20,38 +25,38 @@ namespace HRMapp.DAL.Contexts
             }
             catch (SqlException sqlEx)
             {
-                
+                throw HandleGenericSqlException(sqlEx);
             }
             return addedSkillset;
         }
 
         public bool Delete(Skillset value)
         {
-            string query = "DELETE FROM Skillset " +
-                           "WHERE Id = @Id;";
-            
-            try
-            {
-                using (var connection = new SqlConnection(connectionString))
-                using (var command = new SqlCommand(query, connection))
-                {
-                    connection.Open();
-                    command.Parameters.AddWithValue("@Id", value.Id);
+            throw new NotImplementedException();
+            //string query = "DELETE FROM Skillset " +
+            //               "WHERE Id = @Id;";
 
-                    command.ExecuteNonQuery();
-                }
-                return true;
-            }
-            catch (SqlException sqlEx)
-            {
-                return false;
-            }
+            //try
+            //{
+            //    using (var connection = new SqlConnection(connectionString))
+            //    using (var command = new SqlCommand(query, connection))
+            //    {
+            //        connection.Open();
+            //        command.Parameters.AddWithValue("@Id", value.Id);
+
+            //        command.ExecuteNonQuery();
+            //    }
+            //    return true;
+            //}
+            //catch (SqlException sqlEx)
+            //{
+            //    return false;
+            //}
         }
-
+        
         public IEnumerable<Skillset> GetAll()
         {
             var skillsets = new List<Skillset>();
-
             try
             {
                 var dt = GetDataViaProcedure("sp_GetSkillsets");
@@ -59,16 +64,12 @@ namespace HRMapp.DAL.Contexts
             }
             catch (SqlException sqlEx)
             {
-                switch (sqlEx.Number)
-                {
-                    case 11001: throw new DBException("Kan geen verbinding maken met de server.");
-                    default:    throw new DBException("Er is iets mis gegaan.");
-                }
+                throw HandleGenericSqlException(sqlEx);
             }
 
             return skillsets;
         }
-
+        
         public Skillset GetById(int id)
         {
             Skillset skillset = null;
@@ -83,7 +84,7 @@ namespace HRMapp.DAL.Contexts
             }
             catch (SqlException sqlEx)
             {
-                
+                throw HandleGenericSqlException(sqlEx);
             }
 
             return skillset;
@@ -98,11 +99,11 @@ namespace HRMapp.DAL.Contexts
             }
             catch (SqlException sqlEx)
             {
-                return false;
+                throw HandleGenericSqlException(sqlEx);
             }
         }
 
-        public static Skillset GetSkillsetFromDataRow(DataRow row)
+        internal static Skillset GetSkillsetFromDataRow(DataRow row)
         {
             var skillsetId = Convert.ToInt32(row["Id"]);
             var name = row["Name"].ToString();
@@ -110,7 +111,7 @@ namespace HRMapp.DAL.Contexts
             return new Skillset(skillsetId, name, descriptiom);
         }
 
-        private List<SqlParameter> GetSqlParametersFromSkillset(Skillset skillset, bool withId)
+        private IEnumerable<SqlParameter> GetSqlParametersFromSkillset(Skillset skillset, bool withId)
         {
             var parameters = new List<SqlParameter>()
             {

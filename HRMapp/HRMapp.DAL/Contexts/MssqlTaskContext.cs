@@ -9,7 +9,7 @@ using HRMapp.Models;
 
 namespace HRMapp.DAL.Contexts
 {
-    public class MssqlTaskContext : MssqlDatabase, ITaskContext
+    internal class MssqlTaskContext : MssqlDatabase, ITaskContext
     {
         public IEnumerable<ProductionTask> GetAll()
         {
@@ -22,7 +22,7 @@ namespace HRMapp.DAL.Contexts
             }
             catch (SqlException sqlEx)
             {
-
+                throw HandleGenericSqlException(sqlEx);
             }
 
             return tasks;
@@ -42,7 +42,7 @@ namespace HRMapp.DAL.Contexts
             }
             catch (SqlException sqlEx)
             {
-
+                throw HandleGenericSqlException(sqlEx);
             }
 
             return task;
@@ -57,7 +57,7 @@ namespace HRMapp.DAL.Contexts
             }
             catch (SqlException sqlEx)
             {
-
+                throw HandleGenericSqlException(sqlEx);
             }
 
             UpdateRequiredSkillsets(task);
@@ -66,25 +66,26 @@ namespace HRMapp.DAL.Contexts
 
         public bool Delete(ProductionTask value)
         {
-            string query = "DELETE FROM Task " +
-                           "WHERE Id = @Id;";
+            throw new NotImplementedException();
+            //string query = "DELETE FROM Task " +
+            //               "WHERE Id = @Id;";
 
-            try
-            {
-                using (var connection = new SqlConnection(connectionString))
-                using (var command = new SqlCommand(query, connection))
-                {
-                    connection.Open();
-                    command.Parameters.AddWithValue("@Id", value.Id);
+            //try
+            //{
+            //    using (var connection = new SqlConnection(connectionString))
+            //    using (var command = new SqlCommand(query, connection))
+            //    {
+            //        connection.Open();
+            //        command.Parameters.AddWithValue("@Id", value.Id);
 
-                    command.ExecuteNonQuery();
-                }
-                return true;
-            }
-            catch (SqlException sqlEx)
-            {
-                return false;
-            }
+            //        command.ExecuteNonQuery();
+            //    }
+            //    return true;
+            //}
+            //catch (SqlException sqlEx)
+            //{
+            //    return false;
+            //}
         }
 
         public bool Update(ProductionTask task)
@@ -99,7 +100,7 @@ namespace HRMapp.DAL.Contexts
             }
             catch (SqlException sqlEx)
             {
-                return false;
+                throw HandleGenericSqlException(sqlEx);
             }
         }
 
@@ -115,7 +116,7 @@ namespace HRMapp.DAL.Contexts
             }
             catch (SqlException sqlEx)
             {
-
+                throw HandleGenericSqlException(sqlEx);
             }
 
             return skillsets;
@@ -124,16 +125,18 @@ namespace HRMapp.DAL.Contexts
         
         public bool UpdateRequiredSkillsets(ProductionTask task)
         {
-            var dt = new DataTable();
-            dt.Columns.Add("Id");
+            var daaTablet = new DataTable();
+            daaTablet.Columns.Add("Id");
 
             foreach (var skillset in task.RequiredSkillsets)
             {
-                dt.Rows.Add(skillset.Id);
+                daaTablet.Rows.Add(skillset.Id);
             }
 
-            SqlParameter listWithRequiredSkillsetIds = new SqlParameter("@List", dt);
-            listWithRequiredSkillsetIds.SqlDbType = SqlDbType.Structured;
+            var listWithRequiredSkillsetIds = new SqlParameter("@List", daaTablet)
+            {
+                SqlDbType = SqlDbType.Structured
+            };
 
             var parameters = new List<SqlParameter>()
             {
@@ -148,7 +151,7 @@ namespace HRMapp.DAL.Contexts
             }
             catch (SqlException sqlEx)
             {
-                return false;
+                throw HandleGenericSqlException(sqlEx);
             }
         }
         #endregion

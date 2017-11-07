@@ -4,7 +4,7 @@ using System.Text;
 
 namespace HRMapp.DAL.Repositories
 {
-    public interface IRepo
+    internal interface IRepo
     {
 
     }
