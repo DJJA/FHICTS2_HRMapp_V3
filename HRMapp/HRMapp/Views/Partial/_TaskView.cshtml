@@ -6,8 +6,10 @@
 <p>Duur: @Model.Duration.Hours uur en @Model.Duration.Minutes minuten</p>
 <br />
 <h4>Omschrijving:</h4>
-<p>@Model.Description</p>
-<br />
+<div style="border-style: solid; border-radius: 5px; border-width: 1px; border-color: LightGray;">
+@Html.Raw(Model.Description)
+</div>
+
 @if (Model.RequiredSkillsets.Count > 0)
 {
     <h4>Nodige skillsets:</h4>
