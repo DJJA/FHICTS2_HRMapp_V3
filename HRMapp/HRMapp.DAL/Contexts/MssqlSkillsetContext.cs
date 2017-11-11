@@ -66,14 +66,12 @@ namespace HRMapp.DAL.Contexts
             {
                 throw HandleGenericSqlException(sqlEx);
             }
-
             return skillsets;
         }
         
         public Skillset GetById(int id)
         {
             Skillset skillset = null;
-
             try
             {
                 var dt = GetDataViaProcedure("sp_GetSkillsetById", new SqlParameter("@Id", id));
@@ -86,7 +84,6 @@ namespace HRMapp.DAL.Contexts
             {
                 throw HandleGenericSqlException(sqlEx);
             }
-
             return skillset;
         }
 

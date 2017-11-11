@@ -7,7 +7,7 @@ namespace HRMapp.Models
     public abstract class Employee
     {
         private string firstName, lastName, emailAddress;
-        private int phoneNumber;
+        private Int64 phoneNumber;
 
         public int Id { get; private set; }
 
@@ -40,7 +40,7 @@ namespace HRMapp.Models
             }
         }
 
-        public int PhoneNumber
+        public Int64 PhoneNumber
         {
             get => phoneNumber;
             private set
@@ -79,7 +79,7 @@ namespace HRMapp.Models
             LastName = lastName;
         }
 
-        protected Employee(int id, string firstName, string lastName, int phoneNumber, string emailAddress,
+        protected Employee(int id, string firstName, string lastName, Int64 phoneNumber, string emailAddress,
             string street, string houseNumber, string zipCode, string city)
             : this(id, firstName, lastName)
         {
@@ -98,9 +98,26 @@ namespace HRMapp.Models
             if (indexOfAtSymbol < 1) return false;
             if (!emailAddress.Substring(indexOfAtSymbol).Contains(".")) return false;
             int indexOfDotAfterAtSymbol = emailAddress.IndexOf('.', indexOfAtSymbol);
-            if ((indexOfAtSymbol + 1) - indexOfDotAfterAtSymbol < 1) return false;
-            if ((indexOfDotAfterAtSymbol + 1) - (emailAddress.Length - 1) < 1) return false;
+            if (indexOfDotAfterAtSymbol - (indexOfAtSymbol + 1) < 1) return false;
+            if ((emailAddress.Length - 1) - (indexOfDotAfterAtSymbol + 1) < 1) return false;
             return true;
+        }
+
+        public static string GetTypeOfEmployee(Employee e)
+        {
+            switch (e)
+            {
+                case ProductionWorker _:
+                    return "Productiemedewerk(st)er";
+                case TeamLeader _:
+                    return "Teamleider";
+                case HRManager _:
+                    return "HR Manager";
+                case SalesManager _:
+                    return "Sales Manager";
+                default:
+                    return "Onbekend type (Employee -> GetTypeOfEmployee)";
+            }
         }
     }
 }

@@ -60,5 +60,7 @@ namespace HRMapp.DAL.Repositories
                 return salesManagerContext.Update((SalesManager)employee);
             throw new ArgumentException("Type of employee is not supported in the 'Update' method (DAL -> EmployeeRepo)");
         }
+
+        public TeamLeader GetTeamLeaderById(int id) => teamLeaderContext.GetById(id);
     }
 }

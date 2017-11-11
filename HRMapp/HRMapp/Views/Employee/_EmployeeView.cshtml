@@ -1,6 +1,34 @@
 ﻿@using HRMapp.Models
 @model Employee
 
-<h3>@Model.FirstName</h3>
-<p>Skillset ID: @Model.Id</p>
-<p>@Model.LastName</p>
+<h3>@Model.FirstName @Model.LastName</h3>
+<p>Employee ID: @Model.Id</p>
+<p>
+    <strong>
+        @*@if (Model is HRManager)
+        {
+            <div>HR Manager</div>
+        }
+        else if (Model is SalesManager)
+        {
+            <div>Sales Manager</div>
+        }
+        else if (Model is TeamLeader)
+        {
+            <div>Teamleider</div>
+        }
+        else if (Model is ProductionWorker)
+        {
+            <div>Productiemedewerk(st)er</div>
+        }
+        else
+        {
+            <div>Geen functie</div>
+        }*@
+        @Employee.GetTypeOfEmployee(Model)
+    </strong>
+</p>
+<p>@Model.PhoneNumber</p>
+<p>@Model.EmailAddress</p>
+<p>@Model.Street @Model.HouseNumber <br/>
+@Model.ZipCode @Model.City</p>
