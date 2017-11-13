@@ -59,7 +59,7 @@ namespace HRMapp.Models
             get => emailAddress;
             private set
             {
-                if (!ValidateEmailAddress(value))
+                if (!String.IsNullOrEmpty(value) && !ValidateEmailAddress(value))
                 {
                     throw new ArgumentException("Emailadres voldoet niet aan het juiste formaat.");
                 }

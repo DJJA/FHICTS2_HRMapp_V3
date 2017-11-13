@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Resources;
 using System.Threading.Tasks;
+using HRMapp.Logic;
 using HRMapp.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -73,10 +75,26 @@ namespace HRMapp.ViewModels
             City = employee.City;
         }
 
-        public Employee ToSkillset()
+        public Employee ToEmployee(EmployeeLogic logic)
         {
-            //return new Skillset(Id, Name, Description);
+            if (EmployeeType == 0)
+            {
+                return new ProductionWorker(Id, FirstName, LastName, PhoneNumber, EmailAddress, Street, HouseNumber, ZipCode, City, null, null);
+            }
+            if (EmployeeType == 1)
+            {
+                return new TeamLeader(Id, FirstName, LastName, PhoneNumber, EmailAddress, Street, HouseNumber, ZipCode, City, null, null);
+            }
+            if (EmployeeType == 2)
+            {
+                return new HRManager(Id, FirstName, LastName, PhoneNumber, EmailAddress, Street, HouseNumber, ZipCode, City);
+            }
+            if (EmployeeType == 3)
+            {
+                return new SalesManager(Id, FirstName, LastName, PhoneNumber, EmailAddress, Street, HouseNumber, ZipCode, City);
+            }
             return null;
         }
     }
 }
+

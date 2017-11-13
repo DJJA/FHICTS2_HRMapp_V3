@@ -88,11 +88,15 @@ namespace HRMapp.DAL.Contexts
             var zipCode = row["ZipCode"].ToString();
             var city = row["City"].ToString();
 
-            var teamLeaderId = Convert.ToInt32(row["TeamLeaderId"]);
-
-            var Skillsets = new List<Skillset>();
-            TeamLeader TeamLeader = new EmployeeRepo().GetTeamLeaderById(teamLeaderId);
-            return new ProductionWorker(id, firstName, lastName, phoneNumber, emailAddress, street, houseNumber, zipCode, city, Skillsets, TeamLeader);
+            var skillsets = new List<Skillset>();
+            TeamLeader teamLeader = null;
+            if (row["TeamLeaderId"] != DBNull.Value)
+            {
+                var teamLeaderId = Convert.ToInt32(row["TeamLeaderId"]);
+                teamLeader = new EmployeeRepo().GetTeamLeaderById(teamLeaderId);
+            }
+            
+            return new ProductionWorker(id, firstName, lastName, phoneNumber, emailAddress, street, houseNumber, zipCode, city, skillsets, teamLeader);
         }
 
         private IEnumerable<SqlParameter> GetSqlParametersFromProductionWorker(ProductionWorker productionWorker, bool withId)
@@ -110,7 +114,7 @@ namespace HRMapp.DAL.Contexts
             };
             if (productionWorker.TeamLeader == null)
             {
-                //parameters.Add(new SqlParameter("@TeamLeaderId", null));
+                parameters.Add(new SqlParameter("@TeamLeaderId", DBNull.Value));
             }
             else
             {
@@ -119,6 +123,10 @@ namespace HRMapp.DAL.Contexts
             if (withId)
             {
                 parameters.Add(new SqlParameter("@Id", productionWorker.Id));
+            }
+            foreach (var parameter in parameters)
+            {
+                if (parameter.Value == null) parameter.Value = DBNull.Value;
             }
             return parameters;
         }

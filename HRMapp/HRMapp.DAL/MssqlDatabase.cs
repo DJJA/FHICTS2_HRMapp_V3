@@ -11,7 +11,7 @@ namespace HRMapp.DAL
     internal abstract class MssqlDatabase
     {
         //private readonly string connectionString = "Server=tcp:djjaserver.database.windows.net,1433;Initial Catalog=HRMapp;Persist Security Info=False;User ID=djja;Password=DrEh437u;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
-        private readonly string connectionString = @"Server=localhost\SQLEXPRESS;Database=HRMapp;Trusted_Connection=True;";
+        private const string connectionString = @"Server=localhost\SQLEXPRESS;Database=HRMapp;Trusted_Connection=True;";
 
         #region GetDataViaProcedure
         protected DataTable GetDataViaProcedure(string procedure, IEnumerable<SqlParameter> procedureParameters)

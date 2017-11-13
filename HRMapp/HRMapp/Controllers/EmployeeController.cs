@@ -42,8 +42,8 @@ namespace HRMapp.Controllers
         {
             try
             {
-                //var addedEmployeeId = employeeLogic.Add(model.ToSkillset());
-                var addedEmployeeId = 1;
+                var addedEmployeeId = employeeLogic.Add(model.ToEmployee(employeeLogic));
+                //var addedEmployeeId = 1;
                 infoMessage.Message = $"'{model.FirstName} {model.LastName}' is toegevoegd aan het systeem.";
                 return RedirectToAction("Index", new { id = addedEmployeeId });
             }
@@ -70,7 +70,7 @@ namespace HRMapp.Controllers
         {
             try
             {
-                //var success = employeeLogic.Update(model.ToSkillset());
+                var success = employeeLogic.Update(model.ToEmployee(employeeLogic));
                 infoMessage.Message = $"'{model.FirstName} {model.LastName}' is bewerkt.";
                 return RedirectToAction("Index", new { id = model.Id });
             }

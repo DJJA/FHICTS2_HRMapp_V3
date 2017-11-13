@@ -37,27 +37,27 @@ namespace HRMapp.DAL.Repositories
 
         public int Add(Employee employee)
         {
-            if (employee is ProductionWorker)
-                return productionWorkerContext.Add((ProductionWorker)employee);
-            if (employee is TeamLeader)
-                return teamLeaderContext.Add((TeamLeader)employee);
-            if (employee is HRManager)
-                return hrManagerContext.Add((HRManager)employee);
-            if (employee is SalesManager)
-                return salesManagerContext.Add((SalesManager)employee);
+            if (employee is ProductionWorker worker)
+                return productionWorkerContext.Add(worker);
+            if (employee is TeamLeader leader)
+                return teamLeaderContext.Add(leader);
+            if (employee is HRManager hrManager)
+                return hrManagerContext.Add(hrManager);
+            if (employee is SalesManager manager)
+                return salesManagerContext.Add(manager);
             throw new ArgumentException("Type of employee is not supported in the 'Add' method (DAL -> EmployeeRepo)");
         }
 
         public bool Update(Employee employee)
         {
-            if (employee is ProductionWorker)
-                return productionWorkerContext.Update((ProductionWorker)employee);
-            if (employee is TeamLeader)
-                return teamLeaderContext.Update((TeamLeader)employee);
-            if (employee is HRManager)
-                return hrManagerContext.Update((HRManager)employee);
-            if (employee is SalesManager)
-                return salesManagerContext.Update((SalesManager)employee);
+            if (employee is ProductionWorker worker)
+                return productionWorkerContext.Update(worker);
+            if (employee is TeamLeader leader)
+                return teamLeaderContext.Update(leader);
+            if (employee is HRManager manager)
+                return hrManagerContext.Update(manager);
+            if (employee is SalesManager salesManager)
+                return salesManagerContext.Update(salesManager);
             throw new ArgumentException("Type of employee is not supported in the 'Update' method (DAL -> EmployeeRepo)");
         }
 
