@@ -5,7 +5,7 @@ using HRMapp.Models;
 
 namespace HRMapp.DAL.Contexts
 {
-    interface IHRManager : IContext<HRManager>
+    interface IHRManagerContext : IEmployeeContext<HRManager>, IContext<HRManager>
     {
     }
 }

@@ -111,5 +111,18 @@ namespace HRMapp.DAL.Contexts
             }
             return parameters;
         }
+
+        public bool ChangeToThisTypeAndUpdate(TeamLeader employee)
+        {
+            try
+            {
+                ExecuteProcedure("sp_ChangeEmployeeTypeToTeamLeader", GetSqlParametersFromTeamLeader(employee, true));
+                return true;
+            }
+            catch (SqlException sqlEx)
+            {
+                throw HandleGenericSqlException(sqlEx);
+            }
+        }
     }
 }

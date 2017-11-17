@@ -5,7 +5,7 @@ using HRMapp.Models;
 
 namespace HRMapp.DAL.Contexts
 {
-    interface IProductionWorkerContext : IContext<ProductionWorker>
+    interface IProductionWorkerContext : IEmployeeContext<ProductionWorker>, IContext<ProductionWorker>
     {
     }
 }

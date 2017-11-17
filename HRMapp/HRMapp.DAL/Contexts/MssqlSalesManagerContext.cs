@@ -66,7 +66,7 @@ namespace HRMapp.DAL.Contexts
         {
             try
             {
-                ExecuteProcedure("sp_UpdateHRManager", GetSqlParametersFromSalesManager(employee, true));
+                ExecuteProcedure("sp_UpdateSalesManager", GetSqlParametersFromSalesManager(employee, true));
                 return true;
             }
             catch (SqlException sqlEx)
@@ -108,6 +108,19 @@ namespace HRMapp.DAL.Contexts
                 parameters.Add(new SqlParameter("@Id", hrManager.Id));
             }
             return parameters;
+        }
+
+        public bool ChangeToThisTypeAndUpdate(SalesManager employee)
+        {
+            try
+            {
+                ExecuteProcedure("sp_ChangeEmployeeTypeToSalesManager", GetSqlParametersFromSalesManager(employee, true));
+                return true;
+            }
+            catch (SqlException sqlEx)
+            {
+                throw HandleGenericSqlException(sqlEx);
+            }
         }
     }
 }

@@ -32,6 +32,13 @@ namespace HRMapp.Controllers
             return PartialView("../Partial/_TaskView", task);
         }
 
+        //public IActionResult New(TaskEditorViewModel model)
+        //{
+        //    if(model == null)
+        //        model = new TaskEditorViewModel(skillsetLogic.)
+        //    return View("TaskEditor", new TaskEditorViewModel(skillsetLogic.GetAll().ToList()) { ErrorMessage = errorMessage.Message });
+        //}
+
         public IActionResult New()
         {
             return View("TaskEditor", new TaskEditorViewModel(skillsetLogic.GetAll().ToList()) { ErrorMessage = errorMessage.Message });

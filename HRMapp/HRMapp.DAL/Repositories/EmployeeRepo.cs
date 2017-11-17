@@ -10,7 +10,7 @@ namespace HRMapp.DAL.Repositories
     {
         private IProductionWorkerContext productionWorkerContext = new MssqlProductionWorkerContext();
         private ITeamLeaderContext teamLeaderContext = new MssqlTeamLeaderContext();
-        private IHRManager hrManagerContext = new MssqlHRManagerContext();
+        private IHRManagerContext hrManagerContext = new MssqlHRManagerContext();
         private ISalesManagerContext salesManagerContext = new MssqlSalesManagerContext();
 
         public IEnumerable<Employee> GetAll()
@@ -50,14 +50,31 @@ namespace HRMapp.DAL.Repositories
 
         public bool Update(Employee employee)
         {
-            if (employee is ProductionWorker worker)
-                return productionWorkerContext.Update(worker);
-            if (employee is TeamLeader leader)
-                return teamLeaderContext.Update(leader);
-            if (employee is HRManager manager)
-                return hrManagerContext.Update(manager);
-            if (employee is SalesManager salesManager)
-                return salesManagerContext.Update(salesManager);
+            var employeeInDatabase = GetById(employee.Id);
+
+            if (Employee.GetTypeOfEmployee(employeeInDatabase) == Employee.GetTypeOfEmployee(employee))
+            {
+                if (employee is ProductionWorker worker)
+                    return productionWorkerContext.Update(worker);
+                if (employee is TeamLeader leader)
+                    return teamLeaderContext.Update(leader);
+                if (employee is HRManager manager)
+                    return hrManagerContext.Update(manager);
+                if (employee is SalesManager salesManager)
+                    return salesManagerContext.Update(salesManager);
+            }
+            else
+            {
+                if (employee is ProductionWorker worker)
+                    return productionWorkerContext.ChangeToThisTypeAndUpdate(worker);
+                if (employee is TeamLeader leader)
+                    return teamLeaderContext.ChangeToThisTypeAndUpdate(leader);
+                if (employee is HRManager manager)
+                    return hrManagerContext.ChangeToThisTypeAndUpdate(manager);
+                if (employee is SalesManager salesManager)
+                    return salesManagerContext.ChangeToThisTypeAndUpdate(salesManager);
+            }
+            
             throw new ArgumentException("Type of employee is not supported in the 'Update' method (DAL -> EmployeeRepo)");
         }
 

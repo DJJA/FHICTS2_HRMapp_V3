@@ -130,5 +130,18 @@ namespace HRMapp.DAL.Contexts
             }
             return parameters;
         }
+
+        public bool ChangeToThisTypeAndUpdate(ProductionWorker employee)
+        {
+            try
+            {
+                ExecuteProcedure("sp_ChangeEmployeeTypeToProductionWorker", GetSqlParametersFromProductionWorker(employee, true));
+                return true;
+            }
+            catch (SqlException sqlEx)
+            {
+                throw HandleGenericSqlException(sqlEx);
+            }
+        }
     }
 }

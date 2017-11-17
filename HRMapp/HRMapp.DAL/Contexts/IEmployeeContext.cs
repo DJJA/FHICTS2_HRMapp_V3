@@ -5,7 +5,8 @@ using HRMapp.Models;
 
 namespace HRMapp.DAL.Contexts
 {
-    interface ISalesManagerContext : IEmployeeContext<SalesManager>, IContext<SalesManager>
+    interface IEmployeeContext<T>
     {
+        bool ChangeToThisTypeAndUpdate(T employee);
     }
 }

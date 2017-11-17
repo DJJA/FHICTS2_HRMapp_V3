@@ -8,7 +8,7 @@ using HRMapp.Models;
 
 namespace HRMapp.DAL.Contexts
 {
-    class MssqlHRManagerContext : MssqlDatabase, IHRManager
+    class MssqlHRManagerContext : MssqlDatabase, IHRManagerContext
     {
         public IEnumerable<HRManager> GetAll()
         {
@@ -108,6 +108,19 @@ namespace HRMapp.DAL.Contexts
                 parameters.Add(new SqlParameter("@Id", hrManager.Id));
             }
             return parameters;
+        }
+
+        public bool ChangeToThisTypeAndUpdate(HRManager employee)
+        {
+            try
+            {
+                ExecuteProcedure("sp_ChangeEmployeeTypeToHRManager", GetSqlParametersFromHRManager(employee, true));
+                return true;
+            }
+            catch (SqlException sqlEx)
+            {
+                throw HandleGenericSqlException(sqlEx);
+            }
         }
     }
 }

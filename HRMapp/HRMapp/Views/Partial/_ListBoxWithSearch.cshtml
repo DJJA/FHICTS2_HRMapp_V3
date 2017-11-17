@@ -1,9 +1,17 @@
 @using HRMapp.Models
 @model List<SelectListItem>
-
-<input type="text" placeholder="Search..." />
-<div>
-    @Html.DropDownList("lbox", Model, new { size = 5 })
+    
+@*<style>
+    #divLboxWithSearh {
+        display: flex;
+        flex-direction: row;
+    }
+</style>*@
+<div id="divLboxWithSearh">
+    <input type="text" placeholder="Search..."/>
+    <div>
+        @Html.DropDownList("lbox", Model, new {size = 5})
+    </div>
 </div>
 
 <script>
