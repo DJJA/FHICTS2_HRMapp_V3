@@ -69,7 +69,7 @@ namespace HRMapp.Controllers
         {
             try
             {
-                var success = skillsetLogic.Update(model.ToSkillset());
+                skillsetLogic.Update(model.ToSkillset());
                 infoMessage.Message = $"'{model.Name}' is bewerkt.";
                 return RedirectToAction("Index", new {id = model.Id});
             }

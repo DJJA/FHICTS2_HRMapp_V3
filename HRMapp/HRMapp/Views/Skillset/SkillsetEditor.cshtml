@@ -30,6 +30,10 @@
 
 <script>
     var userInputChanged = false;
+    @if (!String.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        @:userInputChanged = true;
+    }
 
     document.getElementById('Name').oninput = function () { userInputChanged = true; }
     document.getElementById('Description').oninput = function () { userInputChanged = true; }
