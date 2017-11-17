@@ -81,7 +81,7 @@ namespace HRMapp.DAL.Contexts
             var id = Convert.ToInt32(row["EmployeeId"]);
             var firstName = row["FirstName"].ToString();
             var lastName = row["LastName"].ToString();
-            var phoneNumber = Convert.ToInt64(row["PhoneNumber"]);
+            var phoneNumber = row["PhoneNumber"].ToString();
             var emailAddress = row["EmailAddress"].ToString();
             var street = row["Street"].ToString();
             var houseNumber = row["HouseNumber"].ToString();

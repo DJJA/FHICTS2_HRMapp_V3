@@ -39,7 +39,7 @@ namespace HRMapp.ViewModels
         [DisplayName("Achternaam:")]
         public string LastName { get; set; }
         [DisplayName("Telefoonnummer:")]
-        public Int64 PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; }
         [DisplayName("Emailadres:")]
         public string EmailAddress { get; set; }
         [DisplayName("Straat:")]

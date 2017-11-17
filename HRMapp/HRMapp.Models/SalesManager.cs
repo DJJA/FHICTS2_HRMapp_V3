@@ -11,7 +11,7 @@ namespace HRMapp.Models
         {
         }
 
-        public SalesManager(int id, string firstName, string lastName, Int64 phoneNumber, string emailAddress, string street, string houseNumber, string zipCode, string city) 
+        public SalesManager(int id, string firstName, string lastName, string phoneNumber, string emailAddress, string street, string houseNumber, string zipCode, string city) 
             : base(id, firstName, lastName, phoneNumber, emailAddress, street, houseNumber, zipCode, city)
         {
         }

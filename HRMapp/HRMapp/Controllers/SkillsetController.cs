@@ -48,13 +48,13 @@ namespace HRMapp.Controllers
             }
             catch (ArgumentException argEx)
             {
-                errorMessage.Message = argEx.Message;
-                return RedirectToAction("New");
+                model.ErrorMessage = argEx.Message;
+                return View("SkillsetEditor", model);
             }
             catch (DBException dbEx)
             {
-                errorMessage.Message = dbEx.Message;
-                return RedirectToAction("New");
+                model.ErrorMessage = dbEx.Message;
+                return View("SkillsetEditor", model);
             }
         }
 
@@ -71,14 +71,18 @@ namespace HRMapp.Controllers
             {
                 var success = skillsetLogic.Update(model.ToSkillset());
                 infoMessage.Message = $"'{model.Name}' is bewerkt.";
-                return RedirectToAction("Index", new { id = model.Id });
+                return RedirectToAction("Index", new {id = model.Id});
             }
             catch (ArgumentException argEx)
             {
-                errorMessage.Message = argEx.Message;
-                return RedirectToAction("Edit", new { id = model.Id });
+                model.ErrorMessage = argEx.Message;
+                return View("SkillsetEditor", model);
             }
-
+            catch (DBException dbbEx)
+            {
+                model.ErrorMessage = dbbEx.Message;
+                return View("SkillsetEditor", model);
+            }
         }
     }
 }

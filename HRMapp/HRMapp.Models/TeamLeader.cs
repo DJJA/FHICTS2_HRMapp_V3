@@ -16,7 +16,7 @@ namespace HRMapp.Models
             TeamMembers = new List<ProductionWorker>();
         }
 
-        public TeamLeader(int id, string firstName, string lastName, Int64 phoneNumber, string emailAddress, string street, string houseNumber, string zipCode, string city, List<Skillset> skillsets, List<ProductionWorker> teamMembers) 
+        public TeamLeader(int id, string firstName, string lastName, string phoneNumber, string emailAddress, string street, string houseNumber, string zipCode, string city, List<Skillset> skillsets, List<ProductionWorker> teamMembers) 
             : base(id, firstName, lastName, phoneNumber, emailAddress, street, houseNumber, zipCode, city)
         {
             Skillsets = skillsets;
