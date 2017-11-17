@@ -29,7 +29,7 @@ namespace HRMapp.Controllers
         public IActionResult SkillsetView(int id)
         {
             var skillset = skillsetLogic.GetById(id);
-            return PartialView("../Partial/_SkillsetView", skillset);
+            return PartialView("_SkillsetView", skillset);
         }
 
         public IActionResult New()
