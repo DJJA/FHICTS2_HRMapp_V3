@@ -28,10 +28,7 @@ namespace HRMapp.ViewModels
 
         public TimeSpan Duration
         {
-            get
-            {
-                return new TimeSpan(DurationHours, DurationMinutes, 0);
-            }
+            get => new TimeSpan(DurationHours, DurationMinutes, 0);
             private set
             {
                 DurationHours = value.Hours;
@@ -73,9 +70,8 @@ namespace HRMapp.ViewModels
         
         public TaskEditorViewModel()                // This constructor is for the taskEditor so it can return something, needs empty constructor
         {
-            //availableSkillsets = new List<Skillset>();
-            //requiredSkillsets = new List<Skillset>();
             LboxRequiredSkillsets = new List<int>();             // Hoe weet ik straks waarom ik dit hier doe?
+            Id = -1;    // Als hij een gevuld viewmodel meegeeft, roept ie deze constructor niet aan?
         }
 
         public TaskEditorViewModel(List<Skillset> availableSkillsets)   // Used for new
@@ -96,6 +92,41 @@ namespace HRMapp.ViewModels
             Description = task.Description;
             Duration = task.Duration;
             requiredSkillsets = task.RequiredSkillsets;
+        }
+
+        public TaskEditorViewModel(List<Skillset> availableSkillsets, TaskEditorViewModel viewModel,
+            string errorMessage)
+        {
+            this.availableSkillsets = availableSkillsets;
+
+            if (viewModel.Id > -1)
+            {
+                FormAction = "Edit";
+                FormTitle = "Taak bewerken";
+            }
+            else
+            {
+                FormAction = "New";
+                FormTitle = "Nieuwe taak toevoegen";
+            }
+
+            Id = viewModel.Id;
+            Name = viewModel.Name;
+            Description = viewModel.Description;
+            Duration = viewModel.Duration;
+
+            var requiredSkillsets = new List<Skillset>();
+            foreach (var id in viewModel.LboxRequiredSkillsets)
+            {
+                Skillset skillset = availableSkillsets.Single(s => s.Id == id);
+                if (skillset != null)
+                {
+                    requiredSkillsets.Add(skillset);
+                }
+            }
+            this.requiredSkillsets = requiredSkillsets;
+
+            ErrorMessage = errorMessage;
         }
 
         public ProductionTask ToTask(List<Skillset> skillsets)

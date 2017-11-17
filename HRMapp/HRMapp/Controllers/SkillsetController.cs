@@ -11,7 +11,6 @@ namespace HRMapp.Controllers
 {
     public class SkillsetController : Controller
     {
-        private static CrossActionMessageHolder errorMessage = new CrossActionMessageHolder();
         private static CrossActionMessageHolder infoMessage = new CrossActionMessageHolder();
         private SkillsetLogic skillsetLogic = new SkillsetLogic();
 
@@ -34,7 +33,7 @@ namespace HRMapp.Controllers
 
         public IActionResult New()
         {
-            return View("SkillsetEditor", new SkillsetEditorViewModel() { ErrorMessage = errorMessage.Message });
+            return View("SkillsetEditor", new SkillsetEditorViewModel());
         }
 
         [HttpPost]
@@ -61,7 +60,7 @@ namespace HRMapp.Controllers
         public IActionResult Edit(int id)
         {
             var skillset = skillsetLogic.GetById(id);
-            return View("SkillsetEditor", new SkillsetEditorViewModel(skillset) { ErrorMessage = errorMessage.Message });
+            return View("SkillsetEditor", new SkillsetEditorViewModel(skillset));
         }
 
         [HttpPost]

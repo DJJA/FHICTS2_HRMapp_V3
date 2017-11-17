@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HRMapp.Logic;
+using HRMapp.Models.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using HRMapp.ViewModels;
 
@@ -10,7 +11,6 @@ namespace HRMapp.Controllers
 {
     public class TaskController : Controller
     {
-        private static CrossActionMessageHolder errorMessage = new CrossActionMessageHolder();
         private static CrossActionMessageHolder infoMessage = new CrossActionMessageHolder();
         private SkillsetLogic skillsetLogic = new SkillsetLogic();
         private TaskLogic taskLogic = new TaskLogic();
@@ -34,7 +34,7 @@ namespace HRMapp.Controllers
 
         public IActionResult New()
         {
-            return View("TaskEditor", new TaskEditorViewModel(skillsetLogic.GetAll().ToList()) { ErrorMessage = errorMessage.Message });
+            return View("TaskEditor", new TaskEditorViewModel(skillsetLogic.GetAll().ToList()));
         }
 
         [HttpPost]
@@ -46,17 +46,20 @@ namespace HRMapp.Controllers
                 infoMessage.Message = $"'{model.Name}' is toegevoegd aan het systeem.";
                 return RedirectToAction("Index", new { id = addedTaskId });
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException argEx)
             {
-                errorMessage.Message = ex.Message;
-                return RedirectToAction("New");
+                return View("TaskEditor", new TaskEditorViewModel(skillsetLogic.GetAll().ToList(), model, argEx.Message));
+            }
+            catch (DBException dbEx)
+            {
+                return View("TaskEditor", new TaskEditorViewModel(skillsetLogic.GetAll().ToList(), model, dbEx.Message));
             }
         }
 
         public IActionResult Edit(int id)
         {
             var task = taskLogic.GetById(id);
-            return View("TaskEditor", new TaskEditorViewModel(skillsetLogic.GetAll().ToList(), task) { ErrorMessage = errorMessage.Message });
+            return View("TaskEditor", new TaskEditorViewModel(skillsetLogic.GetAll().ToList(), task));
         }
 
         [HttpPost]
@@ -66,12 +69,15 @@ namespace HRMapp.Controllers
             {
                 var success = taskLogic.Update(model.ToTask(skillsetLogic.GetAll().ToList()));
                 infoMessage.Message = $"'{model.Name}' is bewerkt.";
-                return RedirectToAction("Index", new { id = model.Id });
+                return RedirectToAction("Index", new {id = model.Id});
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException argEx)
             {
-                errorMessage.Message = ex.Message;
-                return RedirectToAction("Edit", new { id = model.Id });
+                return View("TaskEditor", new TaskEditorViewModel(skillsetLogic.GetAll().ToList(), model, argEx.Message));
+            }
+            catch (DBException dbEx)
+            {
+                return View("TaskEditor", new TaskEditorViewModel(skillsetLogic.GetAll().ToList(), model, dbEx.Message));
             }
         }
     }
