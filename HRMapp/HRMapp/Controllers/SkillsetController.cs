@@ -48,11 +48,13 @@ namespace HRMapp.Controllers
             catch (ArgumentException argEx)
             {
                 model.ErrorMessage = argEx.Message;
+                model.EditorType = EditorType.New;
                 return View("SkillsetEditor", model);
             }
             catch (DBException dbEx)
             {
                 model.ErrorMessage = dbEx.Message;
+                model.EditorType = EditorType.New;          // Dit hoeft niet, maar zou ik het er bij zetten zodat de code beter te begrijpen is? Wat werkt het beste voor mij?
                 return View("SkillsetEditor", model);
             }
         }
@@ -75,11 +77,13 @@ namespace HRMapp.Controllers
             catch (ArgumentException argEx)
             {
                 model.ErrorMessage = argEx.Message;
+                model.EditorType = EditorType.Edit;
                 return View("SkillsetEditor", model);
             }
             catch (DBException dbbEx)
             {
                 model.ErrorMessage = dbbEx.Message;
+                model.EditorType = EditorType.Edit;
                 return View("SkillsetEditor", model);
             }
         }

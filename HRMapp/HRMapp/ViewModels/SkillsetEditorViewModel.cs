@@ -7,12 +7,40 @@ using System.Threading.Tasks;
 
 namespace HRMapp.ViewModels
 {
-    public class SkillsetEditorViewModel
+    public class SkillsetEditorViewModel : EditorViewModel
     {
-        public string ErrorMessage { get; set; }
-        public string FormAction { get; private set; }
-        public string FormTitle { get; private set; }
-        public int Id { get; set; }
+        public override string FormAction
+        {
+            get
+            {
+                switch (EditorType)
+                {
+                    case EditorType.New:
+                        return "New";
+                    case EditorType.Edit:
+                        return "Edit";
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
+
+        public override string FormTitle
+        {
+            get
+            {
+                switch (EditorType)
+                {
+                    case EditorType.New:
+                        return "Nieuwe skillset toevoegen";
+                    case EditorType.Edit:
+                        return "Skillset bewerken";
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
+        
         [DisplayName("Naam:")]
         public string Name { get; set; }
         [DisplayName("Omschrijving:")]
@@ -20,14 +48,12 @@ namespace HRMapp.ViewModels
 
         public SkillsetEditorViewModel()
         {
-            FormAction = "New";
-            FormTitle = "Nieuwe skillset toevoegen";
+            EditorType = EditorType.New;
         }
 
         public SkillsetEditorViewModel(Skillset skillset)
         {
-            FormAction = "Edit";
-            FormTitle = "Skillset bewerken";
+            EditorType = EditorType.Edit;
 
             Id = skillset.Id;
             Name = skillset.Name;
