@@ -8,15 +8,27 @@ using System.Threading.Tasks;
 
 namespace HRMapp.ViewModels
 {
-    public class TaskEditorViewModel
+    public class TaskEditorViewModel : EditorViewModel
     {
         private List<Skillset> availableSkillsets = new List<Skillset>();
         private List<Skillset> requiredSkillsets = new List<Skillset>();
 
-        public string ErrorMessage { get; set; }
-        public string FormAction { get; private set; }
-        public string FormTitle { get; private set; }
-        public int Id { get; set; }
+        public override string FormTitle
+        {
+            get
+            {
+                switch (EditorType)
+                {
+                    case EditorType.New:
+                        return "Nieuwe taak toevoegen";
+                    case EditorType.Edit:
+                        return "Taak bewerken";
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
+
         [DisplayName("Naam:")]
         public string Name { get; set; }
         [DisplayName("Omschrijving:")]
@@ -43,7 +55,7 @@ namespace HRMapp.ViewModels
                 var list = new List<SelectListItem>();
                 foreach (var skillset in availableSkillsets)
                 {
-                    if(!requiredSkillsets.Any(s => s.Id == skillset.Id))      // Not optimal n^2
+                    if(requiredSkillsets.All(s => s.Id != skillset.Id))      // Not optimal n^2
                     {
                         list.Add(new SelectListItem() { Text = skillset.Name, Value = skillset.Id.ToString() });
                     }
@@ -67,25 +79,34 @@ namespace HRMapp.ViewModels
 
         //public List<int> LboxAvailableSkillsets { get; set; }
         public List<int> LboxRequiredSkillsets { get; set; }
-        
-        public TaskEditorViewModel()                // This constructor is for the taskEditor so it can return something, needs empty constructor
+
+        /// <summary>
+        /// Used by form to send back data
+        /// </summary>
+        public TaskEditorViewModel()
         {
-            LboxRequiredSkillsets = new List<int>();             // Hoe weet ik straks waarom ik dit hier doe?
-            Id = -1;    // Als hij een gevuld viewmodel meegeeft, roept ie deze constructor niet aan?
+            LboxRequiredSkillsets = new List<int>();
         }
 
-        public TaskEditorViewModel(List<Skillset> availableSkillsets)   // Used for new
+        /// <summary>
+        /// Used by controller to create a new task
+        /// </summary>
+        /// <param name="availableSkillsets"></param>
+        public TaskEditorViewModel(List<Skillset> availableSkillsets)
         {
             this.availableSkillsets = availableSkillsets;
-            FormAction = "New";
-            FormTitle = "Nieuwe taak toevoegen";
+            EditorType = EditorType.New;
         }
 
-        public TaskEditorViewModel(List<Skillset> availableSkillsets, ProductionTask task)  // Used for edit
+        /// <summary>
+        /// Used by controller to edit a task
+        /// </summary>
+        /// <param name="availableSkillsets"></param>
+        /// <param name="task"></param>
+        public TaskEditorViewModel(List<Skillset> availableSkillsets, ProductionTask task)
         {
             this.availableSkillsets = availableSkillsets;
-            FormAction = "Edit";
-            FormTitle = "Taak bewerken";
+            EditorType = EditorType.Edit;
 
             Id = task.Id;
             Name = task.Name;
@@ -94,21 +115,16 @@ namespace HRMapp.ViewModels
             requiredSkillsets = task.RequiredSkillsets;
         }
 
-        public TaskEditorViewModel(List<Skillset> availableSkillsets, TaskEditorViewModel viewModel,
-            string errorMessage)
+        /// <summary>
+        /// Used by controller when an error occurred
+        /// </summary>
+        /// <param name="availableSkillsets"></param>
+        /// <param name="viewModel"></param>
+        /// <param name="errorMessage"></param>
+        public TaskEditorViewModel(List<Skillset> availableSkillsets, TaskEditorViewModel viewModel, EditorType editorType, string errorMessage)
         {
             this.availableSkillsets = availableSkillsets;
-
-            if (viewModel.Id > -1)
-            {
-                FormAction = "Edit";
-                FormTitle = "Taak bewerken";
-            }
-            else
-            {
-                FormAction = "New";
-                FormTitle = "Nieuwe taak toevoegen";
-            }
+            EditorType = editorType;
 
             Id = viewModel.Id;
             Name = viewModel.Name;

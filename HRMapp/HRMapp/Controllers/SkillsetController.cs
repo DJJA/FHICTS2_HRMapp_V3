@@ -61,7 +61,7 @@ namespace HRMapp.Controllers
 
         public IActionResult Edit(int id)
         {
-            var skillset = skillsetLogic.GetById(id);
+            var skillset = skillsetLogic.GetById(5);
             return View("SkillsetEditor", new SkillsetEditorViewModel(skillset));
         }
 

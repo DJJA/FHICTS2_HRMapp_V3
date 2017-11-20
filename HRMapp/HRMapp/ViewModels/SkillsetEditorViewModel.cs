@@ -9,22 +9,6 @@ namespace HRMapp.ViewModels
 {
     public class SkillsetEditorViewModel : EditorViewModel
     {
-        public override string FormAction
-        {
-            get
-            {
-                switch (EditorType)
-                {
-                    case EditorType.New:
-                        return "New";
-                    case EditorType.Edit:
-                        return "Edit";
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-        }
-
         public override string FormTitle
         {
             get
@@ -46,11 +30,18 @@ namespace HRMapp.ViewModels
         [DisplayName("Omschrijving:")]
         public string Description { get; set; }
 
+        /// <summary>
+        /// Used for giving back a viewmodel and used for new skillset
+        /// </summary>
         public SkillsetEditorViewModel()
         {
             EditorType = EditorType.New;
         }
 
+        /// <summary>
+        /// Used for editing a skillset
+        /// </summary>
+        /// <param name="skillset"></param>
         public SkillsetEditorViewModel(Skillset skillset)
         {
             EditorType = EditorType.Edit;

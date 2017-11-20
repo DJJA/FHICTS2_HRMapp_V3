@@ -48,11 +48,11 @@ namespace HRMapp.Controllers
             }
             catch (ArgumentException argEx)
             {
-                return View("TaskEditor", new TaskEditorViewModel(skillsetLogic.GetAll().ToList(), model, argEx.Message));
+                return View("TaskEditor", new TaskEditorViewModel(skillsetLogic.GetAll().ToList(), model, EditorType.New, argEx.Message));
             }
             catch (DBException dbEx)
             {
-                return View("TaskEditor", new TaskEditorViewModel(skillsetLogic.GetAll().ToList(), model, dbEx.Message));
+                return View("TaskEditor", new TaskEditorViewModel(skillsetLogic.GetAll().ToList(), model, EditorType.New, dbEx.Message));
             }
         }
 
@@ -73,11 +73,11 @@ namespace HRMapp.Controllers
             }
             catch (ArgumentException argEx)
             {
-                return View("TaskEditor", new TaskEditorViewModel(skillsetLogic.GetAll().ToList(), model, argEx.Message));
+                return View("TaskEditor", new TaskEditorViewModel(skillsetLogic.GetAll().ToList(), model, EditorType.Edit, argEx.Message));
             }
             catch (DBException dbEx)
             {
-                return View("TaskEditor", new TaskEditorViewModel(skillsetLogic.GetAll().ToList(), model, dbEx.Message));
+                return View("TaskEditor", new TaskEditorViewModel(skillsetLogic.GetAll().ToList(), model, EditorType.Edit, dbEx.Message));
             }
         }
     }

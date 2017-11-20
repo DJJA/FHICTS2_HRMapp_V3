@@ -11,7 +11,6 @@ namespace HRMapp.Controllers
 {
     public class EmployeeController : Controller
     {
-        private static CrossActionMessageHolder errorMessage = new CrossActionMessageHolder();
         private static CrossActionMessageHolder infoMessage = new CrossActionMessageHolder();
         private EmployeeLogic employeeLogic = new EmployeeLogic();
 
@@ -34,7 +33,7 @@ namespace HRMapp.Controllers
 
         public IActionResult New()
         {
-            return View("EmployeeEditor", new EmployeeEditorViewModel() { ErrorMessage = errorMessage.Message });
+            return View("EmployeeEditor", new EmployeeEditorViewModel());
         }
 
         [HttpPost]
@@ -49,20 +48,22 @@ namespace HRMapp.Controllers
             }
             catch (ArgumentException argEx)
             {
-                errorMessage.Message = argEx.Message;
-                return RedirectToAction("New");
+                model.ErrorMessage = argEx.Message;
+                model.EditorType = EditorType.New;
+                return View("EmployeeEditor", model);
             }
             catch (DBException dbEx)
             {
-                errorMessage.Message = dbEx.Message;
-                return RedirectToAction("New");
+                model.ErrorMessage = dbEx.Message;
+                model.EditorType = EditorType.New;
+                return View("EmployeeEditor", model);
             }
         }
 
         public IActionResult Edit(int id)
         {
             var employee = employeeLogic.GetById(id);
-            return View("EmployeeEditor", new EmployeeEditorViewModel(employee) { ErrorMessage = errorMessage.Message });
+            return View("EmployeeEditor", new EmployeeEditorViewModel(employee));
         }
 
         [HttpPost]
@@ -70,14 +71,21 @@ namespace HRMapp.Controllers
         {
             try
             {
-                var success = employeeLogic.Update(model.ToEmployee(employeeLogic));
+                employeeLogic.Update(model.ToEmployee(employeeLogic));
                 infoMessage.Message = $"'{model.FirstName} {model.LastName}' is bewerkt.";
                 return RedirectToAction("Index", new { id = model.Id });
             }
             catch (ArgumentException argEx)
             {
-                errorMessage.Message = argEx.Message;
-                return RedirectToAction("Edit", new { id = model.Id });
+                model.ErrorMessage = argEx.Message;
+                model.EditorType = EditorType.Edit;
+                return View("EmployeeEditor", model);
+            }
+            catch (DBException dbEx)
+            {
+                model.ErrorMessage = dbEx.Message;
+                model.EditorType = EditorType.Edit;
+                return View("EmployeeEditor", model);
             }
 
         }

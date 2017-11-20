@@ -15,7 +15,21 @@ namespace HRMapp.ViewModels
     {
         public EditorType EditorType { get; set; }
         public string ErrorMessage { get; set; }
-        public abstract string FormAction { get; }
+        public virtual string FormAction
+        {
+            get
+            {
+                switch (EditorType)
+                {
+                    case EditorType.New:
+                        return "New";
+                    case EditorType.Edit:
+                        return "Edit";
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
 
         public abstract string FormTitle { get; }
 
