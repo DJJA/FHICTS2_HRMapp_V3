@@ -5,7 +5,7 @@ using System.Text;
 
 namespace HRMapp.DAL
 {
-    internal interface ISkillsetContext : IContext<Skillset>
+    internal interface ISkillsetContext : IContext<Models.Skillset>
     {
     }
 }
