@@ -85,7 +85,7 @@ namespace HRMapp.ViewModels
         /// </summary>
         public TaskEditorViewModel()
         {
-            LboxRequiredSkillsets = new List<int>();
+            LboxRequiredSkillsets = new List<int>(); // is dit nodig?
         }
 
         /// <summary>

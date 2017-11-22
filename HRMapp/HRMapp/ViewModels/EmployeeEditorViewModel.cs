@@ -24,6 +24,7 @@ namespace HRMapp.ViewModels
     {
         //private Employee employee = null;
         //private EmployeeFunction employeeFunction = EmployeeFunction.None;
+        private List<TeamLeader> teamLeaders;
 
         public List<SelectListItem> EmployeeTypes
         {
@@ -42,6 +43,17 @@ namespace HRMapp.ViewModels
             }
         }
         public EmployeeFunction EmployeeType { get; set; }
+
+        public List<SelectListItem> TeamLeaders
+        {
+            get
+            {
+                var list = new List<SelectListItem>();
+                list.AddRange(from TeamLeader teamLeader in teamLeaders select new SelectListItem() { Value = teamLeader.Id.ToString(), Text = $"{teamLeader.FirstName} {teamLeader.LastName}" });
+                return list;
+            }
+        }
+        public int TeamLeaderId { get; set; }
 
         public override string FormTitle
         {
@@ -78,25 +90,33 @@ namespace HRMapp.ViewModels
 
         /// <summary>
         /// Used by form to return data to controller
-        /// Used by controller to create new employee
         /// </summary>
         public EmployeeEditorViewModel()
         {
-            //FormAction = "New";
-            //FormTitle = "Nieuwe werknemer toevoegen";
-            EditorType = EditorType.New;                // Remove this when skillsets are added
-            //employeeFunction = (EmployeeFunction)EmployeeType;
+            teamLeaders = new List<TeamLeader>();   // Has to be instantiated, otherwise it crashes (public List<SelectListItem> TeamLeaders)
+        }
+
+        /// <summary>
+        /// Used by controller to create new employee
+        /// </summary>
+        /// <param name="teamLeaders"></param>
+        public EmployeeEditorViewModel(List<TeamLeader> teamLeaders)
+        {
+            EditorType = EditorType.New;
+            this.teamLeaders = teamLeaders;
         }
 
         /// <summary>
         /// Used by controller to edit employee
         /// </summary>
         /// <param name="employee"></param>
-        public EmployeeEditorViewModel(Employee employee)
+        public EmployeeEditorViewModel(List<TeamLeader> teamLeaders, Employee employee)
         {
             //FormAction = "Edit";
             //FormTitle = "Werknemer bewerken";
             EditorType = EditorType.Edit;
+
+            this.teamLeaders = teamLeaders;
 
             //this.employee = employee;
 

@@ -33,7 +33,7 @@ namespace HRMapp.Controllers
 
         public IActionResult New()
         {
-            return View("EmployeeEditor", new EmployeeEditorViewModel());
+            return View("EmployeeEditor", new EmployeeEditorViewModel(employeeLogic.GetAllTeamLeaders.ToList()));
         }
 
         [HttpPost]
@@ -63,7 +63,7 @@ namespace HRMapp.Controllers
         public IActionResult Edit(int id)
         {
             var employee = employeeLogic.GetById(id);
-            return View("EmployeeEditor", new EmployeeEditorViewModel(employee));
+            return View("EmployeeEditor", new EmployeeEditorViewModel(employeeLogic.GetAllTeamLeaders.ToList(), employee));
         }
 
         [HttpPost]

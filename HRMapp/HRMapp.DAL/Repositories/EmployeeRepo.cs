@@ -79,5 +79,6 @@ namespace HRMapp.DAL.Repositories
         }
 
         public TeamLeader GetTeamLeaderById(int id) => teamLeaderContext.GetById(id);
+        public IEnumerable<TeamLeader> GetAllTeamLeaders() => teamLeaderContext.GetAll();
     }
 }

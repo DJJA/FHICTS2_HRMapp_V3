@@ -13,11 +13,16 @@
     <div class="alert alert-danger">@Model.ErrorMessage</div>
 }
 
+@*TODO Can these ddls be placed in the form?*@
 <label for="ddlEmployeeType">Functie:</label>
 @Html.DropDownList("ddlEmployeeType", Model.EmployeeTypes)
 
+<label id="lblTeamLeader" for="ddlTeamLeader">Teamleider:</label>@*TODO Je mag jezelf niet als teamleider kunnen kiezen*@
+@Html.DropDownList("ddlTeamLeader", Model.TeamLeaders)
+
 <form asp-action="@Model.FormAction" method="post">
     <input asp-for="@Model.EmployeeType" type="hidden"/>
+    <input asp-for="@Model.TeamLeaderId" type="hidden" />
     <div class="row">
         <div class="form-group col-md-6">
             <label asp-for="@Model.FirstName" class="control-label"></label>
@@ -84,8 +89,27 @@
     document.getElementById('ddlEmployeeType').onchange = function () {
         userInputChanged = true;
         document.getElementById('EmployeeType').value = this.selectedIndex;
+
+        var hide;
+        var ddlTeamLeader = document.getElementById('ddlTeamLeader');
+        var lblTeamLeader = document.getElementById('lblTeamLeader');
+        var productionWorker = 0;
+        if (this.selectedIndex == productionWorker) {
+            lblTeamLeader.removeAttribute('hidden');
+            ddlTeamLeader.removeAttribute('hidden');
+        } else {
+            lblTeamLeader.setAttribute('hidden', true);
+            ddlTeamLeader.setAttribute('hidden', true);
+        }
     }
     document.getElementById('EmployeeType').value = document.getElementById('ddlEmployeeType').selectedIndex;
+
+    document.getElementById('ddlTeamLeader').onchange = function () {
+        userInputChanged = true;
+        document.getElementById('TeamLeaderId').value = this.value;
+    }
+    document.getElementById('TeamLeaderId').value = document.getElementById('ddlTeamLeader').selectedIndex;
+    // TODO remove duplicate javascript eventhandlers for ddl
 
     document.getElementById('btnSubmit').onclick = function () { userInputChanged = false; }
     document.getElementById('btnCancel').onclick = function () {
