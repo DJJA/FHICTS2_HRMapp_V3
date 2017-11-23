@@ -1,0 +1,78 @@
+﻿@model HRMapp.ViewModels.SkillsetSelectorViewModel
+
+<div class="row">
+    <div class="col-md-5">
+        <label class="control-label" for="lboxAvailableSkillsets">Skillsets:</label>
+    </div>
+    <div class="col-md-2"></div>
+    <div class="col-md-5">
+        <label class="control-label" for="lboxRequiredSkillsets">Nodige skillsets:</label>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-5">
+        @Html.ListBox("lboxAvailableSkillsets", Model.AvailableSkillsetListItems, new { @class = "form-control", size = 10 })
+    </div>
+    <div class="col-md-2">
+        <div>
+            <a id="btnSkillsetsMoveToRequired" class="btn btn-default">>></a>
+        </div>
+        <div>
+            <a id="btnSkillsetsMoveFromRequired" class="btn btn-default"><<</a>
+        </div>
+    </div>
+    <div class="col-md-5">
+        @Html.ListBox("lboxRequiredSkillsets", Model.RequiredSkillsetListItems, new { @class = "form-control", size = 10 })
+    </div>
+</div>
+
+<script>
+    document.getElementById('btnSkillsetsMoveToRequired').onclick = function () {
+        moveSelectedOptionsBetweenSelects(document.getElementById('lboxAvailableSkillsets'), document.getElementById('lboxRequiredSkillsets'));
+    }
+
+    document.getElementById('btnSkillsetsMoveFromRequired').onclick = function () {
+        moveSelectedOptionsBetweenSelects(document.getElementById('lboxRequiredSkillsets'), document.getElementById('lboxAvailableSkillsets'));
+    }
+
+    function moveSelectedOptionsBetweenSelects(selectElementFrom, selectElementTo) {
+        var selectedItems = getSelectValues(selectElementFrom);
+
+        for (var i = 0; i < selectedItems.length; i++) {
+            selectElementFrom.remove(getOptionIndexByValue(selectElementFrom, selectedItems[i].value));  // Could be more efficient perhaps
+            selectElementTo.add(selectedItems[i]);
+        }
+    }
+
+    // Return an array of the selected opion values
+    // select is an HTML select element
+    function getSelectValues(selectElement) {
+        var result = [];
+        var options = selectElement && selectElement.options;   // If I understand correctly, it checks if selectElement is not undefined, if it's not, it assigns the next statement to options
+        var opt;
+
+        for (var i = 0, iLen = options.length; i < iLen; i++) {
+            opt = options[i];
+
+            if (opt.selected) {
+                result.push(opt);
+            }
+        }
+        return result;
+    }
+
+    function getOptionIndexByValue(selectElement, id) {
+        for (var i = 0; i < selectElement.options.length; i++) {
+            if (selectElement.options[i].value == id) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    function selectAllOptions(selectElement) {
+        for (var i = 0; i < selectElement.options.length; i++) {
+            selectElement.options[i].selected = true;
+        }
+    }
+</script>

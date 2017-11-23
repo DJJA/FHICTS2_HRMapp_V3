@@ -13,6 +13,7 @@ namespace HRMapp.Controllers
     {
         private static CrossActionMessageHolder infoMessage = new CrossActionMessageHolder();
         private EmployeeLogic employeeLogic = new EmployeeLogic();
+        private SkillsetLogic skillsetLogic = new SkillsetLogic();
 
         public IActionResult Index(int id)
         {
@@ -30,10 +31,11 @@ namespace HRMapp.Controllers
             var employee = employeeLogic.GetById(id);
             return PartialView("_EmployeeView", employee);
         }
-
+        //TODO Move to list functions to the logic layer
+        //TODO Remove () in logic and repo
         public IActionResult New()
         {
-            return View("EmployeeEditor", new EmployeeEditorViewModel(employeeLogic.GetAllTeamLeaders.ToList()));
+            return View("EmployeeEditor", new EmployeeEditorViewModel(employeeLogic.GetAllTeamLeaders.ToList(), skillsetLogic.GetAll().ToList()));
         }
 
         [HttpPost]
@@ -63,7 +65,7 @@ namespace HRMapp.Controllers
         public IActionResult Edit(int id)
         {
             var employee = employeeLogic.GetById(id);
-            return View("EmployeeEditor", new EmployeeEditorViewModel(employeeLogic.GetAllTeamLeaders.ToList(), employee));
+            return View("EmployeeEditor", new EmployeeEditorViewModel(employeeLogic.GetAllTeamLeaders.ToList(), skillsetLogic.GetAll().ToList(), employee));
         }
 
         [HttpPost]

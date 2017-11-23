@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using HRMapp.Logic;
 using HRMapp.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.WindowsAzure.Storage.Blob.Protocol;
 
 namespace HRMapp.ViewModels
 {
@@ -25,6 +26,8 @@ namespace HRMapp.ViewModels
         //private Employee employee = null;
         //private EmployeeFunction employeeFunction = EmployeeFunction.None;
         private List<TeamLeader> teamLeaders;
+
+        private TeamLeader teamLeader;
 
         public List<SelectListItem> EmployeeTypes
         {
@@ -49,7 +52,7 @@ namespace HRMapp.ViewModels
             get
             {
                 var list = new List<SelectListItem>();
-                list.AddRange(from TeamLeader teamLeader in teamLeaders select new SelectListItem() { Value = teamLeader.Id.ToString(), Text = $"{teamLeader.FirstName} {teamLeader.LastName}" });
+                list.AddRange(from TeamLeader teamLeader in teamLeaders select new SelectListItem() { Value = teamLeader.Id.ToString(), Text = $"{teamLeader.FirstName} {teamLeader.LastName}", Selected = this.teamLeader?.Id == teamLeader.Id});
                 return list;
             }
         }
@@ -69,6 +72,12 @@ namespace HRMapp.ViewModels
                         throw new ArgumentOutOfRangeException();
                 }
             }
+        }
+
+        private SkillsetSelectorViewModel skillsetSelectorViewModel = new SkillsetSelectorViewModel();
+        public SkillsetSelectorViewModel SkillsetSelectorViewModel
+        {
+            get => skillsetSelectorViewModel;
         }
 
         [DisplayName("Voornaam:")]
@@ -100,25 +109,32 @@ namespace HRMapp.ViewModels
         /// Used by controller to create new employee
         /// </summary>
         /// <param name="teamLeaders"></param>
-        public EmployeeEditorViewModel(List<TeamLeader> teamLeaders)
+        public EmployeeEditorViewModel(List<TeamLeader> teamLeaders, List<Skillset> availableSkillsets)
         {
             EditorType = EditorType.New;
             this.teamLeaders = teamLeaders;
+            skillsetSelectorViewModel.availableSkillsets = availableSkillsets;
         }
 
         /// <summary>
         /// Used by controller to edit employee
         /// </summary>
         /// <param name="employee"></param>
-        public EmployeeEditorViewModel(List<TeamLeader> teamLeaders, Employee employee)
+        /// TODO UPDATE summery with shortcut if possible in employee editor viewmodel
+        public EmployeeEditorViewModel(List<TeamLeader> teamLeaders, List<Skillset> availableSkillsets, Employee employee)
         {
             //FormAction = "Edit";
             //FormTitle = "Werknemer bewerken";
             EditorType = EditorType.Edit;
 
             this.teamLeaders = teamLeaders;
+            skillsetSelectorViewModel.availableSkillsets = availableSkillsets;
 
-            //this.employee = employee;
+            if (employee is ProductionWorker worker)
+            {
+                teamLeader = worker.TeamLeader;
+                skillsetSelectorViewModel.requiredSkillsets = worker.Skillsets;
+            }
 
             //employeeFunction = GetEmployeeFunction(employee);
             EmployeeType = GetEmployeeFunction(employee);
