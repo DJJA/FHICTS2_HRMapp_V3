@@ -31,4 +31,35 @@
 <p>@Model.PhoneNumber</p>
 <p>@Model.EmailAddress</p>
 <p>@Model.Street @Model.HouseNumber <br/>
-@Model.ZipCode @Model.City</p>
+    @Model.ZipCode @Model.City</p>
+
+@if (Model is ProductionWorker worker)
+{
+    if (worker.TeamLeader != null)
+    {
+        <p><strong>Teamleider:</strong> @worker.TeamLeader.FirstName @worker.TeamLeader.LastName</p>  
+    }
+    if (worker.Skillsets.Count > 0)
+    {
+        <h4>Skillsets:</h4>
+        <ul>
+            @foreach (var skillset in worker.Skillsets)
+            {
+                <li>@skillset.Name</li>
+            }
+        </ul>
+    }
+}
+else if (Model is TeamLeader teamLeader)
+{
+    if (teamLeader.Skillsets.Count > 0)
+    {
+        <h4>Skillsets:</h4>
+        <ul>
+            @foreach (var skillset in teamLeader.Skillsets)
+            {
+                <li>@skillset.Name</li>
+            }
+        </ul>
+    }
+}

@@ -43,22 +43,18 @@ namespace HRMapp.Controllers
         {
             try
             {
-                var addedEmployeeId = employeeLogic.Add(model.ToEmployee(employeeLogic));
+                var addedEmployeeId = employeeLogic.Add(model.ToEmployee(employeeLogic, skillsetLogic.GetAll().ToList()));
                 //var addedEmployeeId = 1;
                 infoMessage.Message = $"'{model.FirstName} {model.LastName}' is toegevoegd aan het systeem.";
                 return RedirectToAction("Index", new { id = addedEmployeeId });
             }
             catch (ArgumentException argEx)
             {
-                model.ErrorMessage = argEx.Message;
-                model.EditorType = EditorType.New;
-                return View("EmployeeEditor", model);
+                return View("EmployeeEditor", new EmployeeEditorViewModel(employeeLogic.GetAllTeamLeaders.ToList(), skillsetLogic.GetAll().ToList(), model, EditorType.Edit, argEx.Message));
             }
             catch (DBException dbEx)
             {
-                model.ErrorMessage = dbEx.Message;
-                model.EditorType = EditorType.New;
-                return View("EmployeeEditor", model);
+                return View("EmployeeEditor", new EmployeeEditorViewModel(employeeLogic.GetAllTeamLeaders.ToList(), skillsetLogic.GetAll().ToList(), model, EditorType.Edit, dbEx.Message));
             }
         }
 
@@ -73,21 +69,17 @@ namespace HRMapp.Controllers
         {
             try
             {
-                employeeLogic.Update(model.ToEmployee(employeeLogic));
+                employeeLogic.Update(model.ToEmployee(employeeLogic, skillsetLogic.GetAll().ToList()));
                 infoMessage.Message = $"'{model.FirstName} {model.LastName}' is bewerkt.";
                 return RedirectToAction("Index", new { id = model.Id });
             }
             catch (ArgumentException argEx)
             {
-                model.ErrorMessage = argEx.Message;
-                model.EditorType = EditorType.Edit;
-                return View("EmployeeEditor", model);
+                return View("EmployeeEditor", new EmployeeEditorViewModel(employeeLogic.GetAllTeamLeaders.ToList(), skillsetLogic.GetAll().ToList(), model, EditorType.Edit, argEx.Message));
             }
             catch (DBException dbEx)
             {
-                model.ErrorMessage = dbEx.Message;
-                model.EditorType = EditorType.Edit;
-                return View("EmployeeEditor", model);
+                return View("EmployeeEditor", new EmployeeEditorViewModel(employeeLogic.GetAllTeamLeaders.ToList(), skillsetLogic.GetAll().ToList(), model, EditorType.Edit, dbEx.Message));
             }
 
         }

@@ -116,7 +116,7 @@ namespace HRMapp.DAL.Contexts
             }
             catch (SqlException sqlEx)
             {
-                throw HandleGenericSqlException(sqlEx);
+                throw HandleGenericSqlException(sqlEx); // TODO Moet ik hier al wel een specifieke error gooien
             }
 
             return skillsets;

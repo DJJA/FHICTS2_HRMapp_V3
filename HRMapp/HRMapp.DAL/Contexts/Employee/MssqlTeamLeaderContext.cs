@@ -49,6 +49,7 @@ namespace HRMapp.DAL.Contexts
             try
             {
                 addedEmployee = ExecuteProcedureWithReturnValue("sp_AddTeamLeader", GetSqlParametersFromTeamLeader(employee, false));
+                UpdateSkillsets(employee);
             }
             catch (SqlException sqlEx)
             {
@@ -67,6 +68,7 @@ namespace HRMapp.DAL.Contexts
             try
             {
                 ExecuteProcedure("sp_UpdateTeamLeader", GetSqlParametersFromTeamLeader(employee, true));
+                UpdateSkillsets(employee);
                 return true;
             }
             catch (SqlException sqlEx)
@@ -87,7 +89,8 @@ namespace HRMapp.DAL.Contexts
             var zipCode = row["ZipCode"].ToString();
             var city = row["City"].ToString();
 
-            var skillsets = new List<Skillset>();
+            var skillsets = GetSkillsets(id).ToList();
+            //var teamMembers = GetTeamMembers(id).ToList();  // TODO Won't work, infinite loop, get teammembers > get teamleader > get teamleaders > ect
             var teamMembers = new List<ProductionWorker>();
             return new TeamLeader(id, firstName, lastName, phoneNumber, emailAddress, street, houseNumber, zipCode, city, skillsets, teamMembers);
         }
@@ -123,6 +126,72 @@ namespace HRMapp.DAL.Contexts
             {
                 throw HandleGenericSqlException(sqlEx);
             }
+        }
+
+        public IEnumerable<Skillset> GetSkillsets(int employeeId)
+        {
+            var skillsets = new List<Skillset>();
+
+            try
+            {
+                var dataTable = GetDataViaProcedure("sp_GetEmployeeSkillsets", new SqlParameter("@EmployeeId", employeeId));
+                skillsets.AddRange(from DataRow row in dataTable.Rows select MssqlSkillsetContext.GetSkillsetFromDataRow(row)); // TODO mssqlskillsetcontext aanroepen hier is misschien niet zo netjes
+            }
+            catch (SqlException sqlEx)
+            {
+                throw HandleGenericSqlException(sqlEx);
+            }
+
+            return skillsets;
+        }
+
+        public void UpdateSkillsets(TeamLeader teamLeader)
+        {
+            var dataTable = new DataTable();
+            dataTable.Columns.Add("Id");
+
+            foreach (var skillset in teamLeader.Skillsets)
+            {
+                dataTable.Rows.Add(skillset.Id);
+            }
+
+            var listWithRequiredSkillsetIds = new SqlParameter("@List", dataTable)
+            {
+                SqlDbType = SqlDbType.Structured
+            };
+
+            var parameters = new List<SqlParameter>()
+            {
+                listWithRequiredSkillsetIds,
+                new SqlParameter("@EmployeeId", teamLeader.Id)
+            };
+
+            try
+            {
+                ExecuteProcedure("sp_UpdateEmployeeSkillsets", parameters);
+                //return true;
+            }
+            catch (SqlException sqlEx)
+            {
+                throw HandleGenericSqlException(sqlEx);
+            }
+        }
+
+        public IEnumerable<ProductionWorker> GetTeamMembers(int teamLeaderId)
+        {
+            var teamMembers = new List<ProductionWorker>();
+
+            try
+            {
+                var dataTable = GetDataViaProcedure("sp_GetTeamMembers", new SqlParameter("@TeamLeaderId", teamLeaderId));
+                teamMembers.AddRange(from DataRow row in dataTable.Rows select new MssqlProductionWorkerContext().GetProductionWorkerFromDataRow(row));   // TODO Ik laad hier alle teammembers in met alle properties van hun, is dat nodig?
+            }
+            catch (SqlException sqlEx)
+            {
+                throw HandleGenericSqlException(sqlEx);
+            }
+
+            return teamMembers;
         }
     }
 }

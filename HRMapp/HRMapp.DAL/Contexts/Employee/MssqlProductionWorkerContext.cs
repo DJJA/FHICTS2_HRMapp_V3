@@ -50,6 +50,7 @@ namespace HRMapp.DAL.Contexts
             try
             {
                 addedEmployee = ExecuteProcedureWithReturnValue("sp_AddProductionWorker", GetSqlParametersFromProductionWorker(employee, false));
+                UpdateSkillsets(employee);
             }
             catch (SqlException sqlEx)
             {
@@ -68,6 +69,7 @@ namespace HRMapp.DAL.Contexts
             try
             {
                 ExecuteProcedure("sp_UpdateProductionWorker", GetSqlParametersFromProductionWorker(employee, true));
+                UpdateSkillsets(employee);
                 return true;
             }
             catch (SqlException sqlEx)
@@ -76,7 +78,7 @@ namespace HRMapp.DAL.Contexts
             }
         }
 
-        private ProductionWorker GetProductionWorkerFromDataRow(DataRow row)
+        public ProductionWorker GetProductionWorkerFromDataRow(DataRow row)
         {
             var id = Convert.ToInt32(row["EmployeeId"]);
             var firstName = row["FirstName"].ToString();
@@ -88,7 +90,7 @@ namespace HRMapp.DAL.Contexts
             var zipCode = row["ZipCode"].ToString();
             var city = row["City"].ToString();
 
-            var skillsets = new List<Skillset>();
+            var skillsets = GetSkillsets(id).ToList();
             TeamLeader teamLeader = null;
             if (row["TeamLeaderId"] != DBNull.Value)
             {
@@ -137,6 +139,55 @@ namespace HRMapp.DAL.Contexts
             {
                 ExecuteProcedure("sp_ChangeEmployeeTypeToProductionWorker", GetSqlParametersFromProductionWorker(employee, true));
                 return true;
+            }
+            catch (SqlException sqlEx)
+            {
+                throw HandleGenericSqlException(sqlEx);
+            }
+        }
+
+        public IEnumerable<Skillset> GetSkillsets(int employeeId)
+        {
+            var skillsets = new List<Skillset>();
+
+            try
+            {
+                var dataTable = GetDataViaProcedure("sp_GetEmployeeSkillsets", new SqlParameter("@EmployeeId", employeeId));
+                skillsets.AddRange(from DataRow row in dataTable.Rows select MssqlSkillsetContext.GetSkillsetFromDataRow(row)); // TODO mssqlskillsetcontext aanroepen hier is misschien niet zo netjes
+            }
+            catch (SqlException sqlEx)
+            {
+                throw HandleGenericSqlException(sqlEx);
+            }
+
+            return skillsets;
+        }
+
+        public void UpdateSkillsets(ProductionWorker productionWorker)  // TODO Exact hetzelfde als in TeamLeaderContext
+        {
+            var dataTable = new DataTable();
+            dataTable.Columns.Add("Id");
+
+            foreach (var skillset in productionWorker.Skillsets)
+            {
+                dataTable.Rows.Add(skillset.Id);
+            }
+
+            var listWithRequiredSkillsetIds = new SqlParameter("@List", dataTable)
+            {
+                SqlDbType = SqlDbType.Structured
+            };
+
+            var parameters = new List<SqlParameter>()
+            {
+                listWithRequiredSkillsetIds,
+                new SqlParameter("@EmployeeId", productionWorker.Id)
+            };
+
+            try
+            {
+                ExecuteProcedure("sp_UpdateEmployeeSkillsets", parameters);
+                //return true;
             }
             catch (SqlException sqlEx)
             {

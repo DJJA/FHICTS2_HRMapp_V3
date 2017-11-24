@@ -62,8 +62,33 @@
                 <input asp-for="@Model.City" class="form-control" placeholder="Woonplaats" />
             </div>
         </div>
-        <div class="form-group">
-            @Html.Partial("~/Views/Partial/_SkillsetSelector.cshtml", Model.SkillsetSelectorViewModel)
+        <div id="divSkillsetSelector" class="form-group">
+            @*@Html.Partial("~/Views/Partial/_SkillsetSelector.cshtml", Model.SkillsetSelectorViewModel)*@
+            <div class="row">
+                <div class="col-md-5">
+                    <label class="control-label" for="lboxAvailableSkillsets">Skillsets:</label>
+                </div>
+                <div class="col-md-2"></div>
+                <div class="col-md-5">
+                    <label class="control-label" for="lboxRequiredSkillsets">Nodige skillsets:</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    @Html.ListBox("lboxAvailableSkillsets", Model.SkillsetSelectorViewModel.AvailableSkillsetListItems, new { @class = "form-control", size = 10 })
+                </div>
+                <div class="col-md-2">
+                    <div>
+                        <a id="btnSkillsetsMoveToRequired" class="btn btn-default">>></a>
+                    </div>
+                    <div>
+                        <a id="btnSkillsetsMoveFromRequired" class="btn btn-default"><<</a>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    @Html.ListBox("lboxRequiredSkillsets", Model.SkillsetSelectorViewModel.RequiredSkillsetListItems, new { @class = "form-control", size = 10 })
+                </div>
+            </div>
             @* TODO script wordt hier nu ook ingeladen, is dit slecht? *@
         </div>
 
@@ -74,7 +99,7 @@
         </div>
     </form>
 
-    <script>
+<script>
     var userInputChanged = false;
     @if (!String.IsNullOrEmpty(Model.ErrorMessage))
     {
@@ -106,7 +131,15 @@
     function updateDdlTeamLeaderVisibility(selectedIndex) {
         var ddlTeamLeader = document.getElementById('ddlTeamLeader');
         var lblTeamLeader = document.getElementById('lblTeamLeader');
+        var divSkillsetSelector = document.getElementById('divSkillsetSelector');
         var productionWorker = 0;
+        var teamLeader = 1;
+
+        if (selectedIndex == productionWorker || selectedIndex == teamLeader) {
+            divSkillsetSelector.removeAttribute('hidden');
+        } else {
+            divSkillsetSelector.setAttribute('hidden', true);
+        }
         if (selectedIndex == productionWorker) {
             lblTeamLeader.removeAttribute('hidden');
             ddlTeamLeader.removeAttribute('hidden');
@@ -123,7 +156,10 @@
     document.getElementById('TeamLeaderId').value = document.getElementById('ddlTeamLeader').selectedIndex;
     // TODO remove duplicate javascript eventhandlers for ddl
 
-    document.getElementById('btnSubmit').onclick = function () { userInputChanged = false; }
+    document.getElementById('btnSubmit').onclick = function() {
+        userInputChanged = false; 
+        selectAllOptions(document.getElementById('lboxRequiredSkillsets'));
+    }
     document.getElementById('btnCancel').onclick = function () {
         if (@Model.Id > -1) {
             window.location.href = '/Employee/Index/@Model.Id';
@@ -138,4 +174,54 @@
             return message;
         }
     }
-    </script>
+</script>
+<script>
+    document.getElementById('btnSkillsetsMoveToRequired').onclick = function () {
+        moveSelectedOptionsBetweenSelects(document.getElementById('lboxAvailableSkillsets'), document.getElementById('lboxRequiredSkillsets'));
+    }
+
+    document.getElementById('btnSkillsetsMoveFromRequired').onclick = function () {
+        moveSelectedOptionsBetweenSelects(document.getElementById('lboxRequiredSkillsets'), document.getElementById('lboxAvailableSkillsets'));
+    }
+
+    function moveSelectedOptionsBetweenSelects(selectElementFrom, selectElementTo) {
+        var selectedItems = getSelectValues(selectElementFrom);
+
+        for (var i = 0; i < selectedItems.length; i++) {
+            selectElementFrom.remove(getOptionIndexByValue(selectElementFrom, selectedItems[i].value));  // Could be more efficient perhaps
+            selectElementTo.add(selectedItems[i]);
+        }
+    }
+
+    // Return an array of the selected opion values
+    // select is an HTML select element
+    function getSelectValues(selectElement) {
+        var result = [];
+        var options = selectElement && selectElement.options;   // If I understand correctly, it checks if selectElement is not undefined, if it's not, it assigns the next statement to options
+        var opt;
+
+        for (var i = 0, iLen = options.length; i < iLen; i++) {
+            opt = options[i];
+
+            if (opt.selected) {
+                result.push(opt);
+            }
+        }
+        return result;
+    }
+
+    function getOptionIndexByValue(selectElement, id) {
+        for (var i = 0; i < selectElement.options.length; i++) {
+            if (selectElement.options[i].value == id) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    function selectAllOptions(selectElement) {
+        for (var i = 0; i < selectElement.options.length; i++) {
+            selectElement.options[i].selected = true;
+        }
+    }
+</script>

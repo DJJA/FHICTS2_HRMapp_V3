@@ -42,6 +42,6 @@ namespace HRMapp.ViewModels
             }
         }
         
-        public List<int> LboxRequiredSkillsets { get; set; }
+        //public List<int> LboxRequiredSkillsets { get; set; }  // Dit werkt niet, de property moet in de viewmodel staan
     }
 }

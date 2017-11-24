@@ -16,5 +16,6 @@ namespace HRMapp.Logic
         public bool Update(Employee employee) => repo.Update(employee);
 
         public IEnumerable<TeamLeader> GetAllTeamLeaders => repo.GetAllTeamLeaders();
+        public TeamLeader GetTeamLeaderById(int id) => repo.GetTeamLeaderById(id);
     }
 }
