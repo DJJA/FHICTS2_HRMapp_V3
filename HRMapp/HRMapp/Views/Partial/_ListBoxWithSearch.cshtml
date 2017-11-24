@@ -5,12 +5,22 @@
     #divLboxWithSearh {
         display: flex;
         flex-direction: row;
+        j
     }
 </style>*@
 <div id="divLboxWithSearh">
-    <input type="text" placeholder="Search..."/>
-    <div>
-        @Html.DropDownList("lbox", Model, new {size = 5})
+    <div class="row">
+        <div class="col-md-9">
+            <input type="text" placeholder="Zoeken..." style="width: 100%;" />
+        </div>
+        <div class="col-md-3">
+            <a class="btn btn-default">Zoeken</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            @Html.DropDownList("lbox", Model, new {size = 5, style="width : 100%;"})
+        </div>
     </div>
 </div>
 
