@@ -22,7 +22,7 @@ namespace HRMapp.DAL.Contexts
             }
             catch (SqlException sqlEx)
             {
-                throw HandleGenericSqlException(sqlEx);
+                HandleGenericSqlException(sqlEx);
             }
 
             return tasks;
@@ -42,7 +42,7 @@ namespace HRMapp.DAL.Contexts
             }
             catch (SqlException sqlEx)
             {
-                throw HandleGenericSqlException(sqlEx);
+                HandleGenericSqlException(sqlEx);
             }
 
             return task;
@@ -57,7 +57,7 @@ namespace HRMapp.DAL.Contexts
             }
             catch (SqlException sqlEx)
             {
-                throw HandleGenericSqlException(sqlEx);
+                HandleGenericSqlException(sqlEx);
             }
 
             UpdateRequiredSkillsets(task);
@@ -67,25 +67,6 @@ namespace HRMapp.DAL.Contexts
         public bool Delete(ProductionTask value)
         {
             throw new NotImplementedException();
-            //string query = "DELETE FROM Task " +
-            //               "WHERE Id = @Id;";
-
-            //try
-            //{
-            //    using (var connection = new SqlConnection(connectionString))
-            //    using (var command = new SqlCommand(query, connection))
-            //    {
-            //        connection.Open();
-            //        command.Parameters.AddWithValue("@Id", value.Id);
-
-            //        command.ExecuteNonQuery();
-            //    }
-            //    return true;
-            //}
-            //catch (SqlException sqlEx)
-            //{
-            //    return false;
-            //}
         }
 
         public bool Update(ProductionTask task)
@@ -100,7 +81,8 @@ namespace HRMapp.DAL.Contexts
             }
             catch (SqlException sqlEx)
             {
-                throw HandleGenericSqlException(sqlEx);
+                HandleGenericSqlException(sqlEx);
+                return false;
             }
         }
 
@@ -116,7 +98,7 @@ namespace HRMapp.DAL.Contexts
             }
             catch (SqlException sqlEx)
             {
-                throw HandleGenericSqlException(sqlEx); // TODO Moet ik hier al wel een specifieke error gooien
+                HandleGenericSqlException(sqlEx); // TODO Moet ik hier al wel een specifieke error gooien
             }
 
             return skillsets;
@@ -151,7 +133,8 @@ namespace HRMapp.DAL.Contexts
             }
             catch (SqlException sqlEx)
             {
-                throw HandleGenericSqlException(sqlEx);
+                HandleGenericSqlException(sqlEx);
+                return false;
             }
         }
         #endregion

@@ -25,7 +25,7 @@ namespace HRMapp.DAL
 
                 if (procedureParameters != null)
                 {
-                    adapter.SelectCommand.Parameters.AddRange(procedureParameters.ToArray());
+                    adapter.SelectCommand.Parameters.AddRange(ValidateParameters(procedureParameters).ToArray());
                     //foreach (var parammeter in procedureParameters)
                     //{
                     //    adapter.SelectCommand.Parameters.Add(parammeter);
@@ -57,7 +57,7 @@ namespace HRMapp.DAL
 
                 if (procedureParameters != null)
                 {
-                    command.Parameters.AddRange(procedureParameters.ToArray());
+                    command.Parameters.AddRange(ValidateParameters(procedureParameters).ToArray());
                     //foreach (var parammeter in procedureParameters)
                     //{
                     //    command.Parameters.Add(parammeter);
@@ -89,7 +89,7 @@ namespace HRMapp.DAL
             {
                 command.CommandType = CommandType.StoredProcedure;
 
-                command.Parameters.AddRange(procedureParameters.ToArray());
+                command.Parameters.AddRange(ValidateParameters(procedureParameters).ToArray());
                 connection.Open();  // Scalar needs open connection
 
                 command.ExecuteNonQuery();
@@ -111,7 +111,7 @@ namespace HRMapp.DAL
 
                 if (procedureParameters != null)
                 {
-                    command.Parameters.AddRange(procedureParameters.ToArray());
+                    command.Parameters.AddRange(ValidateParameters(procedureParameters).ToArray());
                     //foreach (var parammeter in procedureParameters)
                     //{
                     //    command.Parameters.Add(parammeter);
@@ -171,13 +171,22 @@ namespace HRMapp.DAL
         //}
         #endregion
 
-        protected DBException HandleGenericSqlException(SqlException sqlEx)
+        protected void HandleGenericSqlException(SqlException sqlEx)
         {
             switch (sqlEx.Number)
             {
-                case 11001: return new DBException("Kan geen verbinding maken met de server.");
-                default: return new DBException("Er is iets mis gegaan.");
+                case 11001: throw new DBException("Kan geen verbinding maken met de server.");
+                default: throw new DBException($"Er is iets mis gegaan. {Environment.NewLine} ({sqlEx.Number}){sqlEx.Message}");
             }
+        }
+
+        private IEnumerable<SqlParameter> ValidateParameters(IEnumerable<SqlParameter> parameters)  // TODO Maybe not so efficient
+        {
+            foreach (var parameter in parameters)
+            {
+                if (parameter.Value == null) parameter.Value = DBNull.Value;
+            }
+            return parameters;
         }
     }
 }

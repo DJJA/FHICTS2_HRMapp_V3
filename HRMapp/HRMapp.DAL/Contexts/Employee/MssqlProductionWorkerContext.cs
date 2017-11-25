@@ -21,7 +21,7 @@ namespace HRMapp.DAL.Contexts
             }
             catch (SqlException sqlEx)
             {
-                throw HandleGenericSqlException(sqlEx);
+                HandleGenericSqlException(sqlEx);
             }
             return employees;
         }
@@ -39,7 +39,7 @@ namespace HRMapp.DAL.Contexts
             }
             catch (SqlException sqlEx)
             {
-                throw HandleGenericSqlException(sqlEx);
+                HandleGenericSqlException(sqlEx);
             }
             return employee;
         }
@@ -54,7 +54,7 @@ namespace HRMapp.DAL.Contexts
             }
             catch (SqlException sqlEx)
             {
-                throw HandleGenericSqlException(sqlEx);
+                HandleGenericSqlException(sqlEx);
             }
             return addedEmployee;
         }
@@ -74,7 +74,8 @@ namespace HRMapp.DAL.Contexts
             }
             catch (SqlException sqlEx)
             {
-                throw HandleGenericSqlException(sqlEx);
+                HandleGenericSqlException(sqlEx);
+                return false;
             }
         }
 
@@ -142,7 +143,8 @@ namespace HRMapp.DAL.Contexts
             }
             catch (SqlException sqlEx)
             {
-                throw HandleGenericSqlException(sqlEx);
+                HandleGenericSqlException(sqlEx);
+                return false;
             }
         }
 
@@ -157,7 +159,7 @@ namespace HRMapp.DAL.Contexts
             }
             catch (SqlException sqlEx)
             {
-                throw HandleGenericSqlException(sqlEx);
+                HandleGenericSqlException(sqlEx);
             }
 
             return skillsets;
@@ -191,7 +193,7 @@ namespace HRMapp.DAL.Contexts
             }
             catch (SqlException sqlEx)
             {
-                throw HandleGenericSqlException(sqlEx);
+                HandleGenericSqlException(sqlEx);
             }
         }
     }
