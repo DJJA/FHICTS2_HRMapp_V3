@@ -1,0 +1,68 @@
+﻿@using HRMapp.Models
+@using HRMapp.ViewModels
+@model OrderCollectionViewModel
+
+@{
+    ViewData["Title"] = "Order";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Orders</h2>
+@*TODO Infomessage moet ook herbruikt worden*@
+@if (!String.IsNullOrEmpty(Model.InfoMessage))
+{
+    <div id="visualAlert" class="alert alert-success">@Model.InfoMessage</div>
+
+    <script>
+        hideVisualAlertAfterXSeconds(3);
+
+        function hideVisualAlertAfterXSeconds(seconds) {
+            setTimeout(hideVisualAlart, seconds * 1000);
+        }
+
+        function hideVisualAlart() {
+            var element = document.getElementById('visualAlert');
+            element.className = '';
+            element.innerHTML = '';
+        }
+    </script>
+}
+
+<div class="row">
+    <div class="col-md-4">
+        @Html.Partial("~/Views/Partial/_ListboxWithSearch.cshtml", Model.ListItems) @*TODO Verander viewmodel ListIteams naar een andere naam*@
+    </div>
+    <div class="col-md-8">
+        <div class="row">
+            @Html.Partial("~/Views/Partial/_CrudButtons.cshtml")
+        </div>
+        <div id="skillsetContent" class="row">
+        </div>
+    </div>
+</div>
+
+<script>
+        document.getElementById('lbox').onchange = listBoxItemSelectionChanged;
+        document.getElementById('btnCrudAdd').onclick = function () { window.location.href = '/Order/New'; }
+        document.getElementById('btnCrudEdit').onclick = function () {
+            window.location.href = '/Order/Edit/' + getListBoxSelectedItemId();
+        }
+
+        listBoxItemSelectionChanged();
+
+        function listBoxItemSelectionChanged() {
+            var selectedSkillsetId = getListBoxSelectedItemId();
+
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/Order/OrderView/' + selectedSkillsetId, true);
+
+            xhr.onload = function () {
+                if (this.status == 200) {
+                    document.getElementById('skillsetContent').innerHTML = xhr.responseText;    /*TODO Kan ipv over skillsetContent, taskContent, ect iets generieks gebruiken*/
+                }
+            }
+
+            xhr.send();
+        }
+</script>

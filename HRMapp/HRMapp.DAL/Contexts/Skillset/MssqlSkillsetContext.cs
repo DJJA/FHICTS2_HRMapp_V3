@@ -11,11 +11,6 @@ namespace HRMapp.DAL.Contexts
 {
     internal class MssqlSkillsetContext : MssqlDatabase, ISkillsetContext
     {
-        /// <summary>
-        /// Adds new skillset to the system
-        /// </summary>
-        /// <param name="skillset"></param>
-        /// <returns>The index of the newly added skillset</returns>
         public int Add(Skillset skillset)
         {
             int addedSkillset = -1;
