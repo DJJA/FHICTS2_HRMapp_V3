@@ -66,7 +66,14 @@ namespace HRMapp.DAL.Contexts
         {
             try
             {
-                ExecuteProcedure("sp_UpdateOrder", GetSqlParametersFromOrder(value, true));
+                var parameters = new List<SqlParameter>()
+                {
+                    new SqlParameter("@Deadline", value.DeadLine),
+                    new SqlParameter("@Customer", value.Customer),
+                    new SqlParameter("@Id", value.Id)
+                };
+
+                ExecuteProcedure("sp_UpdateOrder", parameters);
                 return true;
             }
             catch (SqlException sqlEx)
@@ -90,8 +97,8 @@ namespace HRMapp.DAL.Contexts
         {
             var parameters = new List<SqlParameter>()
             {
-                new SqlParameter("@@EmployeeSalesManagerId", order.SalesManagerId),
-                new SqlParameter("@@Deadline", order.DeadLine),
+                new SqlParameter("@EmployeeSalesManagerId", order.SalesManagerId), // todo If this is null, will it not pass this parameter to the db?
+                new SqlParameter("@Deadline", order.DeadLine),
                 new SqlParameter("@Customer", order.Customer)
             };
             if (withId)

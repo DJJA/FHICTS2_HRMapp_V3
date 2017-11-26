@@ -21,9 +21,16 @@ namespace HRMapp.Models
             Customer = customer;
         }
 
+        public Order(int id, DateTime deadLine, string customer)
+        {
+            Id = id;
+            DeadLine = deadLine;
+            Customer = customer;
+        }
+
         public override string ToString()
         {
-            return $"{Id} - {Customer} - {DeadLine}";
+            return $"{Id} - {Customer} - {DeadLine.ToString("ddd dd-MMM-yy")}";
         }
     }
 }

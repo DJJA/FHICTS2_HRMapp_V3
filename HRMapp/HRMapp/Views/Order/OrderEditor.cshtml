@@ -1,0 +1,139 @@
+﻿@using HRMapp.ViewModels
+@model OrderEditorViewModel
+
+@{
+    ViewData["Title"] = "OrderEditor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Model.FormTitle</h2>
+
+@if (!String.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger">@Model.ErrorMessage</div>
+}
+
+<form asp-action="@Model.FormAction" method="post">
+    <div class="form-group">
+        <label asp-for="@Model.Customer" class="control-label"></label>
+        <input asp-for="@Model.Customer" class="form-control" placeholder="Klantnaam" />
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Deadline" class="control-label"></label>
+        <input asp-for="@Model.Deadline" class="form-control" placeholder="Typ hier een omschrijving..." type="date" />
+    </div>
+    <div class="form-group">
+        <button id="btnSubmit" type="submit" class="btn btn-default">Opslaan</button>
+        <a id="btnCancel" class="btn btn-default">Annuleren</a>
+    </div>
+</form>
+
+@*<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/resources/demos/style.css">*@
+@*<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>*@
+<script>
+    //$( function() {
+    //    $( "#Deadline" ).datepicker();
+    //});
+
+    var userInputChanged = false;
+    @if (!String.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        @:userInputChanged = true;
+    }
+
+    document.getElementById('Name').oninput = function () { userInputChanged = true; }
+    document.getElementById('Description').oninput = function () { userInputChanged = true; }
+    document.getElementById('btnSubmit').onclick = function () { userInputChanged = false; }
+    document.getElementById('btnCancel').onclick = function () {
+        if (@Model.Id > -1) {
+            window.location.href = '/Order/Index/@Model.Id';
+        } else {
+            window.location.href = '/Order';
+        }
+    }
+
+    window.onbeforeunload = function (event) {
+        if (userInputChanged) {
+            var message = 'Er zijn wijzigingen niet opgeslagen. Weet u zeker dat u de pagina wilt verlaten?';
+            return message;
+        }
+    }
+</script>
+
+<style>
+    #orderList {
+        width: 400px;
+        height: 300px;
+        overflow-y: scroll;
+        border-style: solid;
+    }
+
+    .orderItemInput {
+        width: 60px;
+    }
+
+    .orderItem > a {
+        background-color: darkred;
+        color: white;
+    }
+</style>
+
+<div id="orderList">
+    <div class="orderItem">
+        <a class="btn btn-default">X</a>
+        <input type="number" class="orderItemInput" value="1" , min="1" />
+        Dit is een product naam
+    </div>
+    <div class="orderItem">
+        <a class="btn btn-default">X</a>
+        <input type="number" class="orderItemInput" value="1" , min="1" />
+        Dit is een product naam
+    </div>
+    <div class="orderItem">
+        <a class="btn btn-default">X</a>
+        <input type="number" class="orderItemInput" value="1" , min="1" />
+        Dit is een product naam
+    </div>
+    <div class="orderItem">
+        <a class="btn btn-default">X</a>
+        <input type="number" class="orderItemInput" value="1" , min="1" />
+        Dit is een product naam
+    </div>
+    <div class="orderItem">
+        <a class="btn btn-default">X</a>
+        <input type="number" class="orderItemInput" value="1" , min="1" />
+        Dit is een product naam
+    </div>
+    <div class="orderItem">
+        <a class="btn btn-default">X</a>
+        <input type="number" class="orderItemInput" value="1" , min="1" />
+        Dit is een product naam
+    </div>
+    <div class="orderItem">
+        <a class="btn btn-default">X</a>
+        <input type="number" class="orderItemInput" value="1" , min="1" />
+        Dit is een product naam
+    </div>
+    <div class="orderItem">
+        <a class="btn btn-default">X</a>
+        <input type="number" class="orderItemInput" value="1" , min="1" />
+        Dit is een product naam
+    </div>
+    <div class="orderItem">
+        <a class="btn btn-default">X</a>
+        <input type="number" class="orderItemInput" value="1" , min="1" />
+        Dit is een product naam
+    </div>
+    <div class="orderItem">
+        <a class="btn btn-default">X</a>
+        <input type="number" class="orderItemInput" value="1" , min="1" />
+        Dit is een product naam
+    </div>
+    <div class="orderItem">
+        <a class="btn btn-default">X</a>
+        <input type="number" class="orderItemInput" value="1" , min="1" />
+        Dit is een product naam
+    </div>
+</div>
