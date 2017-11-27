@@ -1,10 +1,32 @@
-﻿@using HRMapp.ViewModels
-@model OrderEditorViewModel
+﻿@model HRMapp.ViewModels.OrderEditorViewModel
 
 @{
     ViewData["Title"] = "OrderEditor";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+<style>
+    #orderList {
+        width: 400px;
+        height: 300px;
+        overflow-y: scroll;
+        border-style: solid;
+    }
+
+    .orderItem > input {
+        width: 60px;
+    }
+
+    .orderItem > a {
+        background-color: darkred;
+        color: white;
+    }
+
+    .orderItem > div {
+        display: inline-block;
+        padding-left: 4px;
+    }
+</style>
 
 <h2>@Model.FormTitle</h2>
 
@@ -21,6 +43,31 @@
     <div class="form-group">
         <label asp-for="@Model.Deadline" class="control-label"></label>
         <input asp-for="@Model.Deadline" class="form-control" placeholder="Typ hier een omschrijving..." type="date" />
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-5">
+                <label class="control-label" for="lboxAvailableSkillsets">Orderlijst:</label>
+            </div>
+            <div class="col-md-2"></div>
+            <div class="col-md-5">
+                <label class="control-label" for="lboxRequiredSkillsets">Producten:</label>
+                <div>
+                    <a id="btnMoveToRequired" class="btn btn-default">Toevoegen aan order</a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-5">
+                <div id="orderList">
+                    
+                </div>
+            </div>
+            <div class="col-md-2"></div>
+            <div class="col-md-5">
+                @Html.ListBox("lboxAvailableProducts", Model.Products, new { @class = "form-control", size = 10 })
+            </div>
+        </div>
     </div>
     <div class="form-group">
         <button id="btnSubmit" type="submit" class="btn btn-default">Opslaan</button>
@@ -43,8 +90,8 @@
         @:userInputChanged = true;
     }
 
-    document.getElementById('Name').oninput = function () { userInputChanged = true; }
-    document.getElementById('Description').oninput = function () { userInputChanged = true; }
+    document.getElementById('Customer').oninput = function () { userInputChanged = true; }
+    document.getElementById('Deadline').oninput = function () { userInputChanged = true; }
     document.getElementById('btnSubmit').onclick = function () { userInputChanged = false; }
     document.getElementById('btnCancel').onclick = function () {
         if (@Model.Id > -1) {
@@ -60,80 +107,70 @@
             return message;
         }
     }
+
+
+    document.getElementById('btnMoveToRequired').onclick = function () {
+        userInputChanged = true;
+        addProductToOrder();
+    }
+
+    function moveSelectedOptionsBetweenSelects(selectElementFrom, selectElementTo) {
+        var selectedItems = getSelectValues(selectElementFrom);
+
+        for (var i = 0; i < selectedItems.length; i++) {
+            selectElementFrom.remove(getOptionIndexByValue(selectElementFrom, selectedItems[i].value));  // Could be more efficient perhaps
+            selectElementTo.add(selectedItems[i]);
+        }
+    }
+
+    // Return an array of the selected opion values
+    // select is an HTML select element
+    function getSelectValues(selectElement) {
+        var result = [];
+        var options = selectElement && selectElement.options;   // If I understand correctly, it checks if selectElement is not undefined, if it's not, it assigns the next statement to options
+        var opt;
+
+        for (var i = 0, iLen = options.length; i < iLen; i++) {
+            opt = options[i];
+
+            if (opt.selected) {
+                result.push(opt);
+            }
+        }
+        return result;
+    }
+
+    function getOptionIndexByValue(selectElement, id) {
+        for (var i = 0; i < selectElement.options.length; i++) {
+            if (selectElement.options[i].value == id) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+
+    function addProductToOrder() {
+        var selectElement = document.getElementById('lboxAvailableProducts');
+        var selectedItems = getSelectValues(selectElement);
+
+        for (var i = 0; i < selectedItems.length; i++) {
+            selectElement.remove(getOptionIndexByValue(selectElement, selectedItems[i].value));
+            document.getElementById('orderList').innerHTML += createNewOrderListItem(selectedItems[i].value, selectedItems[i].text);
+        }
+    }
+
+    function removeProductFromOrder(id) {
+        var name = $('#orderItem' + id + 'Name').html();
+        $('#orderListItem' + id).remove();
+        document.getElementById('lboxAvailableProducts').add(new Option(name, id));
+    }
+
+    function createNewOrderListItem(id, name) {
+        return '<div class="orderItem" id="orderListItem' + id + '">' +
+                    '<a class="btn btn-default" onclick="removeProductFromOrder(' + id + ')">X</a>' +
+                    '<input type="number" value="1" min="1" />' +
+                    '<div id="orderItem' + id + 'Name">' + name + '</div>' +
+                '</div>';
+    }
 </script>
-
-<style>
-    #orderList {
-        width: 400px;
-        height: 300px;
-        overflow-y: scroll;
-        border-style: solid;
-    }
-
-    .orderItemInput {
-        width: 60px;
-    }
-
-    .orderItem > a {
-        background-color: darkred;
-        color: white;
-    }
-</style>
-
-<div id="orderList">
-    <div class="orderItem">
-        <a class="btn btn-default">X</a>
-        <input type="number" class="orderItemInput" value="1" , min="1" />
-        Dit is een product naam
-    </div>
-    <div class="orderItem">
-        <a class="btn btn-default">X</a>
-        <input type="number" class="orderItemInput" value="1" , min="1" />
-        Dit is een product naam
-    </div>
-    <div class="orderItem">
-        <a class="btn btn-default">X</a>
-        <input type="number" class="orderItemInput" value="1" , min="1" />
-        Dit is een product naam
-    </div>
-    <div class="orderItem">
-        <a class="btn btn-default">X</a>
-        <input type="number" class="orderItemInput" value="1" , min="1" />
-        Dit is een product naam
-    </div>
-    <div class="orderItem">
-        <a class="btn btn-default">X</a>
-        <input type="number" class="orderItemInput" value="1" , min="1" />
-        Dit is een product naam
-    </div>
-    <div class="orderItem">
-        <a class="btn btn-default">X</a>
-        <input type="number" class="orderItemInput" value="1" , min="1" />
-        Dit is een product naam
-    </div>
-    <div class="orderItem">
-        <a class="btn btn-default">X</a>
-        <input type="number" class="orderItemInput" value="1" , min="1" />
-        Dit is een product naam
-    </div>
-    <div class="orderItem">
-        <a class="btn btn-default">X</a>
-        <input type="number" class="orderItemInput" value="1" , min="1" />
-        Dit is een product naam
-    </div>
-    <div class="orderItem">
-        <a class="btn btn-default">X</a>
-        <input type="number" class="orderItemInput" value="1" , min="1" />
-        Dit is een product naam
-    </div>
-    <div class="orderItem">
-        <a class="btn btn-default">X</a>
-        <input type="number" class="orderItemInput" value="1" , min="1" />
-        Dit is een product naam
-    </div>
-    <div class="orderItem">
-        <a class="btn btn-default">X</a>
-        <input type="number" class="orderItemInput" value="1" , min="1" />
-        Dit is een product naam
-    </div>
-</div>
