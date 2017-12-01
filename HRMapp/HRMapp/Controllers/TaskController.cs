@@ -17,7 +17,7 @@ namespace HRMapp.Controllers
 
         public IActionResult Index(int id)
         {
-            var tasks = taskLogic.GetAll().ToList();
+            var tasks = taskLogic.GetAll;
             if (id == 0 && tasks.Count > 0)
             {
                 id = tasks[0].Id;
@@ -80,5 +80,36 @@ namespace HRMapp.Controllers
                 return View("TaskEditor", new TaskEditorViewModel(skillsetLogic.GetAll().ToList(), model, EditorType.Edit, dbEx.Message));
             }
         }
+
+        [HttpPost]
+        public IActionResult AjaxEdit(TaskEditorViewModel viewModel)
+        {
+            //try
+            //{
+            //    //var success = taskLogic.Update(model.ToTask(skillsetLogic.GetAll().ToList()));
+            //    //infoMessage.Message = $"'{model.Name}' is bewerkt.";
+            //    //return RedirectToAction("Index", new { id = model.Id });
+            //    return View("_TaskEditor", new TaskEditorViewModel(skillsetLogic.GetAll().ToList(), model, EditorType.Edit, ""));
+            //}
+            //catch (ArgumentException argEx)
+            //{
+            //    return View("_TaskEditor", new TaskEditorViewModel(skillsetLogic.GetAll().ToList(), model, EditorType.Edit, argEx.Message));
+            //}
+            //catch (DBException dbEx)
+            //{
+            //    return View("_TaskEditor", new TaskEditorViewModel(skillsetLogic.GetAll().ToList(), model, EditorType.Edit, dbEx.Message));
+            //}
+            return View("_TaskEditor", new TaskEditorViewModel(skillsetLogic.GetAll().ToList()));
+            return View("_TaskEditor", new TaskEditorViewModel(skillsetLogic.GetAll().ToList(), viewModel, EditorType.Edit, ""));
+            return null;
+        }
+    }
+
+    public class Testobjformodel
+    {
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public int DurationHours { get; set; }
+        public int DurationMinutes { get; set; }
     }
 }

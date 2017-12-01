@@ -1,10 +1,55 @@
 ﻿@using HRMapp.ViewModels
+@using Microsoft.CodeAnalysis.CSharp.Syntax
 @model ProductEditorViewModel
 
 @{
     ViewData["Title"] = "ProductEditor";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+<style>
+    .taskItem {
+        color: #333;
+        background-color: #fff;
+        border-color: #ccc;
+        font-size: 14px;
+        font-weight: normal;
+        line-height: 1.42857143;
+        border-style: solid;
+        border-width: 1px;
+        border-radius: 4px;
+        margin-bottom: 0;
+        vertical-align: middle;
+    }
+
+    .taskItemHeader {
+        display: flex;
+        justify-content: space-between;
+        color: #333;
+        background-color: #eee;
+        border-color: #ccc;
+        font-size: 14px;
+        font-weight: normal;
+        line-height: 1.42857143;
+        vertical-align: middle;
+        border-style: solid;
+        border-width: 1px;
+        border-radius: 4px;
+        padding: 6px 12px;
+        margin-bottom: 0;
+        vertical-align: middle;
+        cursor: pointer;
+    }
+
+        .taskItemHeader span {
+            user-select: none;
+        }
+
+    .taskItemContent {
+        padding: 6px 12px;
+        background-color: #FCFCFC;
+    }
+</style>
 
 <h2>@Model.FormTitle</h2>
 
@@ -13,7 +58,7 @@
     <div class="alert alert-danger">@Model.ErrorMessage</div>
 }
 
-<form asp-action="@Model.FormAction" method="post">
+<form asp-action="@Model.FormAction" method="post" id="formProduct">
     <div class="form-group">
         <label asp-for="@Model.Name" class="control-label"></label>
         <input asp-for="@Model.Name" class="form-control" placeholder="Naam" />
@@ -22,11 +67,59 @@
         <label asp-for="@Model.Description" class="control-label"></label>
         <textarea asp-for="@Model.Description" class="form-control" placeholder="Typ hier een omschrijving..." rows="10"></textarea>
     </div>
-    <div class="form-group">
-        <button id="btnSubmit" type="submit" class="btn btn-default">Opslaan</button>
-        <a id="btnCancel" class="btn btn-default">Annuleren</a>
-    </div>
+    
+    
 </form>
+
+<div class="form-group">
+    <h3>Taken</h3>
+    <a class="btn btn-default">Nieuwe taak toevoegen</a>
+    <div class="taskContainer">
+
+        @foreach (var task in Model.TaskEditorViewModels)
+        {
+            <div class="taskItem">
+                <div class="taskItemHeader">
+                    <span>@task.Name</span>
+                    <div>
+                        @*<span class="text-danger">Veranderingen niet opgeslagen</span>*@
+                        @*<a href="#" class="btn btn-default">Opslaan</a>*@
+                        <a class="btn btn-default">Verwijderen</a>
+                    </div>
+                </div>
+                <div id="taskItemContent_@task.Id" class="taskItemContent">
+                    @Html.Partial("~/Views/Task/_TaskEditor.cshtml", task)
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+<div class="form-group">
+    <button id="btnSubmit" type="submit" class="btn btn-default" form="formProduct">Opslaan</button>
+    <a id="btnCancel" class="btn btn-default">Annuleren</a>
+</div>
+
+<script>
+    var acc = document.getElementsByClassName("taskItemHeader");
+    var i;
+
+    for (i = 0; i < acc.length; i++) {
+        acc[i].nextElementSibling.style.display = "none";
+        acc[i].onclick = function (e) {
+            if (e.target !== this)
+                return;
+
+            this.classList.toggle("active");
+            var panel = this.nextElementSibling;
+            if (panel.style.display === "block") {
+                panel.style.display = "none";
+            } else {
+                panel.style.display = "block";
+            }
+        }
+    }
+</script>
 
 <script>
     var userInputChanged = false;

@@ -1,0 +1,199 @@
+﻿@model HRMapp.ViewModels.TaskEditorViewModel
+
+<style>
+    .form-buttons {
+        display: flex;
+        justify-content: flex-end;
+    }
+</style>    
+@*action="@Model.FormAction" method="post"*@
+<form>
+    <div class="form-group">
+        <label asp-for="@Model.Name" class="control-label"></label>
+        <input asp-for="@Model.Name" class="form-control" placeholder="Naam" />
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Description" class="control-label"></label>
+        <textarea asp-for="@Model.Description" id="Description_@Model.Id"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label" for="Duration">Duur:</label>
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label asp-for="@Model.DurationHours" class="control-label"></label>
+                <input asp-for="@Model.DurationHours" class="form-control" type="number" min="0" />
+            </div>
+            <div class="form-group col-md-6">
+                <label asp-for="@Model.DurationMinutes" class="control-label"></label>
+                <input asp-for="@Model.DurationMinutes" class="form-control" type="number" min="0" max="59" />
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-5">
+                <label class="control-label" for="lboxAvailableSkillsets">Skillsets:</label>
+            </div>
+            <div class="col-md-2"></div>
+            <div class="col-md-5">
+                <label class="control-label" for="lboxRequiredSkillsets">Nodige skillsets:</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-5">
+                @Html.ListBox("lboxAvailableSkillsets", Model.AvailableSkillsetListItems, new { @class = "form-control", size = 10 })
+            </div>
+            <div class="col-md-2">
+                <center>
+                    <div>
+                        <a id="btnSkillsetsMoveToRequired" class="btn btn-default">>></a>
+                    </div>
+                    <div>
+                        <a id="btnSkillsetsMoveFromRequired" class="btn btn-default"><<</a>
+                    </div>
+                </center>
+            </div>
+            <div class="col-md-5">
+                @Html.ListBox("lboxRequiredSkillsets", Model.RequiredSkillsetListItems, new { @class = "form-control", size = 10 })
+            </div>
+        </div>
+    </div>
+    <div class="form-group form-buttons">
+        <button id="btnSubmit_@Model.Id" type="submit" class="btn btn-default">Opslaan</button>
+        <a id="btnReload" class="btn btn-default">Herladen</a>
+    </div>
+</form>
+
+<script src="https://cdn.ckeditor.com/4.7.3/standard/ckeditor.js"></script>
+<script>
+    CKEDITOR.replace('Description_@Model.Id');
+
+    document.getElementById('btnSubmit_@Model.Id').onclick = function() {
+        var data =
+        {
+            'Name' : "kakzooi",
+            'Description' : 'kak omschrijving',
+            'DurationHours': 2,
+            'DurationMinutes' : 45
+    };
+
+        var params = "Id=" + @Model.Id + "Name=kakzooi";
+
+        @*var posting = $.post('/Task/AjaxEdit', data);
+
+        // Put the results in a div
+        posting.done(function( data ) {
+            document.getElementsByClassName('taskItemContent_@Model.Id')[0].innerHTML = data;
+        });*@
+
+
+        @*var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/Task/AjaxEdit', true);
+
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+        xhr.onload = function () {
+            if (this.status == 200) {
+                document.getElementsByClassName('taskItemContent_@Model.Id')[0].innerHTML = xhr.responseText;
+            }
+        }
+
+        xhr.send(data);*@
+
+        $.ajax({
+            url: '/Task/AjaxEdit',
+            data: {
+                'Id' : 1,
+                'Name' : "kakzooi",
+                'Description' : 'kak omschrijving',
+                'DurationHours': 2,
+                'DurationMinutes' : 45
+            },
+            type: "post",
+            cache: false,
+            success: function (response) {
+                //alert(response);
+                //document.getElementsByClassName('taskItemContent_@Model.Id')[0].innerHTML = response;
+                $('#taskItemContent_@Model.Id').html(response);
+            }
+        });
+    }
+
+    @*document.getElementById('Name').oninput = function () { userInputChanged = true; }
+    document.getElementById('Description').oninput = function () { userInputChanged = true; }
+    document.getElementById('DurationHours').oninput = function () { userInputChanged = true; }
+    document.getElementById('DurationMinutes').oninput = function () { userInputChanged = true; }
+    document.getElementById('btnCancel').onclick = function() {
+        if (@Model.Id > -1) {
+            window.location.href = '/Task/Index/@Model.Id';
+        } else {
+            window.location.href = '/Task';
+        }
+
+    }
+
+    document.getElementById('btnSubmit').onclick = function () {
+        userInputChanged = false;
+        selectAllOptions(document.getElementById('lboxRequiredSkillsets'));
+    }
+
+    document.getElementById('btnSkillsetsMoveToRequired').onclick = function () {
+        userInputChanged = true;
+        moveSelectedOptionsBetweenSelects(document.getElementById('lboxAvailableSkillsets'), document.getElementById('lboxRequiredSkillsets'));
+    }
+
+    document.getElementById('btnSkillsetsMoveFromRequired').onclick = function () {
+        userInputChanged = true;
+        moveSelectedOptionsBetweenSelects(document.getElementById('lboxRequiredSkillsets'), document.getElementById('lboxAvailableSkillsets'));
+    }
+
+    window.onbeforeunload = function (event) {
+        if (userInputChanged) {
+            var message = 'Er zijn wijzigingen niet opgeslagen. Weet u zeker dat u de pagina wilt verlaten?';
+            return message;
+        }
+    }
+
+    function moveSelectedOptionsBetweenSelects(selectElementFrom, selectElementTo) {
+        var selectedItems = getSelectValues(selectElementFrom);
+
+        for (var i = 0; i < selectedItems.length; i++) {
+            selectElementFrom.remove(getOptionIndexByValue(selectElementFrom, selectedItems[i].value));  // Could be more efficient perhaps
+            selectElementTo.add(selectedItems[i]);
+        }
+    }
+
+    // Return an array of the selected opion values
+    // select is an HTML select element
+    function getSelectValues(selectElement) {
+        var result = [];
+        var options = selectElement && selectElement.options;   // If I understand correctly, it checks if selectElement is not undefined, if it's not, it assigns the next statement to options
+        var opt;
+
+        for (var i = 0, iLen = options.length; i < iLen; i++) {
+            opt = options[i];
+
+            if (opt.selected) {
+                result.push(opt);
+            }
+        }
+        return result;
+    }
+
+    function getOptionIndexByValue(selectElement, id) {
+        for (var i = 0; i < selectElement.options.length; i++) {
+            if (selectElement.options[i].value == id) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    function selectAllOptions(selectElement) {
+        for (var i = 0; i < selectElement.options.length; i++) {
+            selectElement.options[i].selected = true;
+        }
+    }*@
+</script>

@@ -13,6 +13,7 @@ namespace HRMapp.Controllers
     {
         private static CrossActionMessageHolder infoMessage = new CrossActionMessageHolder();
         private ProductLogic productLogic = new ProductLogic();
+        private TaskLogic taskLogic = new TaskLogic();
 
         public IActionResult Index(int id)
         {
@@ -62,7 +63,7 @@ namespace HRMapp.Controllers
         public IActionResult Edit(int id)
         {
             var product = productLogic.GetById(id);
-            return View("ProductEditor", new ProductEditorViewModel(product));
+            return View("ProductEditor", new ProductEditorViewModel(product, taskLogic.GetAll));
         }
 
         [HttpPost]
