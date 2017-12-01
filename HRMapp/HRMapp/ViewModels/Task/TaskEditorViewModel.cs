@@ -29,22 +29,6 @@ namespace HRMapp.ViewModels
             }
         }
 
-        public override string FormAction
-        {
-            get
-            {
-                switch (EditorType)
-                {
-                    case EditorType.New:
-                        return "/Task/New";
-                    case EditorType.Edit:
-                        return "/Task/Edit";
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-        }
-
         [DisplayName("Naam:")]
         public string Name { get; set; }
         [DisplayName("Omschrijving:")]

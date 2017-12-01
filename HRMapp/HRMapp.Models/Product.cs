@@ -27,6 +27,11 @@ namespace HRMapp.Models
 
         public List<ProductionTask> Tasks { get; private set; }
 
+        public Product(int id)
+        {
+            Id = id;
+        }
+
         public Product(int id, string name, string description, List<ProductionTask> tasks)
         {
             Id = id;

@@ -73,22 +73,21 @@
 
 <div class="form-group">
     <h3>Taken</h3>
-    <a class="btn btn-default">Nieuwe taak toevoegen</a>
+    <a class="btn btn-default" asp-controller="Task" asp-action="New">Nieuwe taak toevoegen</a>
     <div class="taskContainer">
 
-        @foreach (var task in Model.TaskEditorViewModels)
+        @foreach (var task in Model.Tasks)
         {
             <div class="taskItem">
                 <div class="taskItemHeader">
                     <span>@task.Name</span>
                     <div>
-                        @*<span class="text-danger">Veranderingen niet opgeslagen</span>*@
-                        @*<a href="#" class="btn btn-default">Opslaan</a>*@
+                        <a class="btn btn-default" asp-controller="Task" asp-action="Edit" asp-route-id="@task.Id">Bewerken</a>
                         <a class="btn btn-default">Verwijderen</a>
                     </div>
                 </div>
-                <div id="taskItemContent_@task.Id" class="taskItemContent">
-                    @Html.Partial("~/Views/Task/_TaskEditor.cshtml", task)
+                <div class="taskItemContent">
+                    @Html.Partial("~/Views/Task/_TaskView.cshtml", task)
                 </div>
             </div>
         }
@@ -110,14 +109,27 @@
             if (e.target !== this)
                 return;
 
-            this.classList.toggle("active");
+            
+            //this.classList.toggle("active");
             var panel = this.nextElementSibling;
+
+            var display;
             if (panel.style.display === "block") {
-                panel.style.display = "none";
+                display = "none";
             } else {
-                panel.style.display = "block";
+                display = "block";
             }
+
+            collapseAllTaskItems();
+            panel.style.display = display;
         }
+    }
+
+    function collapseAllTaskItems() {
+        var acc = document.getElementsByClassName("taskItemContent");
+            for (i = 0; i < acc.length; i++) {
+                acc[i].style.display = "none";
+            }
     }
 </script>
 

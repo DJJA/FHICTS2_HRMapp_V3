@@ -1,9 +1,7 @@
 @using HRMapp.Models
 @model ProductionTask
 
-<h3>@Model.Name</h3>
-<p>ID: @Model.Id</p>
-<p>Duur: @Model.Duration.Hours uur en @Model.Duration.Minutes minuten</p>
+@*<p>Duur: @Model.Duration.Hours uur en @Model.Duration.Minutes minuten</p>
 <br />
 <h4>Omschrijving:</h4>
 <div style="border-style: solid; border-radius: 5px; border-width: 1px; border-color: LightGray;">
@@ -19,4 +17,26 @@
             <li>@skillset.Name</li>
         }
     </ul>
+}*@
+<h4>Duur:</h4>
+<p>@Model.Duration.Hours uur en @Model.Duration.Minutes minuten</p>
+
+<h4>Omschrijving:</h4>
+<div>
+    @Html.Raw(Model.Description)
+</div>
+
+<h4>Uit te voeren door:</h4>
+@if (Model.RequiredSkillsets.Count > 0)
+{
+    <ul>
+        @foreach (var skillset in Model.RequiredSkillsets)
+        {
+            <li>@skillset.Name</li>
+        }
+    </ul>
+}
+else
+{
+    @:Iedereen
 }
