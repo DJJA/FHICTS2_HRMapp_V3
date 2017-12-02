@@ -75,13 +75,6 @@ namespace HRMapp.ViewModels
             }
         }
 
-        private SkillsetSelectorViewModel skillsetSelectorViewModel = new SkillsetSelectorViewModel();
-        public SkillsetSelectorViewModel SkillsetSelectorViewModel
-        {
-            get => skillsetSelectorViewModel;
-            set => skillsetSelectorViewModel = value;
-        }
-
         [DisplayName("Voornaam:")]
         public string FirstName { get; set; }
         [DisplayName("Achternaam:")]
@@ -115,11 +108,10 @@ namespace HRMapp.ViewModels
         /// Used by controller to create new employee
         /// </summary>
         /// <param name="teamLeaders"></param>
-        public EmployeeEditorViewModel(List<TeamLeader> teamLeaders, List<Skillset> availableSkillsets)
+        public EmployeeEditorViewModel(List<TeamLeader> teamLeaders)
         {
             EditorType = EditorType.New;
             this.teamLeaders = teamLeaders;
-            skillsetSelectorViewModel.availableSkillsets = availableSkillsets;
         }
 
         /// <summary>
@@ -127,14 +119,13 @@ namespace HRMapp.ViewModels
         /// </summary>
         /// <param name="employee"></param>
         /// TODO UPDATE summery with shortcut if possible in employee editor viewmodel
-        public EmployeeEditorViewModel(List<TeamLeader> teamLeaders, List<Skillset> availableSkillsets, Employee employee)
+        public EmployeeEditorViewModel(List<TeamLeader> teamLeaders, Employee employee)
         {
             //FormAction = "Edit";
             //FormTitle = "Werknemer bewerken";
             EditorType = EditorType.Edit;
 
             this.teamLeaders = teamLeaders;
-            skillsetSelectorViewModel.availableSkillsets = availableSkillsets;
 
             if (employee is ProductionWorker worker)
             {
@@ -146,11 +137,6 @@ namespace HRMapp.ViewModels
                 {
                     TeamLeaderId = -1;
                 }
-                skillsetSelectorViewModel.requiredSkillsets = worker.Skillsets;
-            }
-            else if (employee is TeamLeader teamLeader)
-            {
-                skillsetSelectorViewModel.requiredSkillsets = teamLeader.Skillsets;
             }
 
             //employeeFunction = GetEmployeeFunction(employee);
@@ -174,23 +160,11 @@ namespace HRMapp.ViewModels
         /// <param name="availableSkillsets"></param>
         /// <param name="viewModel"></param>
         /// <param name="editorType"></param>
-        public EmployeeEditorViewModel(List<TeamLeader> teamLeaders, List<Skillset> availableSkillsets, EmployeeEditorViewModel viewModel, EditorType editorType, string errorMessage)
+        public EmployeeEditorViewModel(List<TeamLeader> teamLeaders, EmployeeEditorViewModel viewModel, EditorType editorType, string errorMessage)
         {
             EditorType = editorType;
 
             this.teamLeaders = teamLeaders;
-            skillsetSelectorViewModel.availableSkillsets = availableSkillsets;
-
-            var requiredSkillsets = new List<Skillset>();
-            foreach (var id in viewModel.LboxRequiredSkillsets)
-            {
-                Skillset skillset = availableSkillsets.Single(s => s.Id == id);
-                if (skillset != null)
-                {
-                    requiredSkillsets.Add(skillset);
-                }
-            }
-            skillsetSelectorViewModel.requiredSkillsets = requiredSkillsets;    // TODO Moet ik deze wel overnemen als de EMployee geen productionworker is?
 
             EmployeeType = viewModel.EmployeeType;
 
@@ -226,24 +200,8 @@ namespace HRMapp.ViewModels
             }
         }
 
-        public Employee ToEmployee(EmployeeLogic logic, List<Skillset> availaSkillsets) // TODO Should I even pass the logic in here, do I even want to get all the properties of teamleader?
+        public Employee ToEmployee(EmployeeLogic logic) // TODO Should I even pass the logic in here, do I even want to get all the properties of teamleader?
         {
-            //if (EmployeeType == (int)EmployeeFunction.ProductionWorker)
-            //{
-            //    return new ProductionWorker(Id, FirstName, LastName, PhoneNumber, EmailAddress, Street, HouseNumber, ZipCode, City, null, null);
-            //}
-            //if (EmployeeType == (int)EmployeeFunction.TeamLeader)
-            //{
-            //    return new TeamLeader(Id, FirstName, LastName, PhoneNumber, EmailAddress, Street, HouseNumber, ZipCode, City, null, null);
-            //}
-            //if (EmployeeType == (int)EmployeeFunction.HRManager)
-            //{
-            //    return new HRManager(Id, FirstName, LastName, PhoneNumber, EmailAddress, Street, HouseNumber, ZipCode, City);
-            //}
-            //if (EmployeeType == (int)EmployeeFunction.SalesManager)
-            //{
-            //    return new SalesManager(Id, FirstName, LastName, PhoneNumber, EmailAddress, Street, HouseNumber, ZipCode, City);
-            //}
             if (EmployeeType == EmployeeFunction.ProductionWorker)
             {
                 TeamLeader teamLeader = null;
@@ -251,11 +209,11 @@ namespace HRMapp.ViewModels
                 {
                     teamLeader = logic.GetTeamLeaderById(TeamLeaderId);
                 }
-                return new ProductionWorker(Id, FirstName, LastName, PhoneNumber, EmailAddress, Street, HouseNumber, ZipCode, City, GetSkillsets(availaSkillsets), teamLeader);
+                return new ProductionWorker(Id, FirstName, LastName, PhoneNumber, EmailAddress, Street, HouseNumber, ZipCode, City, teamLeader);
             }
             if (EmployeeType == EmployeeFunction.TeamLeader)
             {
-                return new TeamLeader(Id, FirstName, LastName, PhoneNumber, EmailAddress, Street, HouseNumber, ZipCode, City, GetSkillsets(availaSkillsets));
+                return new TeamLeader(Id, FirstName, LastName, PhoneNumber, EmailAddress, Street, HouseNumber, ZipCode, City);
             }
             if (EmployeeType == EmployeeFunction.HRManager)
             {
@@ -266,16 +224,6 @@ namespace HRMapp.ViewModels
                 return new SalesManager(Id, FirstName, LastName, PhoneNumber, EmailAddress, Street, HouseNumber, ZipCode, City);
             }
             return null;
-        }
-
-        private List<Skillset> GetSkillsets(List<Skillset> availableSkillsets)
-        {
-            var skillsets = new List<Skillset>();
-            foreach (var id in LboxRequiredSkillsets)
-            {
-                skillsets.Add(availableSkillsets.Single(skillset => skillset.Id == id));
-            }
-            return skillsets;
         }
     }
 }

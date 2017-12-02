@@ -59,8 +59,7 @@ namespace HRMapp.DAL.Contexts
             {
                 HandleGenericSqlException(sqlEx);
             }
-
-            UpdateRequiredSkillsets(task);
+            
             return addedTaskId;
         }
 
@@ -74,9 +73,6 @@ namespace HRMapp.DAL.Contexts
             try
             {
                 ExecuteProcedure("sp_UpdateTask", GetSqlParametersFromTask(task, true));
-
-                UpdateRequiredSkillsets(task);
-
                 return true;
             }
             catch (SqlException sqlEx)
@@ -85,68 +81,16 @@ namespace HRMapp.DAL.Contexts
                 return false;
             }
         }
-
-        #region Task Skillset Links
-        public IEnumerable<Skillset> GetRequiredSkillsets(int taskId)
-        {
-            var skillsets = new List<Skillset>();
-
-            try
-            {
-                var dataTable = GetDataViaProcedure("sp_GetRequiredSkillsets", new SqlParameter("@TaskId", taskId));
-                skillsets.AddRange(from DataRow row in dataTable.Rows select MssqlSkillsetContext.GetSkillsetFromDataRow(row));
-            }
-            catch (SqlException sqlEx)
-            {
-                HandleGenericSqlException(sqlEx); // TODO Moet ik hier al wel een specifieke error gooien
-            }
-
-            return skillsets;
-        }
-
-        
-        public bool UpdateRequiredSkillsets(ProductionTask task)
-        {
-            var daaTablet = new DataTable();
-            daaTablet.Columns.Add("Id");
-
-            foreach (var skillset in task.RequiredSkillsets)
-            {
-                daaTablet.Rows.Add(skillset.Id);
-            }
-
-            var listWithRequiredSkillsetIds = new SqlParameter("@List", daaTablet)
-            {
-                SqlDbType = SqlDbType.Structured
-            };
-
-            var parameters = new List<SqlParameter>()
-            {
-                listWithRequiredSkillsetIds,
-                new SqlParameter("@TaskId", task.Id)
-            };
-
-            try
-            {
-                ExecuteProcedure("sp_UpdateRequiredSkillsets", parameters);
-                return true;
-            }
-            catch (SqlException sqlEx)
-            {
-                HandleGenericSqlException(sqlEx);
-                return false;
-            }
-        }
-        #endregion
 
         private ProductionTask GetTaskFromDataRow(DataRow row)
         {
             var id = Convert.ToInt32(row["Id"]);
+            var productId = Convert.ToInt32(row["ProductId"]);
             var name = row["Name"].ToString();
             var description = row["Description"].ToString();
             var duration = new TimeSpan(0, Convert.ToInt32(row["Duration"]), 0);
-            var requiredSkillsets = GetRequiredSkillsets(id).ToList();
-            return new ProductionTask(id, name, description, duration, requiredSkillsets);
+            var employees = new List<Employee>();
+            return new ProductionTask(id, new Product(productId), name, description, duration, employees);
         }
 
         private IEnumerable<SqlParameter> GetSqlParametersFromTask(ProductionTask task, bool withId)

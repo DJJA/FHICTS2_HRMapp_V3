@@ -40,21 +40,17 @@ namespace HRMapp.Models
             }
         }
         public TimeSpan Duration { get; private set; }
-        public List<Skillset> RequiredSkillsets { get; private set; }
+        public List<Employee> Employees { get; private set; }
+        
 
-        public ProductionTask(int id, string name, string description)
+        public ProductionTask(int id, Product product, string name, string description, TimeSpan duration, List<Employee> employees)
         {
             Id = id;
+            Product = product;
             Name = name;
             Description = description;
-            RequiredSkillsets = new List<Skillset>();
-        }
-
-        public ProductionTask(int id, string name, string description, TimeSpan duration, List<Skillset> requiredSkillsets)
-            : this(id, name, description)
-        {
             Duration = duration;
-            RequiredSkillsets = requiredSkillsets;
+            Employees = employees;
         }
     }
 }

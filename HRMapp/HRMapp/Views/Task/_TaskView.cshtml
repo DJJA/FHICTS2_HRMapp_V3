@@ -27,10 +27,10 @@
 </div>
 
 <h4>Uit te voeren door:</h4>
-@if (Model.RequiredSkillsets.Count > 0)
+@if (Model.Employees.Count > 0)
 {
     <ul>
-        @foreach (var skillset in Model.RequiredSkillsets)
+        @foreach (var skillset in Model.Employees)
         {
             <li>@skillset.Name</li>
         }

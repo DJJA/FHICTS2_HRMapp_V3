@@ -7,7 +7,5 @@ namespace HRMapp.DAL
 {
     internal interface ITaskContext : IContext<ProductionTask>
     {
-        IEnumerable<Skillset> GetRequiredSkillsets(int taskId);
-        bool UpdateRequiredSkillsets(ProductionTask task);
     }
 }

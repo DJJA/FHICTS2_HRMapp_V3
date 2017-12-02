@@ -7,7 +7,5 @@ namespace HRMapp.DAL.Contexts
 {
     interface IProductionWorkerContext : IEmployeeContext<ProductionWorker>, IContext<ProductionWorker>
     {
-        IEnumerable<Skillset> GetSkillsets(int employeeId);
-        void UpdateSkillsets(ProductionWorker productionWorker);
     }
 }

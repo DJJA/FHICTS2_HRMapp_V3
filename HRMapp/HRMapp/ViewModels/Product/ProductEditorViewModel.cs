@@ -39,7 +39,7 @@ namespace HRMapp.ViewModels
             {
                 var list = new List<TaskEditorViewModel>();
 
-                list.AddRange(from ProductionTask task in tasks select new TaskEditorViewModel(new List<Skillset>(), task));
+                list.AddRange(from ProductionTask task in tasks select new TaskEditorViewModel(new List<Employee>(), task));
 
                 return list;
             }
