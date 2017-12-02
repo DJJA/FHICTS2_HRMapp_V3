@@ -10,8 +10,6 @@ namespace HRMapp.ViewModels
 {
     public class ProductEditorViewModel : EditorViewModel
     {
-        private List<ProductionTask> tasks = new List<ProductionTask>();
-
         public override string FormTitle
         {
             get
@@ -32,29 +30,7 @@ namespace HRMapp.ViewModels
         public string Name { get; set; }
         [DisplayName("Omschrijving:")]
         public string Description { get; set; }
-
-        public List<TaskEditorViewModel> TaskEditorViewModels
-        {
-            get
-            {
-                var list = new List<TaskEditorViewModel>();
-
-                list.AddRange(from ProductionTask task in tasks select new TaskEditorViewModel(new List<Employee>(), task));
-
-                return list;
-            }
-        }
-        public List<ProductionTask> Tasks
-        {
-            get
-            {
-                var list = new List<ProductionTask>();
-
-                list.AddRange(tasks);
-
-                return list;
-            }
-        }
+        public List<ProductionTask> Tasks { get; private set; }
 
         /// <summary>
         /// Used for giving back a viewmodel and used for new product
@@ -62,26 +38,26 @@ namespace HRMapp.ViewModels
         public ProductEditorViewModel()
         {
             EditorType = EditorType.New;
+            Tasks = new List<ProductionTask>();
         }
 
         /// <summary>
         /// Used for editing a product
         /// </summary>
         /// <param name="product"></param>
-        public ProductEditorViewModel(Product product, List<ProductionTask> tasks)
+        public ProductEditorViewModel(Product product)
         {
             EditorType = EditorType.Edit;
 
             Id = product.Id;
             Name = product.Name;
             Description = product.Description;
-
-            this.tasks = tasks;
+            Tasks = product.Tasks;
         }
 
         public Product ToProduct()
         {
-            return new Product(Id, Name, Description, new List<ProductionTask>());
+            return new Product(Id, Name, Description);
         }
     }
 }

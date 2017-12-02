@@ -14,13 +14,14 @@
 }
 
 <form asp-action="@Model.FormAction" method="post">
+    <input asp-for="@Model.ProductId" type="hidden"/>
     <div class="form-group">
         <label asp-for="@Model.Name" class="control-label"></label>
-        <input asp-for="@Model.Name" class="form-control" placeholder="Naam" />
+        <input asp-for="@Model.Name" class="form-control" placeholder="Naam"/>
     </div>
     <div class="form-group">
         <label asp-for="@Model.Description" class="control-label"></label>
-        <textarea asp-for="@Model.Description" @*class="form-control" placeholder="Typ hier een omschrijving..." *@></textarea>
+        <textarea asp-for="@Model.Description"></textarea>
     </div>
 
     <div class="form-group">
@@ -28,11 +29,11 @@
         <div class="row">
             <div class="form-group col-md-6">
                 <label asp-for="@Model.DurationHours" class="control-label"></label>
-                <input asp-for="@Model.DurationHours" class="form-control" type="number" min="0" />
+                <input asp-for="@Model.DurationHours" class="form-control" type="number" min="0" max="23"/>
             </div>
             <div class="form-group col-md-6">
                 <label asp-for="@Model.DurationMinutes" class="control-label"></label>
-                <input asp-for="@Model.DurationMinutes" class="form-control" type="number" min="0" max="59" />
+                <input asp-for="@Model.DurationMinutes" class="form-control" type="number" min="0" max="59"/>
             </div>
         </div>
     </div>
@@ -40,27 +41,29 @@
     <div class="form-group">
         <div class="row">
             <div class="col-md-5">
-                <label class="control-label" for="lboxAvailableSkillsets">Skillsets:</label>
+                <label class="control-label" for="lboxAvailableSkillsets">Werknemers:</label>
             </div>
             <div class="col-md-2"></div>
             <div class="col-md-5">
-                <label class="control-label" for="lboxRequiredSkillsets">Nodige skillsets:</label>
+                <label class="control-label" for="lboxRequiredSkillsets">Werknemers die de taak kunnen uitvoeren:</label>
             </div>
         </div>
         <div class="row">
             <div class="col-md-5">
-                @Html.ListBox("lboxAvailableSkillsets", Model.AvailableSkillsetListItems, new { @class = "form-control", size = 10 })
+                @Html.ListBox("lboxAvailableSkillsets", Model.AvailableSkillsetListItems, new {@class = "form-control", size = 10})
             </div>
             <div class="col-md-2">
-                <div>
-                    <a id="btnSkillsetsMoveToRequired" class="btn btn-default">>></a>
-                </div>
-                <div>
-                    <a id="btnSkillsetsMoveFromRequired" class="btn btn-default"><<</a>
-                </div>
+                <center>
+                    <div>
+                        <a id="btnSkillsetsMoveToRequired" class="btn btn-default">>></a>
+                    </div>
+                    <div>
+                        <a id="btnSkillsetsMoveFromRequired" class="btn btn-default"><<</a>
+                    </div>
+                </center>
             </div>
             <div class="col-md-5">
-                @Html.ListBox("lboxRequiredSkillsets", Model.RequiredSkillsetListItems, new { @class = "form-control", size = 10 })
+                @Html.ListBox("lboxRequiredSkillsets", Model.RequiredSkillsetListItems, new {@class = "form-control", size = 10})
             </div>
         </div>
     </div>
@@ -70,6 +73,8 @@
     </div>
 </form>
 
+
+@*TODO CKEditor oninput lijkt niet te werken*@
 <script src="https://cdn.ckeditor.com/4.7.3/standard/ckeditor.js"></script>
 <script>
     CKEDITOR.replace('Description');
@@ -79,17 +84,13 @@
     {
         @:userInputChanged = true;
     }
-
+    
     document.getElementById('Name').oninput = function () { userInputChanged = true; }
     document.getElementById('Description').oninput = function () { userInputChanged = true; }
     document.getElementById('DurationHours').oninput = function () { userInputChanged = true; }
     document.getElementById('DurationMinutes').oninput = function () { userInputChanged = true; }
     document.getElementById('btnCancel').onclick = function() {
-        if (@Model.Id > -1) {
-            window.location.href = '/Task/Index/@Model.Id';
-        } else {
-            window.location.href = '/Task';
-        }
+        window.location.href = '/Product/Edit/@Model.ProductId';
 
     }
 

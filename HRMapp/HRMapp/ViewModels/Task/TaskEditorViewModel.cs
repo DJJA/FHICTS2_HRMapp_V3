@@ -29,6 +29,8 @@ namespace HRMapp.ViewModels
             }
         }
 
+        public int ProductId { get; set; }
+
         [DisplayName("Naam:")]
         public string Name { get; set; }
         [DisplayName("Omschrijving:")]
@@ -92,10 +94,11 @@ namespace HRMapp.ViewModels
         /// Used by controller to create a new task
         /// </summary>
         /// <param name="availableEmployees"></param>
-        public TaskEditorViewModel(List<Employee> availableEmployees)
+        public TaskEditorViewModel(List<Employee> availableEmployees, int productId)
         {
             this.availableEmployees = availableEmployees;
             EditorType = EditorType.New;
+            ProductId = productId;
         }
 
         /// <summary>
@@ -109,6 +112,7 @@ namespace HRMapp.ViewModels
             EditorType = EditorType.Edit;
 
             Id = task.Id;
+            ProductId = task.Product.Id;
             Name = task.Name;
             Description = task.Description;
             Duration = task.Duration;
@@ -127,6 +131,7 @@ namespace HRMapp.ViewModels
             EditorType = editorType;
 
             Id = viewModel.Id;
+            ProductId = viewModel.ProductId;
             Name = viewModel.Name;
             Description = viewModel.Description;
             Duration = viewModel.Duration;
@@ -152,7 +157,7 @@ namespace HRMapp.ViewModels
             {
                 qualifiedEmployees.Add(employees.Single(skillset => skillset.Id == id));
             }
-            return new ProductionTask(Id, new Product(-1), Name, Description, Duration, qualifiedEmployees); //TODO change product id -1 to something else
+            return new ProductionTask(Id, new Product(ProductId), Name, Description, Duration, qualifiedEmployees); //TODO change product id -1 to something else
         }
     }
 }

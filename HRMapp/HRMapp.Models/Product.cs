@@ -39,5 +39,13 @@ namespace HRMapp.Models
             Description = description;
             Tasks = tasks;
         }
+
+        // used by editing product
+        public Product(int id, string name, string description)
+        {
+            Id = id;
+            Name = name;
+            Description = description;
+        }
     }
 }

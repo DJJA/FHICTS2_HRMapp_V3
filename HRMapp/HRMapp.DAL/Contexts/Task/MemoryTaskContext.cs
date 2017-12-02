@@ -53,6 +53,11 @@ namespace HRMapp.DAL
             }
         }
 
+        public IEnumerable<ProductionTask> GetByProductId(int productId)
+        {
+            throw new NotImplementedException();
+        }
+
         private void AddRandomItems()
         {
             //var mem = new MemorySkillsetContext();

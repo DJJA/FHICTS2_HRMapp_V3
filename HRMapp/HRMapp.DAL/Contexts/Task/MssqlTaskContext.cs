@@ -63,9 +63,17 @@ namespace HRMapp.DAL.Contexts
             return addedTaskId;
         }
 
-        public bool Delete(ProductionTask value)
+        public bool Delete(ProductionTask task)
         {
-            throw new NotImplementedException();
+            try
+            {
+                ExecuteProcedure("sp_DeleteTaskById", new SqlParameter("@Id", task.Id));
+            }
+            catch (SqlException sqlEx)
+            {
+                HandleGenericSqlException(sqlEx);
+            }
+            return false;
         }
 
         public bool Update(ProductionTask task)
@@ -82,14 +90,51 @@ namespace HRMapp.DAL.Contexts
             }
         }
 
-        private ProductionTask GetTaskFromDataRow(DataRow row)
+        public IEnumerable<ProductionTask> GetByProductId(int productId)
+        {
+            var tasks = new List<ProductionTask>();
+
+            try
+            {
+                var dataTable = GetDataViaProcedure("sp_GetTasksByProductId", new SqlParameter("@ProductId", productId));
+                tasks.AddRange(from DataRow row in dataTable.Rows select GetTaskFromDataRow(row));
+            }
+            catch (SqlException sqlEx)
+            {
+                HandleGenericSqlException(sqlEx);
+            }
+
+            return tasks;
+        }
+
+        private static List<Employee> GetEmployeesByTaskId(int taskId)// TODO dit is fucking lelijk, fix dit!
+        {
+            var employees = new List<Employee>();
+
+            try
+            {
+                var dataTable = new MssqlTaskContext().GetDataViaProcedure("sp_GetEmployeesByTaskId", new SqlParameter("@TaskId", taskId));
+                employees.AddRange(from DataRow row in dataTable.Rows select new Employee(
+                                                                                            id: Convert.ToInt32(row["Id"]),
+                                                                                            firstName: row["FirstName"].ToString(),
+                                                                                            lastName: row["LastName"].ToString()));
+            }
+            catch (SqlException sqlEx)
+            {
+                new MssqlTaskContext().HandleGenericSqlException(sqlEx);
+            }
+
+            return employees;
+        }
+
+        public static ProductionTask GetTaskFromDataRow(DataRow row)
         {
             var id = Convert.ToInt32(row["Id"]);
             var productId = Convert.ToInt32(row["ProductId"]);
             var name = row["Name"].ToString();
             var description = row["Description"].ToString();
             var duration = new TimeSpan(0, Convert.ToInt32(row["Duration"]), 0);
-            var employees = new List<Employee>();
+            var employees = GetEmployeesByTaskId(id);// TODO dit is fucking lelijk, fix dit!
             return new ProductionTask(id, new Product(productId), name, description, duration, employees);
         }
 
@@ -104,6 +149,10 @@ namespace HRMapp.DAL.Contexts
             if (withId)
             {
                 parameters.Add(new SqlParameter("@Id", task.Id));
+            }
+            else
+            {
+                parameters.Add(new SqlParameter("@ProductId", task.Product.Id));
             }
             return parameters;
         }

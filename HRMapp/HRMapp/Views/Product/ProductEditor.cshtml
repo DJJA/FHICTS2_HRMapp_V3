@@ -53,6 +53,27 @@
     .taskContainer {
         user-select: none;
     }
+
+    .contentRight {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .noTaskFount {
+        color: #333;
+        background-color: #eee;
+        border-color: #ccc;
+        font-size: 14px;
+        font-weight: normal;
+        line-height: 1.42857143;
+        vertical-align: middle;
+        border-style: solid;
+        border-width: 1px;
+        border-radius: 4px;
+        padding: 6px 12px;
+        margin-bottom: 0;
+        vertical-align: middle;
+    }
 </style>
 
 <h2>@Model.FormTitle</h2>
@@ -77,26 +98,23 @@
 
 <div class="form-group">
     <h3>Taken</h3>
-    <a class="btn btn-default" asp-controller="Task" asp-action="New">Nieuwe taak toevoegen</a>
-    <div class="taskContainer">
-
-        @foreach (var task in Model.Tasks)
+    <div class="form-group">
+        @if (Model.Id == 0)
         {
-            <div class="taskItem">
-                <div class="taskItemHeader">
-                    <span>@task.Name</span>
-                    <div>
-                        <a class="btn btn-default" asp-controller="Task" asp-action="Edit" asp-route-id="@task.Id">Bewerken</a>
-                        <a class="btn btn-default">Verwijderen</a>
-                    </div>
-                </div>
-                <div class="taskItemContent">
-                    @Html.Partial("~/Views/Task/_TaskView.cshtml", task)
-                </div>
-            </div>
+            //SaveAndAddNewTask
+            <button class="btn btn-default" onclick="userInputChanged = false;$('#formProduct').attr('action', '/Product/SaveAndAddNewTask');" type="submit" form="formProduct">Nieuwe taak toevoegen</button>
         }
-
+        else
+        {
+            <a class="btn btn-default" asp-controller="Task" asp-action="New" asp-route-productId="@Model.Id">Nieuwe taak toevoegen</a>
+        }
+        
     </div>
+    
+    <div class="taskContainer">
+        @Html.Partial("~/Views/Product/_TaskContainerContent.cshtml", Model.Tasks)
+    </div>
+    
 </div>
 <div class="form-group">
     <button id="btnSubmit" type="submit" class="btn btn-default" form="formProduct">Opslaan</button>
@@ -104,36 +122,28 @@
 </div>
 
 <script>
-    var acc = document.getElementsByClassName("taskItemHeader");
-    var i;
-
-    for (i = 0; i < acc.length; i++) {
-        acc[i].nextElementSibling.style.display = "none";
-        acc[i].onclick = function (e) {
-            if (e.target !== this)
-                return;
-
-            
-            //this.classList.toggle("active");
-            var panel = this.nextElementSibling;
-
-            var display;
-            if (panel.style.display === "block") {
-                display = "none";
-            } else {
-                display = "block";
+    function deleteTask(taskId) {
+        $.ajax({
+            url: '/Task/Delete',
+            data: {
+                'taskId': taskId,
+                'productId': @Model.Id
+            },
+            type: 'post',
+            cache: false,
+            success: function (response) {
+                $('.taskContainer').html(response);
             }
-
-            collapseAllTaskItems();
-            panel.style.display = display;
-        }
+        });
     }
+
+    
 
     function collapseAllTaskItems() {
         var acc = document.getElementsByClassName("taskItemContent");
-            for (i = 0; i < acc.length; i++) {
-                acc[i].style.display = "none";
-            }
+        for (i = 0; i < acc.length; i++) {
+            acc[i].style.display = "none";
+        }
     }
 </script>
 

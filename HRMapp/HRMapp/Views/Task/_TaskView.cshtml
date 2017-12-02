@@ -1,23 +1,6 @@
 @using HRMapp.Models
 @model ProductionTask
 
-@*<p>Duur: @Model.Duration.Hours uur en @Model.Duration.Minutes minuten</p>
-<br />
-<h4>Omschrijving:</h4>
-<div style="border-style: solid; border-radius: 5px; border-width: 1px; border-color: LightGray;">
-@Html.Raw(Model.Description)
-</div>
-
-@if (Model.RequiredSkillsets.Count > 0)
-{
-    <h4>Nodige skillsets:</h4>
-    <ul>
-        @foreach (var skillset in Model.RequiredSkillsets)
-        {
-            <li>@skillset.Name</li>
-        }
-    </ul>
-}*@
 <h4>Duur:</h4>
 <p>@Model.Duration.Hours uur en @Model.Duration.Minutes minuten</p>
 
@@ -30,9 +13,9 @@
 @if (Model.Employees.Count > 0)
 {
     <ul>
-        @foreach (var skillset in Model.Employees)
+        @foreach (var employee in Model.Employees)
         {
-            <li>@skillset.Name</li>
+            <li>@employee.FirstName @employee.LastName</li>
         }
     </ul>
 }

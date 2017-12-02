@@ -52,5 +52,10 @@ namespace HRMapp.Models
             Duration = duration;
             Employees = employees;
         }
+
+        public ProductionTask(int id)
+        {
+            Id = id;
+        }
     }
 }

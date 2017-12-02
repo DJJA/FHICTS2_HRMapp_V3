@@ -60,10 +60,33 @@ namespace HRMapp.Controllers
             }
         }
 
+        [HttpPost]
+        public IActionResult SaveAndAddNewTask(ProductEditorViewModel model)
+        {
+            try
+            {
+                var addedProductId = productLogic.Add(model.ToProduct());
+                //infoMessage.Message = $"'{model.Name}' is toegevoegd aan het systeem.";
+                return RedirectToAction("New", "Task", new { productId = addedProductId });
+            }
+            catch (ArgumentException argEx)
+            {
+                model.ErrorMessage = argEx.Message;
+                model.EditorType = EditorType.New;
+                return View("ProductEditor", model);
+            }
+            catch (DBException dbEx)
+            {
+                model.ErrorMessage = dbEx.Message;
+                model.EditorType = EditorType.New;
+                return View("ProductEditor", model);
+            }
+        }
+
         public IActionResult Edit(int id)
         {
             var product = productLogic.GetById(id);
-            return View("ProductEditor", new ProductEditorViewModel(product, taskLogic.GetAll));
+            return View("ProductEditor", new ProductEditorViewModel(product));
         }
 
         [HttpPost]

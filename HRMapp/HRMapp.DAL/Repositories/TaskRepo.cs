@@ -14,5 +14,7 @@ namespace HRMapp.DAL.Repositories
         public ProductionTask GetById(int id) => context.GetById(id);
         public int Add(ProductionTask task) => context.Add(task);
         public bool Update(ProductionTask task) => context.Update(task);
+        public void Delete(ProductionTask task) => context.Delete(task);
+        public IEnumerable<ProductionTask> GetByProductId(int id) => context.GetByProductId(id);
     }
 }

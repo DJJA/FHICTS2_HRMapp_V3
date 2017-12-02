@@ -1,5 +1,19 @@
 ﻿@model HRMapp.Models.Product
 
 <h3>@Model.Name</h3>
-<p>Product ID: @Model.Id</p>
 <p>@Model.Description</p>
+
+<h4>Taken:</h4>
+@if (Model.Tasks.Count > 0)
+{
+    <ul>
+        @foreach (var task in Model.Tasks)
+        {
+            <li>@task.Name</li>
+        }
+    </ul>
+}
+else
+{
+    <p>Geen taken toegewezen.</p>
+}
