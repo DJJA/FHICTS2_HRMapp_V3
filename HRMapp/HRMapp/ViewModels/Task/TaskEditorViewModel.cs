@@ -50,7 +50,7 @@ namespace HRMapp.ViewModels
             }
         }
 
-        public List<SelectListItem> AvailableSkillsetListItems
+        public List<SelectListItem> AvailableEmployees
         {
             get
             {
@@ -66,7 +66,7 @@ namespace HRMapp.ViewModels
             }
         }
 
-        public List<SelectListItem> RequiredSkillsetListItems
+        public List<SelectListItem> QualifiedEmployees
         {
             get
             {
@@ -81,6 +81,20 @@ namespace HRMapp.ViewModels
 
         //public List<int> LboxAvailableSkillsets { get; set; }
         public List<int> LboxQualifiedEmployees { get; set; }
+
+        //private bool specifiedEmployees = false;
+
+        //public bool SpecifiedEmployees
+        //{
+        //    get
+        //    {
+        //        if (qualifiedEmployees.Count > 0)
+        //            return true;
+        //        return false;
+        //    }
+        //}
+
+        public bool SpecifiedEmployees { get; set; }
 
         /// <summary>
         /// Used by form to send back data
@@ -147,15 +161,20 @@ namespace HRMapp.ViewModels
             }
             this.qualifiedEmployees = requiredSkillsets;
 
+            SpecifiedEmployees = viewModel.SpecifiedEmployees;
+
             ErrorMessage = errorMessage;
         }
 
         public ProductionTask ToTask(List<Employee> employees)
         {
             var qualifiedEmployees = new List<Employee>();
-            foreach (var id in LboxQualifiedEmployees)
+            if (SpecifiedEmployees)
             {
-                qualifiedEmployees.Add(employees.Single(skillset => skillset.Id == id));
+                foreach (var id in LboxQualifiedEmployees)
+                {
+                    qualifiedEmployees.Add(employees.Single(employee => employee.Id == id));
+                }
             }
             return new ProductionTask(Id, new Product(ProductId), Name, Description, Duration, qualifiedEmployees); //TODO change product id -1 to something else
         }

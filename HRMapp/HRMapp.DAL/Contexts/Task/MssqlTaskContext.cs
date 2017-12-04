@@ -140,11 +140,22 @@ namespace HRMapp.DAL.Contexts
 
         private IEnumerable<SqlParameter> GetSqlParametersFromTask(ProductionTask task, bool withId)
         {
+            var dataTable = new DataTable();
+            dataTable.Columns.Add("Id");
+            foreach (var employee in task.Employees)
+            {
+                dataTable.Rows.Add(employee.Id);
+            }
+
             var parameters = new List<SqlParameter>()
             {
                 new SqlParameter("@Name", task.Name),
                 new SqlParameter("@Description", task.Description),
                 new SqlParameter("@Duration", (task.Duration.Hours * 60) + task.Duration.Minutes),
+                new SqlParameter("@QualifiedEmployeeIds", dataTable)
+                {
+                    SqlDbType = SqlDbType.Structured
+                }
             };
             if (withId)
             {

@@ -123,18 +123,20 @@
 
 <script>
     function deleteTask(taskId) {
-        $.ajax({
-            url: '/Task/Delete',
-            data: {
-                'taskId': taskId,
-                'productId': @Model.Id
-            },
-            type: 'post',
-            cache: false,
-            success: function (response) {
-                $('.taskContainer').html(response);
-            }
-        });
+        if (confirm('Weet u zeker dat u de taak wil verwijderen?')) {
+            $.ajax({
+                url: '/Task/Delete',
+                data: {
+                    'taskId': taskId,
+                    'productId': @Model.Id
+                },
+                type: 'post',
+                cache: false,
+                success: function (response) {
+                    $('.taskContainer').html(response);
+                }
+            });
+        }
     }
 
     
