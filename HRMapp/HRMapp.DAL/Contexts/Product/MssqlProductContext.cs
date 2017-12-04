@@ -5,6 +5,7 @@ using HRMapp.Models;
 using System.Data.SqlClient;
 using System.Data;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using HRMapp.Models.Exceptions;
 
 namespace HRMapp.DAL.Contexts
@@ -81,14 +82,12 @@ namespace HRMapp.DAL.Contexts
             }
         }
 
-        public IEnumerable<Product> GetRequiredTasks(int productId)
+        public IEnumerable<ProductionTask> GetRequiredTasks(int productId)
         {
-            throw new NotImplementedException();
-        }
-
-        public bool UpdateRequiredTasks(Product product)
-        {
-            throw new NotImplementedException();
+            var tasks = new List<ProductionTask>();
+            var dataTable = GetDataViaProcedure("sp_GetTasksByProductId", new SqlParameter("@ProductId", productId));
+            tasks.AddRange(from DataRow row in dataTable.Rows select MssqlTaskContext.GetTaskFromDataRow(row));   // TODO Als ik niet meer info nodig heb, misschien minder ophalen uit de db
+            return tasks;
         }
 
         private Product GetProductFromDataRow(DataRow row)
@@ -96,7 +95,12 @@ namespace HRMapp.DAL.Contexts
             var id = Convert.ToInt32(row["Id"]);
             var name = row["Name"].ToString();
             var description = row["Description"].ToString();
-            return new Product(id, name, description, new List<ProductionTask>());
+
+            return new Product(
+                id: id,
+                name: name,
+                description: description,
+                tasks: GetRequiredTasks(id).ToList());
         }
 
         private IEnumerable<SqlParameter> GetSqlParametersFromProduct(Product product, bool withId)

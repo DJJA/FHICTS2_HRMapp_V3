@@ -4,7 +4,7 @@ using System.Text;
 
 namespace HRMapp.Models
 {
-    public abstract class Employee
+    public class Employee
     {
         private string firstName, lastName, emailAddress, phoneNumber;
 
@@ -76,7 +76,7 @@ namespace HRMapp.Models
         public string ZipCode { get; private set; }
         public string City { get; private set; }
 
-        protected Employee(int id, string firstName, string lastName)
+        public Employee(int id, string firstName, string lastName)
         {
             Id = id;
             FirstName = firstName;

@@ -39,27 +39,4 @@
     {
         <p><strong>Teamleider:</strong> @worker.TeamLeader.FirstName @worker.TeamLeader.LastName</p>  
     }
-    if (worker.Skillsets.Count > 0)
-    {
-        <h4>Skillsets:</h4>
-        <ul>
-            @foreach (var skillset in worker.Skillsets)
-            {
-                <li>@skillset.Name</li>
-            }
-        </ul>
-    }
-}
-else if (Model is TeamLeader teamLeader)
-{
-    if (teamLeader.Skillsets.Count > 0)
-    {
-        <h4>Skillsets:</h4>
-        <ul>
-            @foreach (var skillset in teamLeader.Skillsets)
-            {
-                <li>@skillset.Name</li>
-            }
-        </ul>
-    }
 }

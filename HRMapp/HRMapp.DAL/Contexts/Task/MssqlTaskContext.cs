@@ -59,14 +59,21 @@ namespace HRMapp.DAL.Contexts
             {
                 HandleGenericSqlException(sqlEx);
             }
-
-            UpdateRequiredSkillsets(task);
+            
             return addedTaskId;
         }
 
-        public bool Delete(ProductionTask value)
+        public bool Delete(ProductionTask task)
         {
-            throw new NotImplementedException();
+            try
+            {
+                ExecuteProcedure("sp_DeleteTaskById", new SqlParameter("@Id", task.Id));
+            }
+            catch (SqlException sqlEx)
+            {
+                HandleGenericSqlException(sqlEx);
+            }
+            return false;
         }
 
         public bool Update(ProductionTask task)
@@ -74,9 +81,6 @@ namespace HRMapp.DAL.Contexts
             try
             {
                 ExecuteProcedure("sp_UpdateTask", GetSqlParametersFromTask(task, true));
-
-                UpdateRequiredSkillsets(task);
-
                 return true;
             }
             catch (SqlException sqlEx)
@@ -86,80 +90,80 @@ namespace HRMapp.DAL.Contexts
             }
         }
 
-        #region Task Skillset Links
-        public IEnumerable<Skillset> GetRequiredSkillsets(int taskId)
+        public IEnumerable<ProductionTask> GetByProductId(int productId)
         {
-            var skillsets = new List<Skillset>();
+            var tasks = new List<ProductionTask>();
 
             try
             {
-                var dataTable = GetDataViaProcedure("sp_GetRequiredSkillsets", new SqlParameter("@TaskId", taskId));
-                skillsets.AddRange(from DataRow row in dataTable.Rows select MssqlSkillsetContext.GetSkillsetFromDataRow(row));
-            }
-            catch (SqlException sqlEx)
-            {
-                HandleGenericSqlException(sqlEx); // TODO Moet ik hier al wel een specifieke error gooien
-            }
-
-            return skillsets;
-        }
-
-        
-        public bool UpdateRequiredSkillsets(ProductionTask task)
-        {
-            var daaTablet = new DataTable();
-            daaTablet.Columns.Add("Id");
-
-            foreach (var skillset in task.RequiredSkillsets)
-            {
-                daaTablet.Rows.Add(skillset.Id);
-            }
-
-            var listWithRequiredSkillsetIds = new SqlParameter("@List", daaTablet)
-            {
-                SqlDbType = SqlDbType.Structured
-            };
-
-            var parameters = new List<SqlParameter>()
-            {
-                listWithRequiredSkillsetIds,
-                new SqlParameter("@TaskId", task.Id)
-            };
-
-            try
-            {
-                ExecuteProcedure("sp_UpdateRequiredSkillsets", parameters);
-                return true;
+                var dataTable = GetDataViaProcedure("sp_GetTasksByProductId", new SqlParameter("@ProductId", productId));
+                tasks.AddRange(from DataRow row in dataTable.Rows select GetTaskFromDataRow(row));
             }
             catch (SqlException sqlEx)
             {
                 HandleGenericSqlException(sqlEx);
-                return false;
             }
-        }
-        #endregion
 
-        private ProductionTask GetTaskFromDataRow(DataRow row)
+            return tasks;
+        }
+
+        private static List<Employee> GetEmployeesByTaskId(int taskId)// TODO dit is fucking lelijk, fix dit!
+        {
+            var employees = new List<Employee>();
+
+            try
+            {
+                var dataTable = new MssqlTaskContext().GetDataViaProcedure("sp_GetEmployeesByTaskId", new SqlParameter("@TaskId", taskId));
+                employees.AddRange(from DataRow row in dataTable.Rows select new Employee(
+                                                                                            id: Convert.ToInt32(row["Id"]),
+                                                                                            firstName: row["FirstName"].ToString(),
+                                                                                            lastName: row["LastName"].ToString()));
+            }
+            catch (SqlException sqlEx)
+            {
+                new MssqlTaskContext().HandleGenericSqlException(sqlEx);
+            }
+
+            return employees;
+        }
+
+        public static ProductionTask GetTaskFromDataRow(DataRow row)
         {
             var id = Convert.ToInt32(row["Id"]);
+            var productId = Convert.ToInt32(row["ProductId"]);
             var name = row["Name"].ToString();
             var description = row["Description"].ToString();
             var duration = new TimeSpan(0, Convert.ToInt32(row["Duration"]), 0);
-            var requiredSkillsets = GetRequiredSkillsets(id).ToList();
-            return new ProductionTask(id, name, description, duration, requiredSkillsets);
+            var employees = GetEmployeesByTaskId(id);// TODO dit is fucking lelijk, fix dit!
+            return new ProductionTask(id, new Product(productId), name, description, duration, employees);
         }
 
         private IEnumerable<SqlParameter> GetSqlParametersFromTask(ProductionTask task, bool withId)
         {
+            var dataTable = new DataTable();
+            dataTable.Columns.Add("Id");
+            foreach (var employee in task.Employees)
+            {
+                dataTable.Rows.Add(employee.Id);
+            }
+
             var parameters = new List<SqlParameter>()
             {
                 new SqlParameter("@Name", task.Name),
                 new SqlParameter("@Description", task.Description),
                 new SqlParameter("@Duration", (task.Duration.Hours * 60) + task.Duration.Minutes),
+                new SqlParameter("@QualifiedEmployeeIds", dataTable)
+                {
+                    SqlDbType = SqlDbType.Structured
+                }
             };
             if (withId)
             {
                 parameters.Add(new SqlParameter("@Id", task.Id));
+            }
+            else
+            {
+                parameters.Add(new SqlParameter("@ProductId", task.Product.Id));
             }
             return parameters;
         }

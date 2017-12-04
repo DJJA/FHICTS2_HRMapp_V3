@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using HRMapp.DAL.Repositories;
 using HRMapp.Models;
@@ -17,5 +18,6 @@ namespace HRMapp.Logic
 
         public IEnumerable<TeamLeader> GetAllTeamLeaders => repo.GetAllTeamLeaders();
         public TeamLeader GetTeamLeaderById(int id) => repo.GetTeamLeaderById(id);
+        public List<Employee> GetAllTeamLeadersAndProductionWorkers => repo.GetAllTeamLeadersAndProductionWorkers().ToList();
     }
 }

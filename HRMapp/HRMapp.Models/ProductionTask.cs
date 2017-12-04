@@ -8,9 +8,10 @@ namespace HRMapp.Models
     {
         private string name, description;
         public int Id { get; private set; }
+        public Product Product { get; private set; }
         public string Name
         {
-            get { return name; }
+            get => name;
             private set
             {
                 if (!String.IsNullOrEmpty(value))
@@ -25,7 +26,7 @@ namespace HRMapp.Models
         }
         public string Description
         {
-            get { return description; }
+            get => description;
             private set
             {
                 if (!String.IsNullOrEmpty(value))
@@ -39,21 +40,22 @@ namespace HRMapp.Models
             }
         }
         public TimeSpan Duration { get; private set; }
-        public List<Skillset> RequiredSkillsets { get; private set; }
+        public List<Employee> Employees { get; private set; }
+        
 
-        public ProductionTask(int id, string name, string description)
+        public ProductionTask(int id, Product product, string name, string description, TimeSpan duration, List<Employee> employees)
         {
             Id = id;
+            Product = product;
             Name = name;
             Description = description;
-            RequiredSkillsets = new List<Skillset>();
+            Duration = duration;
+            Employees = employees;
         }
 
-        public ProductionTask(int id, string name, string description, TimeSpan duration, List<Skillset> requiredSkillsets)
-            : this(id, name, description)
+        public ProductionTask(int id)
         {
-            Duration = duration;
-            RequiredSkillsets = requiredSkillsets;
+            Id = id;
         }
     }
 }

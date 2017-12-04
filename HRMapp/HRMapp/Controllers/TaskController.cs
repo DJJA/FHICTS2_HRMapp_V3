@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HRMapp.Logic;
+using HRMapp.Models;
 using HRMapp.Models.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using HRMapp.ViewModels;
@@ -11,19 +12,21 @@ namespace HRMapp.Controllers
 {
     public class TaskController : Controller
     {
-        private static CrossActionMessageHolder infoMessage = new CrossActionMessageHolder();
-        private SkillsetLogic skillsetLogic = new SkillsetLogic();
+        //private static CrossActionMessageHolder infoMessage = new CrossActionMessageHolder();
         private TaskLogic taskLogic = new TaskLogic();
+
+        private EmployeeLogic employeeLogic = new EmployeeLogic();
 
         public IActionResult Index(int id)
         {
-            var tasks = taskLogic.GetAll;
-            if (id == 0 && tasks.Count > 0)
-            {
-                id = tasks[0].Id;
-            }
-            var model = new TaskCollectionViewModel(id, tasks.ToList()) { InfoMessage = infoMessage.Message };
-            return View("Task", model);
+            //var tasks = taskLogic.GetAll;
+            //if (id == 0 && tasks.Count > 0)
+            //{
+            //    id = tasks[0].Id;
+            //}
+            //var model = new TaskCollectionViewModel(id, tasks.ToList()) { InfoMessage = infoMessage.Message };
+            //return View("Task", model);
+            return RedirectToAction("Index", "Product");
         }
 
         public IActionResult TaskView(int id)
@@ -32,9 +35,9 @@ namespace HRMapp.Controllers
             return PartialView("_TaskView", task);
         }
 
-        public IActionResult New()
+        public IActionResult New(int productId)
         {
-            return View("TaskEditor", new TaskEditorViewModel(skillsetLogic.GetAll().ToList()));
+            return View("TaskEditor", new TaskEditorViewModel(employeeLogic.GetAllTeamLeadersAndProductionWorkers, productId));
         }
 
         [HttpPost]
@@ -42,24 +45,24 @@ namespace HRMapp.Controllers
         {
             try
             {
-                var addedTaskId = taskLogic.Add(model.ToTask(skillsetLogic.GetAll().ToList()));
-                infoMessage.Message = $"'{model.Name}' is toegevoegd aan het systeem.";
-                return RedirectToAction("Index", new { id = addedTaskId });
+                var addedTaskId = taskLogic.Add(model.ToTask(employeeLogic.GetAllTeamLeadersAndProductionWorkers));
+                //infoMessage.Message = $"'{model.Name}' is toegevoegd aan het systeem.";
+                return RedirectToAction("Edit", "Product", new {id = model.ProductId});
             }
             catch (ArgumentException argEx)
             {
-                return View("TaskEditor", new TaskEditorViewModel(skillsetLogic.GetAll().ToList(), model, EditorType.New, argEx.Message));
+                return View("TaskEditor", new TaskEditorViewModel(employeeLogic.GetAllTeamLeadersAndProductionWorkers, model, EditorType.New, argEx.Message));
             }
             catch (DBException dbEx)
             {
-                return View("TaskEditor", new TaskEditorViewModel(skillsetLogic.GetAll().ToList(), model, EditorType.New, dbEx.Message));
+                return View("TaskEditor", new TaskEditorViewModel(employeeLogic.GetAllTeamLeadersAndProductionWorkers, model, EditorType.New, dbEx.Message));
             }
         }
 
         public IActionResult Edit(int id)
         {
             var task = taskLogic.GetById(id);
-            return View("TaskEditor", new TaskEditorViewModel(skillsetLogic.GetAll().ToList(), task));
+            return View("TaskEditor", new TaskEditorViewModel(employeeLogic.GetAllTeamLeadersAndProductionWorkers, task));
         }
 
         [HttpPost]
@@ -67,49 +70,52 @@ namespace HRMapp.Controllers
         {
             try
             {
-                var success = taskLogic.Update(model.ToTask(skillsetLogic.GetAll().ToList()));
-                infoMessage.Message = $"'{model.Name}' is bewerkt.";
-                return RedirectToAction("Index", new {id = model.Id});
+                var success = taskLogic.Update(model.ToTask(employeeLogic.GetAllTeamLeadersAndProductionWorkers));
+                //infoMessage.Message = $"'{model.Name}' is bewerkt.";
+                return RedirectToAction("Edit", "Product", new {id = model.ProductId});
             }
             catch (ArgumentException argEx)
             {
-                return View("TaskEditor", new TaskEditorViewModel(skillsetLogic.GetAll().ToList(), model, EditorType.Edit, argEx.Message));
+                return View("TaskEditor", new TaskEditorViewModel(employeeLogic.GetAllTeamLeadersAndProductionWorkers, model, EditorType.Edit, argEx.Message));
             }
             catch (DBException dbEx)
             {
-                return View("TaskEditor", new TaskEditorViewModel(skillsetLogic.GetAll().ToList(), model, EditorType.Edit, dbEx.Message));
+                return View("TaskEditor", new TaskEditorViewModel(employeeLogic.GetAllTeamLeadersAndProductionWorkers, model, EditorType.Edit, dbEx.Message));
             }
         }
 
+        //Wat is nou het verschil tussen psot en get, wat zou ik hier gebruiken? Beide zullen werken...
         [HttpPost]
-        public IActionResult AjaxEdit(TaskEditorViewModel viewModel)
+        public IActionResult Delete(int taskId, int productId)
         {
             //try
             //{
-            //    //var success = taskLogic.Update(model.ToTask(skillsetLogic.GetAll().ToList()));
-            //    //infoMessage.Message = $"'{model.Name}' is bewerkt.";
-            //    //return RedirectToAction("Index", new { id = model.Id });
-            //    return View("_TaskEditor", new TaskEditorViewModel(skillsetLogic.GetAll().ToList(), model, EditorType.Edit, ""));
+            //    taskLogic.Delete(new ProductionTask(taskId));
+            //    return RedirectToAction("Edit", "Product", new {id = productId});
             //}
             //catch (ArgumentException argEx)
             //{
-            //    return View("_TaskEditor", new TaskEditorViewModel(skillsetLogic.GetAll().ToList(), model, EditorType.Edit, argEx.Message));
+            //    return RedirectToAction("Edit", "Product", new {id = productId}); 
             //}
             //catch (DBException dbEx)
             //{
-            //    return View("_TaskEditor", new TaskEditorViewModel(skillsetLogic.GetAll().ToList(), model, EditorType.Edit, dbEx.Message));
+            //    return RedirectToAction("Edit", "Product", new {id = productId});
             //}
-            return View("_TaskEditor", new TaskEditorViewModel(skillsetLogic.GetAll().ToList()));
-            return View("_TaskEditor", new TaskEditorViewModel(skillsetLogic.GetAll().ToList(), viewModel, EditorType.Edit, ""));
-            return null;
-        }
-    }
 
-    public class Testobjformodel
-    {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public int DurationHours { get; set; }
-        public int DurationMinutes { get; set; }
+            try
+            {
+                taskLogic.Delete(new ProductionTask(taskId));
+                return PartialView("~/Views/Product/_TaskContainerContent.cshtml", taskLogic.GetByProductId(productId));
+            }
+            catch (ArgumentException argEx)
+            {
+                return PartialView("~/Views/Product/_TaskContainerContent.cshtml", taskLogic.GetByProductId(productId));
+                //TODO Do proper error handling
+            }
+            catch (DBException dbEx)
+            {
+                return PartialView("~/Views/Product/_TaskContainerContent.cshtml", taskLogic.GetByProductId(productId));
+            }
+        }
     }
 }

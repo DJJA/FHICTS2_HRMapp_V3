@@ -17,7 +17,7 @@ namespace HRMapp.DAL
 
         public int Add(ProductionTask value)
         {
-            var newTask = new ProductionTask(tasks.Count, value.Name, value.Description);
+            var newTask = new ProductionTask(tasks.Count, new Product(1),  value.Name, value.Description, value.Duration, value.Employees);
             tasks.Add(newTask);
             return newTask.Id;
         }
@@ -53,12 +53,7 @@ namespace HRMapp.DAL
             }
         }
 
-        public IEnumerable<Skillset> GetRequiredSkillsets(int taskId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool UpdateRequiredSkillsets(ProductionTask task)
+        public IEnumerable<ProductionTask> GetByProductId(int productId)
         {
             throw new NotImplementedException();
         }
@@ -74,11 +69,11 @@ namespace HRMapp.DAL
             //tasks.Add(new ProductionTask(4, "Connector solderen 5", "Het solderen van een 64-polige connector", new TimeSpan(0, 45, 0), new List<Skillset>() { skillsets[3], skillsets[4] }));
             
 
-            tasks.Add(new ProductionTask(0, "Connector solderen 1", "Het solderen van een 4-polige connector"));
-            tasks.Add(new ProductionTask(1, "Connector solderen 2", "Het solderen van een 8-polige connector"));
-            tasks.Add(new ProductionTask(2, "Connector solderen 3", "Het solderen van een 16-polige connector"));
-            tasks.Add(new ProductionTask(3, "Connector solderen 4", "Het solderen van een 32-polige connector"));
-            tasks.Add(new ProductionTask(4, "Connector solderen 5", "Het solderen van een 64-polige connector"));
+            tasks.Add(new ProductionTask(0, new Product(1),  "Connector solderen 1", "Het solderen van een 4-polige connector", new TimeSpan(), new List<Employee>()));
+            tasks.Add(new ProductionTask(1, new Product(1), "Connector solderen 2", "Het solderen van een 8-polige connector", new TimeSpan(), new List<Employee>()));
+            tasks.Add(new ProductionTask(2, new Product(1), "Connector solderen 3", "Het solderen van een 16-polige connector", new TimeSpan(), new List<Employee>()));
+            tasks.Add(new ProductionTask(3, new Product(1), "Connector solderen 4", "Het solderen van een 32-polige connector", new TimeSpan(), new List<Employee>()));
+            tasks.Add(new ProductionTask(4, new Product(1), "Connector solderen 5", "Het solderen van een 64-polige connector", new TimeSpan(), new List<Employee>()));
         }
     }
 }

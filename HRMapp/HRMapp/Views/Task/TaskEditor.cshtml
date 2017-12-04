@@ -6,6 +6,12 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<style>
+    #divSpecifiedEmployeesRadioButtons > span {
+        margin: 0 20px;
+    }
+</style>
+
 <h2>@Model.FormTitle</h2>
 
 @if (!String.IsNullOrEmpty(Model.ErrorMessage))
@@ -14,13 +20,14 @@
 }
 
 <form asp-action="@Model.FormAction" method="post">
+    <input asp-for="@Model.ProductId" type="hidden"/>
     <div class="form-group">
         <label asp-for="@Model.Name" class="control-label"></label>
-        <input asp-for="@Model.Name" class="form-control" placeholder="Naam" />
+        <input asp-for="@Model.Name" class="form-control" placeholder="Naam"/>
     </div>
     <div class="form-group">
         <label asp-for="@Model.Description" class="control-label"></label>
-        <textarea asp-for="@Model.Description" @*class="form-control" placeholder="Typ hier een omschrijving..." *@></textarea>
+        <textarea asp-for="@Model.Description"></textarea>
     </div>
 
     <div class="form-group">
@@ -28,39 +35,49 @@
         <div class="row">
             <div class="form-group col-md-6">
                 <label asp-for="@Model.DurationHours" class="control-label"></label>
-                <input asp-for="@Model.DurationHours" class="form-control" type="number" min="0" />
+                <input asp-for="@Model.DurationHours" class="form-control" type="number" min="0" max="23"/>
             </div>
             <div class="form-group col-md-6">
                 <label asp-for="@Model.DurationMinutes" class="control-label"></label>
-                <input asp-for="@Model.DurationMinutes" class="form-control" type="number" min="0" max="59" />
+                <input asp-for="@Model.DurationMinutes" class="form-control" type="number" min="0" max="59"/>
             </div>
         </div>
     </div>
-
+    
     <div class="form-group">
+        <label for="divSpecifiedEmployeesRadioButtons">Kan iedereen uitvoeren:</label>
+        <div id="divSpecifiedEmployeesRadioButtons">
+            <span>@Html.RadioButton("specifiedEmployees", "true", new {id = "specifiedEmployees_yes" }) Ja </span>
+            <span>@Html.RadioButton("specifiedEmployees", "false", new {id = "specifiedEmployees_no" }) Nee </span>
+        </div>
+    </div>
+
+    <div id="divEmployeeSelector" class="form-group">
         <div class="row">
             <div class="col-md-5">
-                <label class="control-label" for="lboxAvailableSkillsets">Skillsets:</label>
+                <label class="control-label" for="lboxAvailableEmployees">Werknemers:</label>
             </div>
             <div class="col-md-2"></div>
             <div class="col-md-5">
-                <label class="control-label" for="lboxRequiredSkillsets">Nodige skillsets:</label>
+                <label class="control-label" for="lboxQualifiedEmployees">Werknemers die de taak kunnen uitvoeren:</label>
             </div>
         </div>
         <div class="row">
             <div class="col-md-5">
-                @Html.ListBox("lboxAvailableSkillsets", Model.AvailableSkillsetListItems, new { @class = "form-control", size = 10 })
+                @Html.ListBox("lboxAvailableEmployees", Model.AvailableEmployees, new {@class = "form-control", size = 10})
             </div>
             <div class="col-md-2">
-                <div>
-                    <a id="btnSkillsetsMoveToRequired" class="btn btn-default">>></a>
-                </div>
-                <div>
-                    <a id="btnSkillsetsMoveFromRequired" class="btn btn-default"><<</a>
-                </div>
+                <center>
+                    <div>
+                        <a id="btnMoveToQualified" class="btn btn-default">>></a>
+                    </div>
+                    <div>
+                        <a id="btnMoveFromQualified" class="btn btn-default"><<</a>
+                    </div>
+                </center>
             </div>
             <div class="col-md-5">
-                @Html.ListBox("lboxRequiredSkillsets", Model.RequiredSkillsetListItems, new { @class = "form-control", size = 10 })
+                @Html.ListBox("LboxQualifiedEmployees", Model.QualifiedEmployees, new {@class = "form-control", size = 10})
             </div>
         </div>
     </div>
@@ -70,6 +87,8 @@
     </div>
 </form>
 
+
+@*TODO CKEditor oninput lijkt niet te werken*@
 <script src="https://cdn.ckeditor.com/4.7.3/standard/ckeditor.js"></script>
 <script>
     CKEDITOR.replace('Description');
@@ -85,27 +104,23 @@
     document.getElementById('DurationHours').oninput = function () { userInputChanged = true; }
     document.getElementById('DurationMinutes').oninput = function () { userInputChanged = true; }
     document.getElementById('btnCancel').onclick = function() {
-        if (@Model.Id > -1) {
-            window.location.href = '/Task/Index/@Model.Id';
-        } else {
-            window.location.href = '/Task';
-        }
+        window.location.href = '/Product/Edit/@Model.ProductId';
 
     }
 
     document.getElementById('btnSubmit').onclick = function () {
         userInputChanged = false;
-        selectAllOptions(document.getElementById('lboxRequiredSkillsets'));
+        selectAllOptions(document.getElementById('LboxQualifiedEmployees'));
     }
 
-    document.getElementById('btnSkillsetsMoveToRequired').onclick = function () {
+    document.getElementById('btnMoveToQualified').onclick = function () {
         userInputChanged = true;
-        moveSelectedOptionsBetweenSelects(document.getElementById('lboxAvailableSkillsets'), document.getElementById('lboxRequiredSkillsets'));
+        moveSelectedOptionsBetweenSelects(document.getElementById('lboxAvailableEmployees'), document.getElementById('LboxQualifiedEmployees'));
     }
 
-    document.getElementById('btnSkillsetsMoveFromRequired').onclick = function () {
+    document.getElementById('btnMoveFromQualified').onclick = function () {
         userInputChanged = true;
-        moveSelectedOptionsBetweenSelects(document.getElementById('lboxRequiredSkillsets'), document.getElementById('lboxAvailableSkillsets'));
+        moveSelectedOptionsBetweenSelects(document.getElementById('LboxQualifiedEmployees'), document.getElementById('lboxAvailableEmployees'));
     }
 
     window.onbeforeunload = function (event) {
@@ -114,6 +129,32 @@
             return message;
         }
     }
+
+    @if (Model.QualifiedEmployees.Count > 0)    // TODO do this everywhere so this is serverside
+    {
+        //@: $('#specifiedEmployees_yes').prop('checked', true); // TODO Kan hier nog geen jquery gebruiken omdat die als laatste wordt ingeladen
+        @: document.getElementById('specifiedEmployees_yes').checked = true;
+    }
+    else
+    {
+        //@: $('#specifiedEmployees_no').prop('checked', true);
+        @: document.getElementById('specifiedEmployees_no').checked = true;
+        @: document.getElementById('divEmployeeSelector').style.display = "none";
+    }
+    //specifiedEmployeesSelectedChanged();
+
+    //specifiedEmployees
+    document.getElementById('specifiedEmployees_yes').onchange = specifiedEmployeesSelectedChanged;
+    document.getElementById('specifiedEmployees_no').onchange = specifiedEmployeesSelectedChanged;
+
+    function specifiedEmployeesSelectedChanged() {
+        if ($('#specifiedEmployees_yes').is(':checked')) {
+            $('#divEmployeeSelector').show();
+        } else {
+            $('#divEmployeeSelector').hide();
+        }
+    }
+
 
     function moveSelectedOptionsBetweenSelects(selectElementFrom, selectElementTo) {
         var selectedItems = getSelectValues(selectElementFrom);

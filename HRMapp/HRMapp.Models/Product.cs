@@ -27,12 +27,25 @@ namespace HRMapp.Models
 
         public List<ProductionTask> Tasks { get; private set; }
 
+        public Product(int id)
+        {
+            Id = id;
+        }
+
         public Product(int id, string name, string description, List<ProductionTask> tasks)
         {
             Id = id;
             Name = name;
             Description = description;
             Tasks = tasks;
+        }
+
+        // used by editing product
+        public Product(int id, string name, string description)
+        {
+            Id = id;
+            Name = name;
+            Description = description;
         }
     }
 }

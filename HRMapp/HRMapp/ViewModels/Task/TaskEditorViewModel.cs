@@ -10,8 +10,8 @@ namespace HRMapp.ViewModels
 {
     public class TaskEditorViewModel : EditorViewModel
     {
-        private List<Skillset> availableSkillsets = new List<Skillset>();
-        private List<Skillset> requiredSkillsets = new List<Skillset>();
+        private List<Employee> availableEmployees = new List<Employee>();
+        private List<Employee> qualifiedEmployees = new List<Employee>();
 
         public override string FormTitle
         {
@@ -29,21 +29,7 @@ namespace HRMapp.ViewModels
             }
         }
 
-        public override string FormAction
-        {
-            get
-            {
-                switch (EditorType)
-                {
-                    case EditorType.New:
-                        return "/Task/New";
-                    case EditorType.Edit:
-                        return "/Task/Edit";
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-        }
+        public int ProductId { get; set; }
 
         [DisplayName("Naam:")]
         public string Name { get; set; }
@@ -64,111 +50,133 @@ namespace HRMapp.ViewModels
             }
         }
 
-        public List<SelectListItem> AvailableSkillsetListItems
+        public List<SelectListItem> AvailableEmployees
         {
             get
             {
                 var list = new List<SelectListItem>();
-                foreach (var skillset in availableSkillsets)
+                foreach (var employee in availableEmployees)
                 {
-                    if(requiredSkillsets.All(s => s.Id != skillset.Id))      // Not optimal n^2
+                    if(qualifiedEmployees.All(s => s.Id != employee.Id))      // Not optimal n^2
                     {
-                        list.Add(new SelectListItem() { Text = skillset.Name, Value = skillset.Id.ToString() });
+                        list.Add(new SelectListItem() { Text = $"{employee.FirstName} {employee.LastName}", Value = employee.Id.ToString() });
                     }
                 }
                 return list;
             }
         }
 
-        public List<SelectListItem> RequiredSkillsetListItems
+        public List<SelectListItem> QualifiedEmployees
         {
             get
             {
                 var list = new List<SelectListItem>();
-                foreach (var skillset in requiredSkillsets)
+                foreach (var employee in qualifiedEmployees)
                 {
-                    list.Add(new SelectListItem() { Text = skillset.Name, Value = skillset.Id.ToString() });
+                    list.Add(new SelectListItem() { Text = $"{employee.FirstName} {employee.LastName}", Value = employee.Id.ToString() });
                 }
                 return list;
             }
         }
 
         //public List<int> LboxAvailableSkillsets { get; set; }
-        public List<int> LboxRequiredSkillsets { get; set; }
+        public List<int> LboxQualifiedEmployees { get; set; }
+
+        //private bool specifiedEmployees = false;
+
+        //public bool SpecifiedEmployees
+        //{
+        //    get
+        //    {
+        //        if (qualifiedEmployees.Count > 0)
+        //            return true;
+        //        return false;
+        //    }
+        //}
+
+        public bool SpecifiedEmployees { get; set; }
 
         /// <summary>
         /// Used by form to send back data
         /// </summary>
         public TaskEditorViewModel()
         {
-            LboxRequiredSkillsets = new List<int>(); // is dit nodig?
+            LboxQualifiedEmployees = new List<int>(); // is dit nodig?
         }
 
         /// <summary>
         /// Used by controller to create a new task
         /// </summary>
-        /// <param name="availableSkillsets"></param>
-        public TaskEditorViewModel(List<Skillset> availableSkillsets)
+        /// <param name="availableEmployees"></param>
+        public TaskEditorViewModel(List<Employee> availableEmployees, int productId)
         {
-            this.availableSkillsets = availableSkillsets;
+            this.availableEmployees = availableEmployees;
             EditorType = EditorType.New;
+            ProductId = productId;
         }
 
         /// <summary>
         /// Used by controller to edit a task
         /// </summary>
-        /// <param name="availableSkillsets"></param>
+        /// <param name="availableEmployees"></param>
         /// <param name="task"></param>
-        public TaskEditorViewModel(List<Skillset> availableSkillsets, ProductionTask task)
+        public TaskEditorViewModel(List<Employee> availableEmployees, ProductionTask task)
         {
-            this.availableSkillsets = availableSkillsets;
+            this.availableEmployees = availableEmployees;
             EditorType = EditorType.Edit;
 
             Id = task.Id;
+            ProductId = task.Product.Id;
             Name = task.Name;
             Description = task.Description;
             Duration = task.Duration;
-            requiredSkillsets = task.RequiredSkillsets;
+            qualifiedEmployees = task.Employees;
         }
 
         /// <summary>
         /// Used by controller when an error occurred
         /// </summary>
-        /// <param name="availableSkillsets"></param>
+        /// <param name="availableEmployees"></param>
         /// <param name="viewModel"></param>
         /// <param name="errorMessage"></param>
-        public TaskEditorViewModel(List<Skillset> availableSkillsets, TaskEditorViewModel viewModel, EditorType editorType, string errorMessage)
+        public TaskEditorViewModel(List<Employee> availableEmployees, TaskEditorViewModel viewModel, EditorType editorType, string errorMessage)
         {
-            this.availableSkillsets = availableSkillsets;
+            this.availableEmployees = availableEmployees;
             EditorType = editorType;
 
             Id = viewModel.Id;
+            ProductId = viewModel.ProductId;
             Name = viewModel.Name;
             Description = viewModel.Description;
             Duration = viewModel.Duration;
 
-            var requiredSkillsets = new List<Skillset>();
-            foreach (var id in viewModel.LboxRequiredSkillsets)
+            var requiredSkillsets = new List<Employee>();
+            foreach (var id in viewModel.LboxQualifiedEmployees)
             {
-                Skillset skillset = availableSkillsets.Single(s => s.Id == id);
-                if (skillset != null)
+                Employee employee = availableEmployees.Single(s => s.Id == id);
+                if (employee != null)
                 {
-                    requiredSkillsets.Add(skillset);
+                    requiredSkillsets.Add(employee);
                 }
             }
-            this.requiredSkillsets = requiredSkillsets;
+            this.qualifiedEmployees = requiredSkillsets;
+
+            SpecifiedEmployees = viewModel.SpecifiedEmployees;
 
             ErrorMessage = errorMessage;
         }
 
-        public ProductionTask ToTask(List<Skillset> skillsets)
+        public ProductionTask ToTask(List<Employee> employees)
         {
-            var requiredSkillsets = new List<Skillset>();
-            foreach (var id in LboxRequiredSkillsets)
+            var qualifiedEmployees = new List<Employee>();
+            if (SpecifiedEmployees)
             {
-                requiredSkillsets.Add(skillsets.Single(skillset => skillset.Id == id));
+                foreach (var id in LboxQualifiedEmployees)
+                {
+                    qualifiedEmployees.Add(employees.Single(employee => employee.Id == id));
+                }
             }
-            return new ProductionTask(Id, Name, Description, Duration, requiredSkillsets);
+            return new ProductionTask(Id, new Product(ProductId), Name, Description, Duration, qualifiedEmployees); //TODO change product id -1 to something else
         }
     }
 }

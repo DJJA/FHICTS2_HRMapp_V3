@@ -16,5 +16,7 @@ namespace HRMapp.Logic
         public ProductionTask GetById(int id) => repo.GetById(id);
         public int Add(ProductionTask task) => repo.Add(task);
         public bool Update(ProductionTask task) => repo.Update(task);
+        public void Delete(ProductionTask task) => repo.Delete(task);
+        public List<ProductionTask> GetByProductId(int id) => repo.GetByProductId(id).ToList();
     }
 }
