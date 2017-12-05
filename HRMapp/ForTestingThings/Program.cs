@@ -16,6 +16,7 @@ namespace ForTestingThings
         {
             Console.WriteLine("Hello World!");
             Console.WriteLine((int)TestNum.bla2);
+            Console.WriteLine();
             Console.ReadLine();
         }
     }

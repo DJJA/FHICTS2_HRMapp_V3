@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using HRMapp.DAL.Repositories;
 using HRMapp.Models;
+using HRMapp.Models.Exceptions;
 
 namespace HRMapp.DAL.Contexts
 {
@@ -57,6 +58,10 @@ namespace HRMapp.DAL.Contexts
             }
             catch (SqlException sqlEx)
             {
+                switch (sqlEx.Number)
+                {
+                    case 2627: throw new DBException("Er bestaat al een taak met deze naam.");
+                }
                 HandleGenericSqlException(sqlEx);
             }
             
@@ -85,6 +90,10 @@ namespace HRMapp.DAL.Contexts
             }
             catch (SqlException sqlEx)
             {
+                switch (sqlEx.Number)
+                {
+                    case 2627: throw new DBException("Er bestaat al een taak met deze naam.");
+                }
                 HandleGenericSqlException(sqlEx);
                 return false;
             }
@@ -117,7 +126,8 @@ namespace HRMapp.DAL.Contexts
                 employees.AddRange(from DataRow row in dataTable.Rows select new Employee(
                                                                                             id: Convert.ToInt32(row["Id"]),
                                                                                             firstName: row["FirstName"].ToString(),
-                                                                                            lastName: row["LastName"].ToString()));
+                                                                                            lastName: row["LastName"].ToString())
+                                                                                            );
             }
             catch (SqlException sqlEx)
             {
