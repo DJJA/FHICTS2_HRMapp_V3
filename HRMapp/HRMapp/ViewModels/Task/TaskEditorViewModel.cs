@@ -10,8 +10,8 @@ namespace HRMapp.ViewModels
 {
     public class TaskEditorViewModel : EditorViewModel
     {
-        private List<Employee> availableEmployees = new List<Employee>();
-        private List<Employee> qualifiedEmployees = new List<Employee>();
+        private List<ProductionEmployee> availableEmployees = new List<ProductionEmployee>();
+        private List<ProductionEmployee> qualifiedEmployees = new List<ProductionEmployee>();
 
         public override string FormTitle
         {
@@ -108,7 +108,7 @@ namespace HRMapp.ViewModels
         /// Used by controller to create a new task
         /// </summary>
         /// <param name="availableEmployees"></param>
-        public TaskEditorViewModel(List<Employee> availableEmployees, int productId)
+        public TaskEditorViewModel(List<ProductionEmployee> availableEmployees, int productId)
         {
             this.availableEmployees = availableEmployees;
             EditorType = EditorType.New;
@@ -120,7 +120,7 @@ namespace HRMapp.ViewModels
         /// </summary>
         /// <param name="availableEmployees"></param>
         /// <param name="task"></param>
-        public TaskEditorViewModel(List<Employee> availableEmployees, ProductionTask task)
+        public TaskEditorViewModel(List<ProductionEmployee> availableEmployees, ProductionTask task)
         {
             this.availableEmployees = availableEmployees;
             EditorType = EditorType.Edit;
@@ -139,7 +139,7 @@ namespace HRMapp.ViewModels
         /// <param name="availableEmployees"></param>
         /// <param name="viewModel"></param>
         /// <param name="errorMessage"></param>
-        public TaskEditorViewModel(List<Employee> availableEmployees, TaskEditorViewModel viewModel, EditorType editorType, string errorMessage)
+        public TaskEditorViewModel(List<ProductionEmployee> availableEmployees, TaskEditorViewModel viewModel, EditorType editorType, string errorMessage)
         {
             this.availableEmployees = availableEmployees;
             EditorType = editorType;
@@ -159,16 +159,16 @@ namespace HRMapp.ViewModels
                     requiredSkillsets.Add(employee);
                 }
             }
-            this.qualifiedEmployees = requiredSkillsets;
+            //this.qualifiedEmployees = requiredSkillsets;
 
             SpecifiedEmployees = viewModel.SpecifiedEmployees;
 
             ErrorMessage = errorMessage;
         }
 
-        public ProductionTask ToTask(List<Employee> employees)
+        public ProductionTask ToTask(List<ProductionEmployee> employees)
         {
-            var qualifiedEmployees = new List<Employee>();
+            var qualifiedEmployees = new List<ProductionEmployee>();
             if (SpecifiedEmployees)
             {
                 foreach (var id in LboxQualifiedEmployees)

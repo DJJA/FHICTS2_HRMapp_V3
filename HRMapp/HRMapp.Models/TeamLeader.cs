@@ -4,7 +4,7 @@ using System.Text;
 
 namespace HRMapp.Models
 {
-    public class TeamLeader : Employee
+    public class TeamLeader : ProductionEmployee
     {
         public List<ProductionWorker> TeamMembers { get; private set; }
 

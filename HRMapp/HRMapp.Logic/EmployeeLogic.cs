@@ -18,6 +18,6 @@ namespace HRMapp.Logic
 
         public IEnumerable<TeamLeader> GetAllTeamLeaders => repo.GetAllTeamLeaders();
         public TeamLeader GetTeamLeaderById(int id) => repo.GetTeamLeaderById(id);
-        public List<Employee> GetAllTeamLeadersAndProductionWorkers => repo.GetAllTeamLeadersAndProductionWorkers().ToList();
+        public List<ProductionEmployee> GetAllTeamLeadersAndProductionWorkers => repo.GetAllTeamLeadersAndProductionWorkers().ToList();
     }
 }

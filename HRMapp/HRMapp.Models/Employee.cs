@@ -4,7 +4,7 @@ using System.Text;
 
 namespace HRMapp.Models
 {
-    public class Employee
+    public abstract class Employee
     {
         private string firstName, lastName, emailAddress, phoneNumber;
 

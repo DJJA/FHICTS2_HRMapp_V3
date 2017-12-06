@@ -40,10 +40,10 @@ namespace HRMapp.Models
             }
         }
         public TimeSpan Duration { get; private set; }
-        public List<Employee> Employees { get; private set; }
+        public List<ProductionEmployee> Employees { get; private set; }
         
 
-        public ProductionTask(int id, Product product, string name, string description, TimeSpan duration, List<Employee> employees)
+        public ProductionTask(int id, Product product, string name, string description, TimeSpan duration, List<ProductionEmployee> employees)
         {
             Id = id;
             Product = product;

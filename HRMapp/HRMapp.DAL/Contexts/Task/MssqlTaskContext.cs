@@ -116,14 +116,14 @@ namespace HRMapp.DAL.Contexts
             return tasks;
         }
 
-        private static List<Employee> GetEmployeesByTaskId(int taskId)// TODO dit is fucking lelijk, fix dit!
+        private static List<ProductionEmployee> GetEmployeesByTaskId(int taskId)// TODO dit is fucking lelijk, fix dit!
         {
-            var employees = new List<Employee>();
+            var employees = new List<ProductionEmployee>();
 
             try
             {
                 var dataTable = new MssqlTaskContext().GetDataViaProcedure("sp_GetEmployeesByTaskId", new SqlParameter("@TaskId", taskId));
-                employees.AddRange(from DataRow row in dataTable.Rows select new Employee(
+                employees.AddRange(from DataRow row in dataTable.Rows select new ProductionEmployee(
                                                                                             id: Convert.ToInt32(row["Id"]),
                                                                                             firstName: row["FirstName"].ToString(),
                                                                                             lastName: row["LastName"].ToString())
