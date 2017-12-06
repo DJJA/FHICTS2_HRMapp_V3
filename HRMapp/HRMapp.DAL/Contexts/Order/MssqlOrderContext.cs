@@ -68,7 +68,7 @@ namespace HRMapp.DAL.Contexts
             {
                 var parameters = new List<SqlParameter>()
                 {
-                    new SqlParameter("@Deadline", value.DeadLine),
+                    new SqlParameter("@Deadline", value.Deadline),
                     new SqlParameter("@Customer", value.Customer),
                     new SqlParameter("@Id", value.Id)
                 };
@@ -90,15 +90,21 @@ namespace HRMapp.DAL.Contexts
             var deadline = Convert.ToDateTime(row["Deadline"]);
             var entryDate = Convert.ToDateTime(row["EntryDate"]);
             var customer = row["Customer"].ToString();
-            return new Order(id, salesManagerId, deadline, entryDate, customer);
+            return new Order(
+                id: id, 
+                salesManager: new SalesManager(salesManagerId), 
+                deadline: deadline, 
+                entryDate:entryDate, 
+                customer:customer
+                );
         }
 
         private IEnumerable<SqlParameter> GetSqlParametersFromOrder(Order order, bool withId)
         {
             var parameters = new List<SqlParameter>()
             {
-                new SqlParameter("@EmployeeSalesManagerId", order.SalesManagerId), // todo If this is null, will it not pass this parameter to the db?
-                new SqlParameter("@Deadline", order.DeadLine),
+                new SqlParameter("@EmployeeSalesManagerId", order.SalesManager.Id), // todo If this is null, will it not pass this parameter to the db?
+                new SqlParameter("@Deadline", order.Deadline),
                 new SqlParameter("@Customer", order.Customer)
             };
             if (withId)

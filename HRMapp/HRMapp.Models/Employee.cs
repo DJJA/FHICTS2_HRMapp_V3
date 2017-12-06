@@ -76,6 +76,11 @@ namespace HRMapp.Models
         public string ZipCode { get; private set; }
         public string City { get; private set; }
 
+        public Employee(int id)
+        {
+            Id = id;
+        }
+
         public Employee(int id, string firstName, string lastName)
         {
             Id = id;

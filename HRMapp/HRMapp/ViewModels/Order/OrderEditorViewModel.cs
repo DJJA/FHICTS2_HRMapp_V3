@@ -81,7 +81,7 @@ namespace HRMapp.ViewModels
             this.products = products;
 
             Id = order.Id;
-            Deadline = order.DeadLine;
+            Deadline = order.Deadline;
             Customer = order.Customer;
         }
 

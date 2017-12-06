@@ -7,30 +7,30 @@ namespace HRMapp.Models
     public class Order
     {
         public int Id { get; private set; }
-        public int SalesManagerId { get; private set; }  // TODO Wanneer sla je een Id op en wanneer een heel object?
-        public DateTime DeadLine { get; private set; }
+        public SalesManager SalesManager { get; private set; }  // TODO Wanneer sla je een Id op en wanneer een heel object?
+        public DateTime Deadline { get; private set; }
         public DateTime EntryDate { get; private set; }
         public string Customer { get; private set; }
 
-        public Order(int id, int salesManagerId, DateTime deadLine, DateTime entryDate, string customer)
+        public Order(int id, SalesManager salesManager, DateTime deadline, DateTime entryDate, string customer)
         {
             Id = id;
-            SalesManagerId = salesManagerId;
-            DeadLine = deadLine;
+            SalesManager = salesManager;
+            Deadline = deadline;
             EntryDate = entryDate;
             Customer = customer;
         }
 
-        public Order(int id, DateTime deadLine, string customer)
+        public Order(int id, DateTime deadline, string customer)
         {
             Id = id;
-            DeadLine = deadLine;
+            Deadline = deadline;
             Customer = customer;
         }
 
         public override string ToString()
         {
-            return $"{Id} - {Customer} - {DeadLine.ToString("ddd dd-MMM-yy")}";
+            return $"{Id} - {Customer} - {Deadline.ToString("ddd dd-MMM-yy")}";
         }
     }
 }

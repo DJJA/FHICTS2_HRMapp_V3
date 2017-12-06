@@ -20,7 +20,7 @@ namespace HRMapp.Models
                 }
                 else
                 {
-                    throw new ArgumentException("Task name must be set.");
+                    throw new ArgumentException("De taak moet een naam hebben.");
                 }
             }
         }
@@ -35,7 +35,7 @@ namespace HRMapp.Models
                 }
                 else
                 {
-                    throw new ArgumentException("Task description must be set.");
+                    throw new ArgumentException("De taak moet een omschrijving hebben.");
                 }
             }
         }

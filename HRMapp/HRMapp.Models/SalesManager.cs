@@ -6,6 +6,14 @@ namespace HRMapp.Models
 {
     public class SalesManager : Employee
     {
+        private int salesManagerId;
+
+        public SalesManager(int id)
+            :base(id)
+        {
+            salesManagerId = id;
+        }
+
         public SalesManager(int id, string firstName, string lastName) 
             : base(id, firstName, lastName)
         {

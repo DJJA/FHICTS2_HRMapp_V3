@@ -108,15 +108,32 @@
     function JsonfyOrderedProducts() {
         var orderedProducts = [];
 
-        $('#orderList > .orderItem').each(function(index) {
-            alert($(this).childern('productId').val());
-            orderedProducts.push({
-                productId: this.childern('productId').val(),
-                amount: this.childern('productCount').val()
-            });
-        });
+        //$('#orderList > .orderItem').each(function(index) {
+            //alert($(this).childern('productId').val());
+            //orderedProducts.push({
+            //    productId: this.childern('productId').val(),
+            //    amount: this.childern('productCount').val()
+            //});
+        //});
 
-        $('#OrderedProducts').val(JSON.stringify({ orderedProducts: orderedProducts }));
+        var items = $('#orderList > .orderItem');
+        $.each(items,
+            function () {
+                var orderItem = $(this);
+                //alert(
+                //    $(this).attr('id') + '\n' +
+                //    'PrdouctId : ' + orderItem.find('.productId').val() + '\n' +
+                //    'Amount : ' + orderItem.find('.productCount').val()
+                //);
+                orderedProducts.push({
+                    productId: orderItem.find('.productId').val(),
+                    amount: orderItem.find('.productCount').val()
+                });
+
+                //alert(JSON.stringify({ orderedItems: orderedProducts }));
+            });
+        
+        $('#OrderedProducts').val(JSON.stringify({ orderedItems: orderedProducts }));
     }
 
     window.onbeforeunload = function (event) {
