@@ -33,3 +33,13 @@
         display: none;
     }
 }
+
+.navbar-inverse {
+    background-color: #bdc3c7;
+    border-color: #95a5a6;
+}
+
+/*.navbar-inverse {
+    background-color: #f1c40f;
+    border-color: #95a5a6;
+}*/
