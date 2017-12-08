@@ -7,5 +7,6 @@ namespace HRMapp.DAL.Contexts
 {
     interface IOrderContext : IContext<Order>
     {
+        List<OrderItem> GetOrderItems(int orderId);
     }
 }

@@ -16,7 +16,7 @@ namespace HRMapp.DAL
         #region GetDataViaProcedure
         protected DataTable GetDataViaProcedure(string procedure, IEnumerable<SqlParameter> procedureParameters)
         {
-            var datatable = new DataTable();
+            var dataTable = new DataTable();
             using (var connection = new SqlConnection(connectionString))
             using (var adapter = new SqlDataAdapter(procedure, connection))
             {
@@ -32,9 +32,9 @@ namespace HRMapp.DAL
                     //}
                 }
 
-                adapter.Fill(datatable);
+                adapter.Fill(dataTable);
             }
-            return datatable;
+            return dataTable;
         }
 
         protected DataTable GetDataViaProcedure(string procedure)
@@ -188,5 +188,60 @@ namespace HRMapp.DAL
             }
             return parameters;
         }
+
+        protected DataTable GetDataByView(string viewName)
+        {
+            return GetDataBySelectQuery($"SELECT * FROM {viewName};");
+        }
+
+        #region GetDataBySelectQuery
+        private DataTable GetDataBySelectQuery(string selectQuery, IEnumerable<SqlParameter> parameters)
+        {
+            var dataTable = new DataTable();
+            using (var connection = new SqlConnection(connectionString))
+            using (var adapter = new SqlDataAdapter(selectQuery, connection))
+            {
+                adapter.SelectCommand.Parameters.AddRange(ValidateParameters(parameters).ToArray());
+                adapter.Fill(dataTable);
+            }
+            return dataTable;
+        }
+
+        private DataTable GetDataBySelectQuery(string selectQuery, SqlParameter parameter)
+        {
+            return GetDataBySelectQuery(selectQuery, new List<SqlParameter>() { parameter });
+        }
+
+        private DataTable GetDataBySelectQuery(string selectQuery)
+        {
+            return GetDataBySelectQuery(selectQuery, new SqlParameter());
+        }
+        #endregion
+        #region GetDataByFunction
+        protected DataTable GetDataByFunction(string functionName, List<object> parameterValues)
+        {
+            const string parameterPrefix = "@Param";
+            var sqlParameters = new List<SqlParameter>();
+            string parametersInQuery = string.Empty;
+            for (int i = 0; i < parameterValues.Count; i++)
+            {
+                sqlParameters.Add(new SqlParameter(parameterPrefix + i, parameterValues[i]));
+                parametersInQuery += parameterPrefix + i + (i < parameterValues.Count - 1 ? "," : "");
+            }
+            string query = $"SELECT * FROM {functionName}({parametersInQuery});";
+
+            return GetDataBySelectQuery(query, sqlParameters);
+        }
+
+        protected DataTable GetDataByFunction(string functionName, object parameterValue)
+        {
+            return GetDataByFunction(functionName, new List<object>() {parameterValue});
+        }
+
+        protected DataTable GetDataByFunction(string functionName)
+        {
+            return GetDataByFunction(functionName, new List<object>());
+        }
+        #endregion
     }
 }

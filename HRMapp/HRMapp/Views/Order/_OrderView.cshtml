@@ -2,3 +2,11 @@
 
 <h3>@Model.ToString()</h3>
 <p>Ingevoerd op @Model.EntryDate.ToString("ddd dd-MMM-yy")</p>
+<br/>
+<h4>Bestelde producten:</h4>
+<ul>
+    @foreach (var item in Model.Items)
+    {
+        <li>@item.Amount x @item.Product.Name</li>
+    }
+</ul>

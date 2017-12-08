@@ -64,16 +64,29 @@ namespace HRMapp.DAL.Contexts
 
         public bool Update(Order value)
         {
+            //var dataTable = new DataTable();
+            //dataTable.Columns.Add("ProductId");
+            //dataTable.Columns.Add("Amount");
+            //foreach (var item in value.Items)
+            //{
+            //    dataTable.Rows.Add(item.Product, item.Amount);
+            //}
+
             try
             {
-                var parameters = new List<SqlParameter>()
-                {
-                    new SqlParameter("@Deadline", value.Deadline),
-                    new SqlParameter("@Customer", value.Customer),
-                    new SqlParameter("@Id", value.Id)
-                };
+                //var parameters = new List<SqlParameter>()
+                //{
+                //    new SqlParameter("@Deadline", value.Deadline),
+                //    new SqlParameter("@Customer", value.Customer),
+                //    new SqlParameter("@Id", value.Id),
+                //    new SqlParameter("@OrderItems", dataTable)
+                //    {
+                //        SqlDbType = SqlDbType.Structured
+                //    }
+                //};
 
-                ExecuteProcedure("sp_UpdateOrder", parameters);
+                //ExecuteProcedure("sp_UpdateOrder", parameters);
+                ExecuteProcedure("sp_UpdateOrder", GetSqlParametersFromOrder(value, true));
                 return true;
             }
             catch (SqlException sqlEx)
@@ -81,6 +94,19 @@ namespace HRMapp.DAL.Contexts
                 HandleGenericSqlException(sqlEx);
                 return false;
             }
+        }
+
+        public List<OrderItem> GetOrderItems(int orderId)
+        {
+            var orderItems = new List<OrderItem>();
+            //var dataTable = GetDataBySelectQuery("SELECT * FROM fn_GetOrderItems(@OrderId)", new SqlParameter("@OrderId", orderId));
+            var dataTable = GetDataByFunction("fn_GetOrderItems", orderId);
+            orderItems.AddRange(from DataRow row in dataTable.Rows select new OrderItem()
+            {
+                Product = new Product(Convert.ToInt32(row["ProductId"]), row["Name"].ToString()),
+                Amount = Convert.ToInt32(row["Amount"])
+            });
+            return orderItems;
         }
 
         private Order GetOrderFromDataRow(DataRow row)
@@ -95,21 +121,37 @@ namespace HRMapp.DAL.Contexts
                 salesManager: new SalesManager(salesManagerId), 
                 deadline: deadline, 
                 entryDate:entryDate, 
-                customer:customer
+                customer:customer,
+                items: GetOrderItems(id)
                 );
         }
 
         private IEnumerable<SqlParameter> GetSqlParametersFromOrder(Order order, bool withId)
         {
+            var dataTable = new DataTable();
+            dataTable.Columns.Add("ProductId");
+            dataTable.Columns.Add("Amount");
+            foreach (var item in order.Items)
+            {
+                dataTable.Rows.Add(item.Product.Id, item.Amount);
+            }
+
             var parameters = new List<SqlParameter>()
             {
-                new SqlParameter("@EmployeeSalesManagerId", order.SalesManager.Id), // todo If this is null, will it not pass this parameter to the db?
                 new SqlParameter("@Deadline", order.Deadline),
-                new SqlParameter("@Customer", order.Customer)
+                new SqlParameter("@Customer", order.Customer),
+                new SqlParameter("@OrderItems", dataTable)
+                {
+                    SqlDbType = SqlDbType.Structured
+                }
             };
             if (withId)
             {
                 parameters.Add(new SqlParameter("@Id", order.Id));
+            }
+            else
+            {
+                parameters.Add(new SqlParameter("@EmployeeSalesManagerId", order.SalesManager.Id)); // todo If this is null, will it not pass this parameter to the db?
             }
             return parameters;
         }

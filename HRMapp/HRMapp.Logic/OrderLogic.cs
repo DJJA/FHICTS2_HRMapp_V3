@@ -13,7 +13,12 @@ namespace HRMapp.Logic
 
         public List<Order> GetAll => repo.GetAll.ToList();
         public Order GetById(int id) => repo.GetById(id);
-        public int Add(Order order) => repo.Add(order);
+        public int Add(Order order)
+        {
+            order.SalesManager = new SalesManager(3);   // TODO Do this via logged in user, limit functionality with interfaces
+            return repo.Add(order);
+        }
+
         public bool Update(Order order) => repo.Update(order);
     }
 }

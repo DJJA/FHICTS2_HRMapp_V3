@@ -6,6 +6,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Newtonsoft.Json;
 
 namespace HRMapp.ViewModels
@@ -36,7 +37,8 @@ namespace HRMapp.ViewModels
                 var list = new List<SelectListItem>();
                 foreach (var product in products)
                 {
-                    list.Add(new SelectListItem() { Text = product.Name, Value = product.Id.ToString() });
+                    if(Items.All(i => i.Product.Id != product.Id))
+                        list.Add(new SelectListItem() { Text = product.Name, Value = product.Id.ToString() });
                 }
                 return list;
             }
@@ -44,9 +46,20 @@ namespace HRMapp.ViewModels
 
         public string OrderedProducts { get; set; }
 
-        public Dictionary<int, int> OrderedProductsV2
+        private struct OrderItemHelper
         {
-            get { return JsonConvert.DeserializeObject<Dictionary<int, int>>(OrderedProducts); }
+            public int ProductId, Amount;
+        }
+
+        private List<OrderItem> OrderItems
+        {
+            get
+            {
+                var deserializedObjects = JsonConvert.DeserializeObject<List<OrderItemHelper>>(OrderedProducts);
+                var orderItems = new List<OrderItem>();
+                orderItems.AddRange(from OrderItemHelper helper in deserializedObjects select new OrderItem(){Product = new Product(helper.ProductId), Amount = helper.Amount});
+                return orderItems;
+            }
         }
 
         [DisplayName("Deadline:")]
@@ -54,12 +67,15 @@ namespace HRMapp.ViewModels
         [DisplayName("Klant:")]
         public string Customer { get; set; }
 
+        public List<OrderItem> Items { get; private set; }
+
         /// <summary>
         /// Used for giving back a viewmodel
         /// </summary>
         public OrderEditorViewModel()
         {
             EditorType = EditorType.New;
+            Items = new List<OrderItem>();
         }
 
         /// <summary>
@@ -69,6 +85,7 @@ namespace HRMapp.ViewModels
         {
             EditorType = EditorType.New;
             this.products = products;
+            Items = new List<OrderItem>();
         }
 
         /// <summary>
@@ -83,11 +100,17 @@ namespace HRMapp.ViewModels
             Id = order.Id;
             Deadline = order.Deadline;
             Customer = order.Customer;
+            Items = order.Items;
         }
 
         public Order ToOrder()
         {
-            return new Order(Id, Deadline, Customer);
+            return new Order(
+                id: Id,
+                deadline: Deadline,
+                customer: Customer,
+                items: OrderItems
+                );
         }
     }
 }

@@ -60,7 +60,7 @@
         <div class="row">
             <div class="col-md-5">
                 <div id="orderList">
-                    
+
                 </div>
             </div>
             <div class="col-md-2"></div>
@@ -77,13 +77,19 @@
 </form>
 
 @*<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<link rel="stylesheet" href="/resources/demos/style.css">*@
+    <link rel="stylesheet" href="/resources/demos/style.css">*@
 @*<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>*@
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>*@
 <script>
     //$( function() {
     //    $( "#Deadline" ).datepicker();
     //});
+    var orderItems = '';
+    @foreach (var item in @Model.Items)
+    {
+        @:orderItems += createNewOrderListItem(@item.Product.Id, '@item.Product.Name', @item.Amount);
+    }
+    document.getElementById('orderList').innerHTML = orderItems;
 
     var userInputChanged = false;
     @if (!String.IsNullOrEmpty(Model.ErrorMessage))
@@ -132,8 +138,10 @@
 
                 //alert(JSON.stringify({ orderedItems: orderedProducts }));
             });
-        
-        $('#OrderedProducts').val(JSON.stringify({ orderedItems: orderedProducts }));
+
+        //$('#OrderedProducts').val(JSON.stringify({ orderedItems: orderedProducts }));
+        $('#OrderedProducts').val(JSON.stringify(orderedProducts));
+        //alert(JSON.stringify(orderedProducts));
     }
 
     window.onbeforeunload = function (event) {
@@ -191,7 +199,8 @@
 
         for (var i = 0; i < selectedItems.length; i++) {
             selectElement.remove(getOptionIndexByValue(selectElement, selectedItems[i].value));
-            document.getElementById('orderList').innerHTML += createNewOrderListItem(selectedItems[i].value, selectedItems[i].text);
+            //document.getElementById('orderList').innerHTML += createNewOrderListItem(selectedItems[i].value, selectedItems[i].text);
+            $('#orderList').append(createNewOrderListItem(selectedItems[i].value, selectedItems[i].text, 1));
         }
     }
 
@@ -201,10 +210,10 @@
         document.getElementById('lboxAvailableProducts').add(new Option(name, id));
     }
 
-    function createNewOrderListItem(id, name) {
+    function createNewOrderListItem(id, name, amount) {
         return '<div class="orderItem" id="orderListItem' + id + '">' +
             '<a class="btn btn-default" onclick="removeProductFromOrder(' + id + ')">X</a>' +
-            '<input class="productCount" type="number" value="1" min="1" />' +
+            '<input class="productCount" type="number" value="' + amount + '" min="1" />' +
             '<div id="orderItem' + id + 'Name">' + name + '</div>' +
             '<input class="productId" type="hidden" value="' + id + '"/>' +
             '</div>';
