@@ -44,16 +44,19 @@ namespace HRMapp.Models
             get => phoneNumber;
             private set
             {
-                if (value == null || value.Length != 10)
+                if (!String.IsNullOrEmpty(value))
                 {
-                    throw new ArgumentException("Een telefoonnummer moet 10 cijfers lang zijn.");
-                }
 
-                if (!StringOnlyContainsIntegers(value))
-                {
-                    throw new ArgumentException("Een telefoonnummer mag alleen uit cijfers bestaan.");
-                }
+                    if (value.Length != 10)
+                    {
+                        throw new ArgumentException("Een telefoonnummer moet 10 cijfers lang zijn.");
+                    }
 
+                    if (!StringOnlyContainsIntegers(value))
+                    {
+                        throw new ArgumentException("Een telefoonnummer mag alleen uit cijfers bestaan.");
+                    }
+                }
                 phoneNumber = value;
             }
         }
@@ -63,9 +66,12 @@ namespace HRMapp.Models
             get => emailAddress;
             private set
             {
-                if (!String.IsNullOrEmpty(value) && !ValidateEmailAddress(value))
+                if (!String.IsNullOrEmpty(value))
                 {
-                    throw new ArgumentException("Emailadres voldoet niet aan het juiste formaat.");
+                    if (!ValidateEmailAddress(value))
+                    {
+                        throw new ArgumentException("Emailadres voldoet niet aan het juiste formaat.");
+                    }
                 }
                 emailAddress = value;
             }

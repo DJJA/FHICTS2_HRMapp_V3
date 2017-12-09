@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 using HRMapp.DAL.Contexts;
 using HRMapp.Models;
@@ -56,26 +57,29 @@ namespace HRMapp.DAL.Repositories
             {
                 if (employee is ProductionWorker worker)
                     productionWorkerContext.Update(worker);
-                if (employee is TeamLeader leader)
+                else if (employee is TeamLeader leader)
                     teamLeaderContext.Update(leader);
-                if (employee is HRManager manager)
+                else if (employee is HRManager manager)
                     hrManagerContext.Update(manager);
-                if (employee is SalesManager salesManager)
+                else if (employee is SalesManager salesManager)
                     salesManagerContext.Update(salesManager);
+                else
+                    throw new ArgumentException("Type of employee is not supported in the 'Update' method (DAL -> EmployeeRepo)");
             }
             else
             {
                 if (employee is ProductionWorker worker)
                     productionWorkerContext.ChangeToThisTypeAndUpdate(worker);
-                if (employee is TeamLeader leader)
+                else if (employee is TeamLeader leader)
                     teamLeaderContext.ChangeToThisTypeAndUpdate(leader);
-                if (employee is HRManager manager)
+                else if (employee is HRManager manager)
                     hrManagerContext.ChangeToThisTypeAndUpdate(manager);
-                if (employee is SalesManager salesManager)
+                else if (employee is SalesManager salesManager)
                     salesManagerContext.ChangeToThisTypeAndUpdate(salesManager);
+                else
+                    throw new ArgumentException("Type of employee is not supported in the 'Update' method (DAL -> EmployeeRepo)");
             }
-            
-            throw new ArgumentException("Type of employee is not supported in the 'Update' method (DAL -> EmployeeRepo)");
+
         }
 
         public TeamLeader GetTeamLeaderById(int id) => teamLeaderContext.GetById(id);
