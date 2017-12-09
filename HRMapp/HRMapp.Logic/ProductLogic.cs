@@ -14,6 +14,6 @@ namespace HRMapp.Logic
         public List<Product> GetAll => repo.GetAll.ToList();
         public Product GetById(int id) => repo.GetById(id);
         public int Add(Product product) => repo.Add(product);
-        public bool Update(Product product) => repo.Update(product);
+        public void Update(Product product) => repo.Update(product);
     }
 }

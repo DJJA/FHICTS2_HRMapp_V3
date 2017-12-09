@@ -57,22 +57,15 @@ namespace HRMapp.DAL.Contexts
             return addedEmployee;
         }
 
-        public bool Delete(TeamLeader value)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Update(TeamLeader employee)
+        public void Update(TeamLeader employee)
         {
             try
             {
                 ExecuteProcedure("sp_UpdateTeamLeader", GetSqlParametersFromTeamLeader(employee, true));
-                return true;
             }
             catch (SqlException sqlEx)
             {
                 HandleGenericSqlException(sqlEx);
-                return false;
             }
         }
 

@@ -68,7 +68,7 @@ namespace HRMapp.DAL.Contexts
             return addedTaskId;
         }
 
-        public bool Delete(ProductionTask task)
+        public void Delete(ProductionTask task)
         {
             try
             {
@@ -78,15 +78,13 @@ namespace HRMapp.DAL.Contexts
             {
                 HandleGenericSqlException(sqlEx);
             }
-            return false;
         }
 
-        public bool Update(ProductionTask task)
+        public void Update(ProductionTask task)
         {
             try
             {
                 ExecuteProcedure("sp_UpdateTask", GetSqlParametersFromTask(task, true));
-                return true;
             }
             catch (SqlException sqlEx)
             {
@@ -95,7 +93,6 @@ namespace HRMapp.DAL.Contexts
                     case 2627: throw new DBException("Er bestaat al een taak met deze naam.");
                 }
                 HandleGenericSqlException(sqlEx);
-                return false;
             }
         }
 

@@ -11,12 +11,12 @@ namespace HRMapp.Logic
     {
         private EmployeeRepo repo = new EmployeeRepo();
 
-        public IEnumerable<Employee> GetAll() => repo.GetAll();
+        public List<Employee> GetAll => repo.GetAll().ToList();
         public Employee GetById(int id) => repo.GetById(id);
         public int Add(Employee employee) => repo.Add(employee);
-        public bool Update(Employee employee) => repo.Update(employee);
+        public void Update(Employee employee) => repo.Update(employee);
 
-        public IEnumerable<TeamLeader> GetAllTeamLeaders => repo.GetAllTeamLeaders();
+        public List<TeamLeader> GetAllTeamLeaders => repo.GetAllTeamLeaders().ToList();
         public TeamLeader GetTeamLeaderById(int id) => repo.GetTeamLeaderById(id);
         public List<ProductionEmployee> GetAllTeamLeadersAndProductionWorkers => repo.GetAllTeamLeadersAndProductionWorkers().ToList();
     }

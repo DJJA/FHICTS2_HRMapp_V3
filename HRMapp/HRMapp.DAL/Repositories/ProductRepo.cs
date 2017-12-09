@@ -13,6 +13,6 @@ namespace HRMapp.DAL.Repositories
         public IEnumerable<Product> GetAll => context.GetAll();
         public Product GetById(int id) => context.GetById(id);
         public int Add(Product product) => context.Add(product);
-        public bool Update(Product product) => context.Update(product);
+        public void Update(Product product) => context.Update(product);
     }
 }

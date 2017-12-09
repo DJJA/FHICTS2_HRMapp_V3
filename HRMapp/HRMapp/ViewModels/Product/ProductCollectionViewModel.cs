@@ -16,7 +16,7 @@ namespace HRMapp.ViewModels
         public List<SelectListItem> ListItems { get; private set; }
         public List<Product> Products
         {
-            get { return products; }
+            get => products;
             private set
             {
                 products = value;

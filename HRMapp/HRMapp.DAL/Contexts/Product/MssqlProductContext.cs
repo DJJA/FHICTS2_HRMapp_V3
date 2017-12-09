@@ -56,29 +56,22 @@ namespace HRMapp.DAL.Contexts
             {
                 switch (sqlEx.Number)
                 {
-                    case 2627: throw new DBException($"Product met naam '{product.Name}' bestaat al. Kies een andere naam.");   // TODO Waarom geen specifieke DBProductException?
+                    case 2627: throw new DBException($"Product met naam '{product.Name}' bestaat al. Kies een andere naam.");   
                 }
                 HandleGenericSqlException(sqlEx);
             }
             return addedProduct;
         }
 
-        public bool Delete(Product value)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Update(Product product)
+        public void Update(Product product)
         {
             try
             {
                 ExecuteProcedure("sp_UpdateProduct", GetSqlParametersFromProduct(product, true));
-                return true;
             }
             catch (SqlException sqlEx)
             {
                 HandleGenericSqlException(sqlEx);
-                return false;
             }
         }
 
@@ -86,7 +79,7 @@ namespace HRMapp.DAL.Contexts
         {
             var tasks = new List<ProductionTask>();
             var dataTable = GetDataViaProcedure("sp_GetTasksByProductId", new SqlParameter("@ProductId", productId));
-            tasks.AddRange(from DataRow row in dataTable.Rows select MssqlTaskContext.GetTaskFromDataRow(row));   // TODO Als ik niet meer info nodig heb, misschien minder ophalen uit de db
+            tasks.AddRange(from DataRow row in dataTable.Rows select MssqlTaskContext.GetTaskFromDataRow(row));   
             return tasks;
         }
 

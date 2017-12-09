@@ -12,20 +12,11 @@ namespace HRMapp.Controllers
 {
     public class TaskController : Controller
     {
-        //private static CrossActionMessageHolder infoMessage = new CrossActionMessageHolder();
         private TaskLogic taskLogic = new TaskLogic();
-
         private EmployeeLogic employeeLogic = new EmployeeLogic();
 
         public IActionResult Index(int id)
         {
-            //var tasks = taskLogic.GetAll;
-            //if (id == 0 && tasks.Count > 0)
-            //{
-            //    id = tasks[0].Id;
-            //}
-            //var model = new TaskCollectionViewModel(id, tasks.ToList()) { InfoMessage = infoMessage.Message };
-            //return View("Task", model);
             return RedirectToAction("Index", "Product");
         }
 
@@ -45,8 +36,7 @@ namespace HRMapp.Controllers
         {
             try
             {
-                var addedTaskId = taskLogic.Add(model.ToTask(employeeLogic.GetAllTeamLeadersAndProductionWorkers));
-                //infoMessage.Message = $"'{model.Name}' is toegevoegd aan het systeem.";
+                taskLogic.Add(model.ToTask(employeeLogic.GetAllTeamLeadersAndProductionWorkers));
                 return RedirectToAction("Edit", "Product", new {id = model.ProductId});
             }
             catch (ArgumentException argEx)
@@ -70,8 +60,7 @@ namespace HRMapp.Controllers
         {
             try
             {
-                var success = taskLogic.Update(model.ToTask(employeeLogic.GetAllTeamLeadersAndProductionWorkers));
-                //infoMessage.Message = $"'{model.Name}' is bewerkt.";
+                taskLogic.Update(model.ToTask(employeeLogic.GetAllTeamLeadersAndProductionWorkers));
                 return RedirectToAction("Edit", "Product", new {id = model.ProductId});
             }
             catch (ArgumentException argEx)
@@ -84,24 +73,9 @@ namespace HRMapp.Controllers
             }
         }
 
-        //Wat is nou het verschil tussen psot en get, wat zou ik hier gebruiken? Beide zullen werken...
         [HttpPost]
         public IActionResult Delete(int taskId, int productId)
         {
-            //try
-            //{
-            //    taskLogic.Delete(new ProductionTask(taskId));
-            //    return RedirectToAction("Edit", "Product", new {id = productId});
-            //}
-            //catch (ArgumentException argEx)
-            //{
-            //    return RedirectToAction("Edit", "Product", new {id = productId}); 
-            //}
-            //catch (DBException dbEx)
-            //{
-            //    return RedirectToAction("Edit", "Product", new {id = productId});
-            //}
-
             try
             {
                 taskLogic.Delete(new ProductionTask(taskId));

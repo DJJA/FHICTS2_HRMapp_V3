@@ -13,7 +13,6 @@ namespace HRMapp.Controllers
     {
         private static CrossActionMessageHolder infoMessage = new CrossActionMessageHolder();
         private ProductLogic productLogic = new ProductLogic();
-        private TaskLogic taskLogic = new TaskLogic();
 
         public IActionResult Index(int id)
         {
@@ -66,7 +65,6 @@ namespace HRMapp.Controllers
             try
             {
                 var addedProductId = productLogic.Add(model.ToProduct());
-                //infoMessage.Message = $"'{model.Name}' is toegevoegd aan het systeem.";
                 return RedirectToAction("New", "Task", new { productId = addedProductId });
             }
             catch (ArgumentException argEx)

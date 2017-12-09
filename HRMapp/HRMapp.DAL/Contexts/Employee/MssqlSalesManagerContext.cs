@@ -57,22 +57,15 @@ namespace HRMapp.DAL.Contexts
             return addedEmployee;
         }
 
-        public bool Delete(SalesManager value)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Update(SalesManager employee)
+        public void Update(SalesManager employee)
         {
             try
             {
                 ExecuteProcedure("sp_UpdateSalesManager", GetSqlParametersFromSalesManager(employee, true));
-                return true;
             }
             catch (SqlException sqlEx)
             {
                 HandleGenericSqlException(sqlEx);
-                return false;
             }
         }
 

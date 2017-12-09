@@ -37,7 +37,7 @@ namespace HRMapp.ViewModels
                 var list = new List<SelectListItem>();
                 foreach (var product in products)
                 {
-                    if(Items.All(i => i.Product.Id != product.Id))
+                    if (Items.All(i => i.Product.Id != product.Id))
                         list.Add(new SelectListItem() { Text = product.Name, Value = product.Id.ToString() });
                 }
                 return list;
@@ -57,7 +57,7 @@ namespace HRMapp.ViewModels
             {
                 var deserializedObjects = JsonConvert.DeserializeObject<List<OrderItemHelper>>(OrderedProducts);
                 var orderItems = new List<OrderItem>();
-                orderItems.AddRange(from OrderItemHelper helper in deserializedObjects select new OrderItem(){Product = new Product(helper.ProductId), Amount = helper.Amount});
+                orderItems.AddRange(from OrderItemHelper helper in deserializedObjects select new OrderItem() { Product = new Product(helper.ProductId), Amount = helper.Amount });
                 return orderItems;
             }
         }
@@ -67,7 +67,7 @@ namespace HRMapp.ViewModels
         [DisplayName("Klant:")]
         public string Customer { get; set; }
 
-        public List<OrderItem> Items { get; private set; }
+        public List<OrderItem> Items { get; private set; } = new List<OrderItem>();
 
         /// <summary>
         /// Used for giving back a viewmodel
@@ -75,23 +75,23 @@ namespace HRMapp.ViewModels
         public OrderEditorViewModel()
         {
             EditorType = EditorType.New;
-            Items = new List<OrderItem>();
         }
 
         /// <summary>
-        /// Used for giving back a viewmodel and used for new skillset todo change summary
+        /// Used for new order
         /// </summary>
+        /// <param name="products"></param>
         public OrderEditorViewModel(List<Product> products)
         {
             EditorType = EditorType.New;
             this.products = products;
-            Items = new List<OrderItem>();
         }
 
         /// <summary>
-        /// Used for editing a skillset
+        /// Used for editing an order
         /// </summary>
         /// <param name="order"></param>
+        /// <param name="products"></param>
         public OrderEditorViewModel(Order order, List<Product> products)
         {
             EditorType = EditorType.Edit;

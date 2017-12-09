@@ -3,11 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace HRMapp.DAL
+namespace HRMapp.DAL.Contexts
 {
     internal interface ITaskContext : IContext<ProductionTask>
     {
         IEnumerable<ProductionTask> GetByProductId(int productId);
-        //IEnumerable<Employee> GetEmployeesByTaskId(int taskId);
+        void Delete(ProductionTask task);
     }
 }

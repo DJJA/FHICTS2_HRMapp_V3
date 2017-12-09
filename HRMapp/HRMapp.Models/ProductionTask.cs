@@ -14,14 +14,11 @@ namespace HRMapp.Models
             get => name;
             private set
             {
-                if (!String.IsNullOrEmpty(value))
-                {
-                    name = value;
-                }
-                else
+                if (String.IsNullOrEmpty(value))
                 {
                     throw new ArgumentException("De taak moet een naam hebben.");
                 }
+                name = value;
             }
         }
         public string Description
@@ -29,14 +26,11 @@ namespace HRMapp.Models
             get => description;
             private set
             {
-                if (!String.IsNullOrEmpty(value))
-                {
-                    description = value;
-                }
-                else
+                if (String.IsNullOrEmpty(value))
                 {
                     throw new ArgumentException("De taak moet een omschrijving hebben.");
                 }
+                description = value;
             }
         }
         public TimeSpan Duration { get; private set; }

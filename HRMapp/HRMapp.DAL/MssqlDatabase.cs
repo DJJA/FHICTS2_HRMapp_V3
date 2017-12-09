@@ -20,18 +20,8 @@ namespace HRMapp.DAL
             using (var connection = new SqlConnection(connectionString))
             using (var adapter = new SqlDataAdapter(procedure, connection))
             {
-                //connection.Open();
                 adapter.SelectCommand.CommandType = CommandType.StoredProcedure;
-
-                if (procedureParameters != null)
-                {
-                    adapter.SelectCommand.Parameters.AddRange(ValidateParameters(procedureParameters).ToArray());
-                    //foreach (var parammeter in procedureParameters)
-                    //{
-                    //    adapter.SelectCommand.Parameters.Add(parammeter);
-                    //}
-                }
-
+                adapter.SelectCommand.Parameters.AddRange(ValidateParameters(procedureParameters).ToArray());
                 adapter.Fill(dataTable);
             }
             return dataTable;
@@ -39,7 +29,7 @@ namespace HRMapp.DAL
 
         protected DataTable GetDataViaProcedure(string procedure)
         {
-            return GetDataViaProcedure(procedure, procedureParameters: null);
+            return GetDataViaProcedure(procedure, new List<SqlParameter>());
         }
 
         protected DataTable GetDataViaProcedure(string procedure, SqlParameter procedureParameter)
@@ -54,15 +44,7 @@ namespace HRMapp.DAL
             using (var command = new SqlCommand(procedure, connection))
             {
                 command.CommandType = CommandType.StoredProcedure;
-
-                if (procedureParameters != null)
-                {
-                    command.Parameters.AddRange(ValidateParameters(procedureParameters).ToArray());
-                    //foreach (var parammeter in procedureParameters)
-                    //{
-                    //    command.Parameters.Add(parammeter);
-                    //}
-                }
+                command.Parameters.AddRange(ValidateParameters(procedureParameters).ToArray());
                 connection.Open();  // ExecuteNonQuery requires open connection
 
                 command.ExecuteNonQuery();
@@ -71,7 +53,7 @@ namespace HRMapp.DAL
 
         protected void ExecuteProcedure(string procedure)
         {
-            ExecuteProcedure(procedure, procedureParameters: null);
+            ExecuteProcedure(procedure, new List<SqlParameter>());
         }
 
         protected void ExecuteProcedure(string procedure, SqlParameter procedureParameter)
@@ -108,15 +90,7 @@ namespace HRMapp.DAL
             using (var command = new SqlCommand(procedure, connection))
             {
                 command.CommandType = CommandType.StoredProcedure;
-
-                if (procedureParameters != null)
-                {
-                    command.Parameters.AddRange(ValidateParameters(procedureParameters).ToArray());
-                    //foreach (var parammeter in procedureParameters)
-                    //{
-                    //    command.Parameters.Add(parammeter);
-                    //}
-                }
+                command.Parameters.AddRange(ValidateParameters(procedureParameters).ToArray());
                 connection.Open();  // Scalar needs open connection
 
                 var obj = command.ExecuteScalar();
@@ -128,7 +102,7 @@ namespace HRMapp.DAL
 
         protected int ExecuteProcedureWithReturnValue(string procedure)
         {
-            return ExecuteProcedureWithReturnValue(procedure, procedureParameters: null);
+            return ExecuteProcedureWithReturnValue(procedure, new List<SqlParameter>());
         }
 
         protected int ExecuteProcedureWithReturnValue(string procedure, SqlParameter procedureParameter)

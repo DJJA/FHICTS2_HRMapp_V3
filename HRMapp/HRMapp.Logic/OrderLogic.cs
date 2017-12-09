@@ -19,6 +19,6 @@ namespace HRMapp.Logic
             return repo.Add(order);
         }
 
-        public bool Update(Order order) => repo.Update(order);
+        public void Update(Order order) => repo.Update(order);
     }
 }

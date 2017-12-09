@@ -57,49 +57,21 @@ namespace HRMapp.DAL.Contexts
             return addedId;
         }
 
-        public bool Delete(Order value)
+        public void Update(Order value)
         {
-            throw new NotImplementedException();
-        }
-
-        public bool Update(Order value)
-        {
-            //var dataTable = new DataTable();
-            //dataTable.Columns.Add("ProductId");
-            //dataTable.Columns.Add("Amount");
-            //foreach (var item in value.Items)
-            //{
-            //    dataTable.Rows.Add(item.Product, item.Amount);
-            //}
-
             try
             {
-                //var parameters = new List<SqlParameter>()
-                //{
-                //    new SqlParameter("@Deadline", value.Deadline),
-                //    new SqlParameter("@Customer", value.Customer),
-                //    new SqlParameter("@Id", value.Id),
-                //    new SqlParameter("@OrderItems", dataTable)
-                //    {
-                //        SqlDbType = SqlDbType.Structured
-                //    }
-                //};
-
-                //ExecuteProcedure("sp_UpdateOrder", parameters);
                 ExecuteProcedure("sp_UpdateOrder", GetSqlParametersFromOrder(value, true));
-                return true;
             }
             catch (SqlException sqlEx)
             {
                 HandleGenericSqlException(sqlEx);
-                return false;
             }
         }
 
         public List<OrderItem> GetOrderItems(int orderId)
         {
             var orderItems = new List<OrderItem>();
-            //var dataTable = GetDataBySelectQuery("SELECT * FROM fn_GetOrderItems(@OrderId)", new SqlParameter("@OrderId", orderId));
             var dataTable = GetDataByFunction("fn_GetOrderItems", orderId);
             orderItems.AddRange(from DataRow row in dataTable.Rows select new OrderItem()
             {
@@ -151,7 +123,7 @@ namespace HRMapp.DAL.Contexts
             }
             else
             {
-                parameters.Add(new SqlParameter("@EmployeeSalesManagerId", order.SalesManager.Id)); // todo If this is null, will it not pass this parameter to the db?
+                parameters.Add(new SqlParameter("@EmployeeSalesManagerId", order.SalesManager.Id)); 
             }
             return parameters;
         }

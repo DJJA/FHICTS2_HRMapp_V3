@@ -12,32 +12,15 @@ using Microsoft.WindowsAzure.Storage.Blob.Protocol;
 
 namespace HRMapp.ViewModels
 {
-    public enum EmployeeFunction
-    {
-        ProductionWorker,
-        TeamLeader,
-        HRManager,
-        SalesManager,
-        None
-    }
-
     public class EmployeeEditorViewModel : EditorViewModel
     {
-        //private Employee employee = null;
-        //private EmployeeFunction employeeFunction = EmployeeFunction.None;
-        private List<TeamLeader> teamLeaders;
-
-        //private TeamLeader teamLeader;
+        private List<TeamLeader> teamLeaders = new List<TeamLeader>();
 
         public List<SelectListItem> EmployeeTypes
         {
             get
             {
                 var list = new List<SelectListItem>();
-                //list.Add(new SelectListItem() { Value = "0", Text = "Productiemedewerk(st)er", Selected = employee == null || employee is ProductionWorker});
-                //list.Add(new SelectListItem() { Value = "1", Text = "Teamleider", Selected = employee is TeamLeader});
-                //list.Add(new SelectListItem() { Value = "2", Text = "HR Manager", Selected = employee is HRManager});
-                //list.Add(new SelectListItem() { Value = "3", Text = "Sales Manager", Selected = employee is SalesManager});
                 list.Add(new SelectListItem() { Value = ((int)EmployeeFunction.ProductionWorker).ToString(), Text = EmployeeFunction.ProductionWorker.ToString(), Selected = EmployeeType == EmployeeFunction.None || EmployeeType == EmployeeFunction.ProductionWorker });
                 list.Add(new SelectListItem() { Value = ((int)EmployeeFunction.TeamLeader).ToString(), Text = EmployeeFunction.TeamLeader.ToString(), Selected = EmployeeType == EmployeeFunction.TeamLeader });
                 list.Add(new SelectListItem() { Value = ((int)EmployeeFunction.HRManager).ToString(), Text = EmployeeFunction.HRManager.ToString(), Selected = EmployeeType == EmployeeFunction.HRManager });
@@ -52,8 +35,8 @@ namespace HRMapp.ViewModels
             get
             {
                 var list = new List<SelectListItem>();
-                list.Add(new SelectListItem(){Value="-1", Text = "- - -"});
-                list.AddRange(from TeamLeader teamLeader in teamLeaders select new SelectListItem() { Value = teamLeader.Id.ToString(), Text = $"{teamLeader.FirstName} {teamLeader.LastName}", Selected = teamLeader.Id == TeamLeaderId});
+                list.Add(new SelectListItem() { Value = "-1", Text = "- - -" });
+                list.AddRange(from TeamLeader teamLeader in teamLeaders select new SelectListItem() { Value = teamLeader.Id.ToString(), Text = $"{teamLeader.FirstName} {teamLeader.LastName}", Selected = teamLeader.Id == TeamLeaderId });
                 return list;
             }
         }
@@ -101,7 +84,6 @@ namespace HRMapp.ViewModels
         /// </summary>
         public EmployeeEditorViewModel()
         {
-            teamLeaders = new List<TeamLeader>();   // Has to be instantiated, otherwise it crashes (public List<SelectListItem> TeamLeaders)
         }
 
         /// <summary>
@@ -115,21 +97,19 @@ namespace HRMapp.ViewModels
         }
 
         /// <summary>
-        /// Used by controller to edit employee
+        /// Used by controller to edit
         /// </summary>
+        /// <param name="teamLeaders"></param>
         /// <param name="employee"></param>
-        /// TODO UPDATE summery with shortcut if possible in employee editor viewmodel
         public EmployeeEditorViewModel(List<TeamLeader> teamLeaders, Employee employee)
         {
-            //FormAction = "Edit";
-            //FormTitle = "Werknemer bewerken";
             EditorType = EditorType.Edit;
 
             this.teamLeaders = teamLeaders;
 
             if (employee is ProductionWorker worker)
             {
-                if(worker.TeamLeader != null)
+                if (worker.TeamLeader != null)
                 {
                     TeamLeaderId = worker.TeamLeader.Id;
                 }
@@ -139,7 +119,6 @@ namespace HRMapp.ViewModels
                 }
             }
 
-            //employeeFunction = GetEmployeeFunction(employee);
             EmployeeType = GetEmployeeFunction(employee);
 
             Id = employee.Id;
@@ -157,9 +136,9 @@ namespace HRMapp.ViewModels
         /// Used by controller when error occurs
         /// </summary>
         /// <param name="teamLeaders"></param>
-        /// <param name="availableSkillsets"></param>
         /// <param name="viewModel"></param>
         /// <param name="editorType"></param>
+        /// <param name="errorMessage"></param>
         public EmployeeEditorViewModel(List<TeamLeader> teamLeaders, EmployeeEditorViewModel viewModel, EditorType editorType, string errorMessage)
         {
             EditorType = editorType;

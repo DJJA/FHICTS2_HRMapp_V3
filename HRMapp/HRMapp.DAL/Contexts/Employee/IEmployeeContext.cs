@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using HRMapp.Models;
 
-namespace HRMapp.DAL.Contexts   // TODO fix namespaces
+namespace HRMapp.DAL.Contexts 
 {
     interface IEmployeeContext<T>
     {

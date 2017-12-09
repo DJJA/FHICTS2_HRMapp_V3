@@ -79,20 +79,7 @@ namespace HRMapp.ViewModels
             }
         }
 
-        //public List<int> LboxAvailableSkillsets { get; set; }
         public List<int> LboxQualifiedEmployees { get; set; }
-
-        //private bool specifiedEmployees = false;
-
-        //public bool SpecifiedEmployees
-        //{
-        //    get
-        //    {
-        //        if (qualifiedEmployees.Count > 0)
-        //            return true;
-        //        return false;
-        //    }
-        //}
 
         public bool SpecifiedEmployees { get; set; }
 
@@ -105,9 +92,10 @@ namespace HRMapp.ViewModels
         }
 
         /// <summary>
-        /// Used by controller to create a new task
+        /// Used to add new task
         /// </summary>
         /// <param name="availableEmployees"></param>
+        /// <param name="productId"></param>
         public TaskEditorViewModel(List<ProductionEmployee> availableEmployees, int productId)
         {
             this.availableEmployees = availableEmployees;
@@ -159,8 +147,6 @@ namespace HRMapp.ViewModels
                     requiredSkillsets.Add(employee);
                 }
             }
-            //this.qualifiedEmployees = requiredSkillsets;
-
             SpecifiedEmployees = viewModel.SpecifiedEmployees;
 
             ErrorMessage = errorMessage;
@@ -176,7 +162,7 @@ namespace HRMapp.ViewModels
                     qualifiedEmployees.Add(employees.Single(employee => employee.Id == id));
                 }
             }
-            return new ProductionTask(Id, new Product(ProductId), Name, Description, Duration, qualifiedEmployees); //TODO change product id -1 to something else
+            return new ProductionTask(Id, new Product(ProductId), Name, Description, Duration, qualifiedEmployees); 
         }
     }
 }
