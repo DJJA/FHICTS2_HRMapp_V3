@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2003
+VisualStudioVersion = 15.0.27004.2006
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HRMapp", "HRMapp\HRMapp.csproj", "{C6D540BF-E6E6-4B73-BB30-224FCE12EC3F}"
 EndProject
@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HRMapp.Logic", "HRMapp.Logi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HRMapp.CLI", "HRMapp.CLI\HRMapp.CLI.csproj", "{677F8A9F-CA99-4F33-9808-D613BF63643D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HRMapp_Tests", "HRMapp_Tests\HRMapp_Tests.csproj", "{CF1F97B1-38B1-426B-9066-28574717F6C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HRMapp_Tests", "HRMapp_Tests\HRMapp_Tests.csproj", "{CF1F97B1-38B1-426B-9066-28574717F6C2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
