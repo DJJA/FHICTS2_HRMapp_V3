@@ -9,7 +9,12 @@ namespace HRMapp.Logic
 {
     public class OrderLogic
     {
-        private OrderRepo repo = new OrderRepo();
+        private OrderRepo repo;
+
+        public OrderLogic(OrderRepo repo)
+        {
+            this.repo = repo;
+        }
 
         public List<Order> GetAll => repo.GetAll.ToList();
         public Order GetById(int id) => repo.GetById(id);
