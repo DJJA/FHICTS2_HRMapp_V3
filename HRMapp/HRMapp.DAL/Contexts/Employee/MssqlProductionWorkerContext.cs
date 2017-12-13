@@ -86,7 +86,8 @@ namespace HRMapp.DAL.Contexts
             if (row["TeamLeaderId"] != DBNull.Value)
             {
                 var teamLeaderId = Convert.ToInt32(row["TeamLeaderId"]);
-                teamLeader = new EmployeeRepo().GetTeamLeaderById(teamLeaderId);
+                //teamLeader = new EmployeeRepo().GetTeamLeaderById(teamLeaderId); // TODO Laad teamleider in ipv testdata
+                teamLeader = new TeamLeader(1,"sample","sample");
             }
             
             return new ProductionWorker(id, firstName, lastName, phoneNumber, emailAddress, street, houseNumber, zipCode, city, teamLeader);

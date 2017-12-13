@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HRMapp.Factory;
 using HRMapp.Logic;
 using HRMapp.Models.Exceptions;
 using HRMapp.ViewModels;
@@ -12,7 +13,7 @@ namespace HRMapp.Controllers
     public class ProductController : Controller
     {
         private static CrossActionMessageHolder infoMessage = new CrossActionMessageHolder();
-        private ProductLogic productLogic = new ProductLogic();
+        private ProductLogic productLogic = ProductFactory.ManageProducts();
 
         public IActionResult Index(int id)
         {

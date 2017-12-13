@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HRMapp.DAL.Repositories;
 using HRMapp.Logic;
 using HRMapp.Models;
 using HRMapp.Models.Exceptions;
@@ -12,8 +13,8 @@ namespace HRMapp.Controllers
 {
     public class TaskController : Controller
     {
-        private TaskLogic taskLogic = new TaskLogic();
-        private EmployeeLogic employeeLogic = new EmployeeLogic();
+        private TaskLogic taskLogic = Factory.TaskFactory.ManageTasks();
+        private EmployeeLogic employeeLogic = new EmployeeLogic(new EmployeeRepo(ContextType.Mssql));EmployeeRepo rrrr = new EmployeeRepo(ContextType.Mssql);
 
         public IActionResult Index(int id)
         {

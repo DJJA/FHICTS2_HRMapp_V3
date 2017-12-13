@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HRMapp.Factory;
 using HRMapp.Logic;
 using HRMapp.Models.Exceptions;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +13,7 @@ namespace HRMapp.Controllers
     public class EmployeeController : Controller
     {
         private static CrossActionMessageHolder infoMessage = new CrossActionMessageHolder();
-        private EmployeeLogic employeeLogic = new EmployeeLogic();
+        private EmployeeLogic employeeLogic = EmployeeFactory.ManageEmployees();
 
         public IActionResult Index(int id)
         {

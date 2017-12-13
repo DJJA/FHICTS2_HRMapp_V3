@@ -10,7 +10,12 @@ namespace HRMapp.Logic
 {
     public class TaskLogic
     {
-        private TaskRepo repo = new TaskRepo();
+        private TaskRepo repo;
+
+        public TaskLogic(TaskRepo repo)
+        {
+            this.repo = repo;
+        }
         
         public List<ProductionTask> GetAll => repo.GetAll().ToList();
         public ProductionTask GetById(int id) => repo.GetById(id);

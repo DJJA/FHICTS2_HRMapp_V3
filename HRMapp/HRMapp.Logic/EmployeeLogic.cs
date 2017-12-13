@@ -9,7 +9,12 @@ namespace HRMapp.Logic
 {
     public class EmployeeLogic
     {
-        private EmployeeRepo repo = new EmployeeRepo();
+        private EmployeeRepo repo;
+
+        public EmployeeLogic(EmployeeRepo repo)
+        {
+            this.repo = repo;
+        }
 
         public List<Employee> GetAll => repo.GetAll().ToList();
         public Employee GetById(int id) => repo.GetById(id);

@@ -8,7 +8,18 @@ namespace HRMapp.DAL.Repositories
 {
     public class ProductRepo
     {
-        IProductContext context = new MssqlProductContext();
+        private IProductContext context;
+
+        public ProductRepo(ContextType contextType)
+        {
+            switch (contextType)
+            {
+                case ContextType.Mssql:
+                    context = new MssqlProductContext();
+                    break;
+                default: throw new NotImplementedException();
+            }
+        }
 
         public IEnumerable<Product> GetAll => context.GetAll();
         public Product GetById(int id) => context.GetById(id);

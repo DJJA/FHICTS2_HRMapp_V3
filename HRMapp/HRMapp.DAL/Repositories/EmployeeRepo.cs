@@ -14,6 +14,20 @@ namespace HRMapp.DAL.Repositories
         private IHRManagerContext hrManagerContext = new MssqlHRManagerContext();
         private ISalesManagerContext salesManagerContext = new MssqlSalesManagerContext();
 
+        public EmployeeRepo(ContextType contextType)
+        {
+            switch (contextType)
+            {
+                case ContextType.Mssql:
+                    productionWorkerContext = new MssqlProductionWorkerContext();
+                    teamLeaderContext = new MssqlTeamLeaderContext();
+                    hrManagerContext = new MssqlHRManagerContext();
+                    salesManagerContext = new MssqlSalesManagerContext();
+                    break;
+                default: throw new NotImplementedException();
+            }
+        }
+
         public IEnumerable<Employee> GetAll()
         {
             var employees = new List<Employee>();

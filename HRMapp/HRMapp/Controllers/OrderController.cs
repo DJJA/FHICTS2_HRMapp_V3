@@ -14,7 +14,7 @@ namespace HRMapp.Controllers
     {
         private static CrossActionMessageHolder infoMessage = new CrossActionMessageHolder();
         private OrderLogic orderLogic = OrderFactory.ManageOrders();
-        private ProductLogic productLogic = new ProductLogic();
+        private ProductLogic productLogic = ProductFactory.ManageProducts();
 
         public IActionResult Index(int id)
         {

@@ -8,7 +8,21 @@ namespace HRMapp.DAL.Repositories
 {
     public class TaskRepo : IRepo
     {
-        private ITaskContext context = new MssqlTaskContext();
+        private ITaskContext context;
+
+        public TaskRepo(ContextType contextType)
+        {
+            switch (contextType)
+            {
+                case ContextType.Mssql:
+                    context = new MssqlTaskContext();
+                    break;
+                case ContextType.Memmory:
+                    context = new MemoryTaskContext();
+                    break;
+                default: throw new NotImplementedException();
+            }
+        }
 
         public IEnumerable<ProductionTask> GetAll() => context.GetAll();
         public ProductionTask GetById(int id) => context.GetById(id);

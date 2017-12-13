@@ -9,7 +9,12 @@ namespace HRMapp.Logic
 {
     public class ProductLogic
     {
-        ProductRepo repo = new ProductRepo();
+        private ProductRepo repo;
+
+        public ProductLogic(ProductRepo repo)
+        {
+            this.repo = repo;
+        }
 
         public List<Product> GetAll => repo.GetAll.ToList();
         public Product GetById(int id) => repo.GetById(id);
