@@ -10,9 +10,9 @@ namespace HRMapp.Logic
 {
     public class TaskLogic : ITaskLogic
     {
-        private TaskRepo repo;
+        private ITaskRepo repo;
 
-        public TaskLogic(TaskRepo repo)
+        public TaskLogic(ITaskRepo repo)
         {
             this.repo = repo;
         }

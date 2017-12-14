@@ -43,7 +43,7 @@ namespace HRMapp.Models
             Id = id;
             Deadline = deadline;
             Customer = customer;
-            Items = items;          //TODO Misschien lijsten niet in contructors instantieren, maar in de class body
+            Items = items;
         }
 
         public override string ToString()

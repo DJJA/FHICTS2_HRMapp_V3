@@ -9,9 +9,9 @@ namespace HRMapp.Logic
 {
     public class ProductLogic : IProductLogic
     {
-        private ProductRepo repo;
+        private IProductRepo repo;
 
-        public ProductLogic(ProductRepo repo)
+        public ProductLogic(IProductRepo repo)
         {
             this.repo = repo;
         }

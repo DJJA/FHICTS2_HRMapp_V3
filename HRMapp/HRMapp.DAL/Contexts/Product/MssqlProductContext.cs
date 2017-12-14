@@ -18,7 +18,7 @@ namespace HRMapp.DAL.Contexts
             try
             {
                 var dt = GetDataViaProcedure("sp_GetProducts");
-                products.AddRange(from DataRow row in dt.Rows select GetProductFromDataRow(row));
+                products.AddRange(from DataRow row in dt.Rows select MssqlObjectFactory.GetProductFromDataRow(row, GetRequiredTasks(Convert.ToInt32(row["Id"]))));
             }
             catch (SqlException sqlEx)
             {
@@ -35,7 +35,7 @@ namespace HRMapp.DAL.Contexts
                 var dt = GetDataViaProcedure("sp_GetProductById", new SqlParameter("@Id", id));
                 if (dt.Rows.Count > 0)
                 {
-                    product = GetProductFromDataRow(dt.Rows[0]);
+                    product = MssqlObjectFactory.GetProductFromDataRow(dt.Rows[0], GetRequiredTasks(id));
                 }
             }
             catch (SqlException sqlEx)
@@ -50,7 +50,7 @@ namespace HRMapp.DAL.Contexts
             int addedProduct = -1;
             try
             {
-                addedProduct = ExecuteProcedureWithReturnValue("sp_AddProduct", GetSqlParametersFromProduct(product, false));
+                addedProduct = ExecuteProcedureWithReturnValue("sp_AddProduct", MssqlObjectFactory.GetSqlParametersFromProduct(product, false));
             }
             catch (SqlException sqlEx)
             {
@@ -67,7 +67,7 @@ namespace HRMapp.DAL.Contexts
         {
             try
             {
-                ExecuteProcedure("sp_UpdateProduct", GetSqlParametersFromProduct(product, true));
+                ExecuteProcedure("sp_UpdateProduct", MssqlObjectFactory.GetSqlParametersFromProduct(product, true));
             }
             catch (SqlException sqlEx)
             {
@@ -75,39 +75,13 @@ namespace HRMapp.DAL.Contexts
             }
         }
 
-        public IEnumerable<ProductionTask> GetRequiredTasks(int productId)
+        public List<ProductionTask> GetRequiredTasks(int productId)
         {
             var tasks = new List<ProductionTask>();
             var dataTable = GetDataViaProcedure("sp_GetTasksByProductId", new SqlParameter("@ProductId", productId));
-            tasks.AddRange(from DataRow row in dataTable.Rows select MssqlTaskContext.GetTaskFromDataRow(row));   
+            tasks.AddRange(from DataRow row in dataTable.Rows select MssqlObjectFactory.GetTaskFromDataRow(row, MssqlTaskContext.GetEmployeesByTaskId(Convert.ToInt32(row["Id"]))));   // TODO Fick this filthy solution
             return tasks;
         }
 
-        private Product GetProductFromDataRow(DataRow row)
-        {
-            var id = Convert.ToInt32(row["Id"]);
-            var name = row["Name"].ToString();
-            var description = row["Description"].ToString();
-
-            return new Product(
-                id: id,
-                name: name,
-                description: description,
-                tasks: GetRequiredTasks(id).ToList());
-        }
-
-        private IEnumerable<SqlParameter> GetSqlParametersFromProduct(Product product, bool withId)
-        {
-            var parameters = new List<SqlParameter>()
-            {
-                new SqlParameter("@Name", product.Name),
-                new SqlParameter("@Description", product.Description)   // TODO Wat als ie null is? zet null standaard om naar dbnull.value
-            };
-            if (withId)
-            {
-                parameters.Add(new SqlParameter("@Id", product.Id));
-            }
-            return parameters;
-        }
     }
 }

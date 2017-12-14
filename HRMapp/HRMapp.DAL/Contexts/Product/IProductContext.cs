@@ -7,6 +7,6 @@ namespace HRMapp.DAL.Contexts
 {
     interface IProductContext : IContext<Product>
     {
-        IEnumerable<ProductionTask> GetRequiredTasks(int productId);
+        List<ProductionTask> GetRequiredTasks(int productId);
     }
 }

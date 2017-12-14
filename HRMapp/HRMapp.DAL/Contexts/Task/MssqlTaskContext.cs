@@ -19,7 +19,7 @@ namespace HRMapp.DAL.Contexts
             try
             {
                 var dataTable = GetDataViaProcedure("sp_GetTasks");
-                tasks.AddRange(from DataRow row in dataTable.Rows select GetTaskFromDataRow(row));
+                tasks.AddRange(from DataRow row in dataTable.Rows select MssqlObjectFactory.GetTaskFromDataRow(row, GetEmployeesByTaskId(Convert.ToInt32(row["Id"]))));
             }
             catch (SqlException sqlEx)
             {
@@ -38,7 +38,7 @@ namespace HRMapp.DAL.Contexts
                 var dataTable = GetDataViaProcedure("sp_GetTaskById", new SqlParameter("@Id", id));
                 if (dataTable.Rows.Count > 0)
                 {
-                    task = GetTaskFromDataRow(dataTable.Rows[0]);
+                    task = MssqlObjectFactory.GetTaskFromDataRow(dataTable.Rows[0], GetEmployeesByTaskId(id));
                 }
             }
             catch (SqlException sqlEx)
@@ -54,7 +54,7 @@ namespace HRMapp.DAL.Contexts
             int addedTaskId = -1;
             try
             {
-                addedTaskId = ExecuteProcedureWithReturnValue("sp_AddTask", GetSqlParametersFromTask(task, false));
+                addedTaskId = ExecuteProcedureWithReturnValue("sp_AddTask", MssqlObjectFactory.GetSqlParametersFromTask(task, false));
             }
             catch (SqlException sqlEx)
             {
@@ -84,7 +84,7 @@ namespace HRMapp.DAL.Contexts
         {
             try
             {
-                ExecuteProcedure("sp_UpdateTask", GetSqlParametersFromTask(task, true));
+                ExecuteProcedure("sp_UpdateTask", MssqlObjectFactory.GetSqlParametersFromTask(task, true));
             }
             catch (SqlException sqlEx)
             {
@@ -103,7 +103,7 @@ namespace HRMapp.DAL.Contexts
             try
             {
                 var dataTable = GetDataViaProcedure("sp_GetTasksByProductId", new SqlParameter("@ProductId", productId));
-                tasks.AddRange(from DataRow row in dataTable.Rows select GetTaskFromDataRow(row));
+                tasks.AddRange(from DataRow row in dataTable.Rows select MssqlObjectFactory.GetTaskFromDataRow(row, GetEmployeesByTaskId(Convert.ToInt32(row["Id"]))));
             }
             catch (SqlException sqlEx)
             {
@@ -113,7 +113,7 @@ namespace HRMapp.DAL.Contexts
             return tasks;
         }
 
-        private static List<ProductionEmployee> GetEmployeesByTaskId(int taskId)// TODO dit is fucking lelijk, fix dit!
+        public static List<ProductionEmployee> GetEmployeesByTaskId(int taskId)// TODO dit is fucking lelijk, fix dit!
         {
             var employees = new List<ProductionEmployee>();
 
@@ -134,45 +134,5 @@ namespace HRMapp.DAL.Contexts
             return employees;
         }
 
-        public static ProductionTask GetTaskFromDataRow(DataRow row)
-        {
-            var id = Convert.ToInt32(row["Id"]);
-            var productId = Convert.ToInt32(row["ProductId"]);
-            var name = row["Name"].ToString();
-            var description = row["Description"].ToString();
-            var duration = new TimeSpan(0, Convert.ToInt32(row["Duration"]), 0);
-            var employees = GetEmployeesByTaskId(id);// TODO dit is fucking lelijk, fix dit!
-            return new ProductionTask(id, new Product(productId), name, description, duration, employees);
-        }
-
-        private IEnumerable<SqlParameter> GetSqlParametersFromTask(ProductionTask task, bool withId)
-        {
-            var dataTable = new DataTable();
-            dataTable.Columns.Add("Id");
-            foreach (var employee in task.Employees)
-            {
-                dataTable.Rows.Add(employee.Id);
-            }
-
-            var parameters = new List<SqlParameter>()
-            {
-                new SqlParameter("@Name", task.Name),
-                new SqlParameter("@Description", task.Description),
-                new SqlParameter("@Duration", (task.Duration.Hours * 60) + task.Duration.Minutes),
-                new SqlParameter("@QualifiedEmployeeIds", dataTable)
-                {
-                    SqlDbType = SqlDbType.Structured
-                }
-            };
-            if (withId)
-            {
-                parameters.Add(new SqlParameter("@Id", task.Id));
-            }
-            else
-            {
-                parameters.Add(new SqlParameter("@ProductId", task.Product.Id));
-            }
-            return parameters;
-        }
     }
 }

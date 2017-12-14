@@ -9,9 +9,9 @@ namespace HRMapp.Logic
 {
     public class EmployeeLogic : IEmployeeLogic
     {
-        private EmployeeRepo repo;
+        private IEmployeeRepo repo;
 
-        public EmployeeLogic(EmployeeRepo repo)
+        public EmployeeLogic(IEmployeeRepo repo)
         {
             this.repo = repo;
         }

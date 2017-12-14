@@ -5,7 +5,10 @@ using HRMapp.Models;
 
 namespace HRMapp.DAL.Repositories
 {
-    interface IEmployeeRepo : IRepo<Employee>
+    public interface IEmployeeRepo : IRepo<Employee>
     {
+        TeamLeader GetTeamLeaderById(int id);
+        IEnumerable<TeamLeader> GetAllTeamLeaders();
+        IEnumerable<ProductionEmployee> GetAllTeamLeadersAndProductionWorkers();
     }
 }

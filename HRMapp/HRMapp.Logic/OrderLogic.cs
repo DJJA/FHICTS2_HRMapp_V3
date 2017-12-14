@@ -9,9 +9,9 @@ namespace HRMapp.Logic
 {
     public class OrderLogic : IOrderLogic
     {
-        private OrderRepo repo;
+        private IOrderRepo repo;
 
-        public OrderLogic(OrderRepo repo)
+        public OrderLogic(IOrderRepo repo)
         {
             this.repo = repo;
         }

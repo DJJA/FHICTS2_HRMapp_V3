@@ -16,7 +16,7 @@ namespace HRMapp.DAL.Contexts
             try
             {
                 var dt = GetDataViaProcedure("sp_GetOrders");
-                orders.AddRange(from DataRow row in dt.Rows select GetOrderFromDataRow(row));
+                orders.AddRange(from DataRow row in dt.Rows select MssqlObjectFactory.GetOrderFromDataRow(row, GetOrderItems(Convert.ToInt32(row["Id"])))); // TODO Fix deze quik 'n dirty oplossing en in andere context classes
             }
             catch (SqlException sqlEx)
             {
@@ -33,7 +33,7 @@ namespace HRMapp.DAL.Contexts
                 var dt = GetDataViaProcedure("sp_GetOrderById", new SqlParameter("@Id", id));
                 if (dt.Rows.Count > 0)
                 {
-                    order = GetOrderFromDataRow(dt.Rows[0]);
+                    order = MssqlObjectFactory.GetOrderFromDataRow(dt.Rows[0], GetOrderItems(id));
                 }
             }
             catch (SqlException sqlEx)
@@ -48,7 +48,7 @@ namespace HRMapp.DAL.Contexts
             int addedId = -1;
             try
             {
-                addedId = ExecuteProcedureWithReturnValue("sp_AddOrder", GetSqlParametersFromOrder(value, false));
+                addedId = ExecuteProcedureWithReturnValue("sp_AddOrder", MssqlObjectFactory.GetSqlParametersFromOrder(value, false));
             }
             catch (SqlException sqlEx)
             {
@@ -61,7 +61,7 @@ namespace HRMapp.DAL.Contexts
         {
             try
             {
-                ExecuteProcedure("sp_UpdateOrder", GetSqlParametersFromOrder(value, true));
+                ExecuteProcedure("sp_UpdateOrder", MssqlObjectFactory.GetSqlParametersFromOrder(value, true));
             }
             catch (SqlException sqlEx)
             {
@@ -81,51 +81,5 @@ namespace HRMapp.DAL.Contexts
             return orderItems;
         }
 
-        private Order GetOrderFromDataRow(DataRow row)
-        {
-            var id = Convert.ToInt32(row["Id"]);
-            var salesManagerId = Convert.ToInt32(row["EmployeeSalesManagerId"]);
-            var deadline = Convert.ToDateTime(row["Deadline"]);
-            var entryDate = Convert.ToDateTime(row["EntryDate"]);
-            var customer = row["Customer"].ToString();
-            return new Order(
-                id: id, 
-                salesManager: new SalesManager(salesManagerId), 
-                deadline: deadline, 
-                entryDate:entryDate, 
-                customer:customer,
-                items: GetOrderItems(id)
-                );
-        }
-
-        private IEnumerable<SqlParameter> GetSqlParametersFromOrder(Order order, bool withId)
-        {
-            var dataTable = new DataTable();
-            dataTable.Columns.Add("ProductId");
-            dataTable.Columns.Add("Amount");
-            foreach (var item in order.Items)
-            {
-                dataTable.Rows.Add(item.Product.Id, item.Amount);
-            }
-
-            var parameters = new List<SqlParameter>()
-            {
-                new SqlParameter("@Deadline", order.Deadline),
-                new SqlParameter("@Customer", order.Customer),
-                new SqlParameter("@OrderItems", dataTable)
-                {
-                    SqlDbType = SqlDbType.Structured
-                }
-            };
-            if (withId)
-            {
-                parameters.Add(new SqlParameter("@Id", order.Id));
-            }
-            else
-            {
-                parameters.Add(new SqlParameter("@EmployeeSalesManagerId", order.SalesManager.Id)); 
-            }
-            return parameters;
-        }
     }
 }
