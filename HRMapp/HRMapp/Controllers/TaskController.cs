@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HRMapp.DAL.Repositories;
+using HRMapp.Factory;
 using HRMapp.Logic;
 using HRMapp.Models;
 using HRMapp.Models.Exceptions;
@@ -13,8 +14,8 @@ namespace HRMapp.Controllers
 {
     public class TaskController : Controller
     {
-        private TaskLogic taskLogic = Factory.TaskFactory.ManageTasks();
-        private EmployeeLogic employeeLogic = new EmployeeLogic(new EmployeeRepo(ContextType.Mssql));EmployeeRepo rrrr = new EmployeeRepo(ContextType.Mssql);
+        private ITaskLogic taskLogic = new HRMapp.Factory.TaskFactory().Manage();
+        private IEmployeeLogic employeeLogic = new EmployeeFactory().Manage(); EmployeeRepo rrrr = new EmployeeRepo(ContextType.Mssql);
 
         public IActionResult Index(int id)
         {
@@ -29,7 +30,7 @@ namespace HRMapp.Controllers
 
         public IActionResult New(int productId)
         {
-            return View("TaskEditor", new TaskEditorViewModel(employeeLogic.GetAllTeamLeadersAndProductionWorkers, productId));
+            return View("TaskEditor", new TaskEditorViewModel(employeeLogic.GetAllTeamLeadersAndProductionWorkers(), productId));
         }
 
         [HttpPost]
@@ -37,23 +38,23 @@ namespace HRMapp.Controllers
         {
             try
             {
-                taskLogic.Add(model.ToTask(employeeLogic.GetAllTeamLeadersAndProductionWorkers));
+                taskLogic.Add(model.ToTask(employeeLogic.GetAllTeamLeadersAndProductionWorkers()));
                 return RedirectToAction("Edit", "Product", new {id = model.ProductId});
             }
             catch (ArgumentException argEx)
             {
-                return View("TaskEditor", new TaskEditorViewModel(employeeLogic.GetAllTeamLeadersAndProductionWorkers, model, EditorType.New, argEx.Message));
+                return View("TaskEditor", new TaskEditorViewModel(employeeLogic.GetAllTeamLeadersAndProductionWorkers(), model, EditorType.New, argEx.Message));
             }
             catch (DBException dbEx)
             {
-                return View("TaskEditor", new TaskEditorViewModel(employeeLogic.GetAllTeamLeadersAndProductionWorkers, model, EditorType.New, dbEx.Message));
+                return View("TaskEditor", new TaskEditorViewModel(employeeLogic.GetAllTeamLeadersAndProductionWorkers(), model, EditorType.New, dbEx.Message));
             }
         }
 
         public IActionResult Edit(int id)
         {
             var task = taskLogic.GetById(id);
-            return View("TaskEditor", new TaskEditorViewModel(employeeLogic.GetAllTeamLeadersAndProductionWorkers, task));
+            return View("TaskEditor", new TaskEditorViewModel(employeeLogic.GetAllTeamLeadersAndProductionWorkers(), task));
         }
 
         [HttpPost]
@@ -61,16 +62,16 @@ namespace HRMapp.Controllers
         {
             try
             {
-                taskLogic.Update(model.ToTask(employeeLogic.GetAllTeamLeadersAndProductionWorkers));
+                taskLogic.Update(model.ToTask(employeeLogic.GetAllTeamLeadersAndProductionWorkers()));
                 return RedirectToAction("Edit", "Product", new {id = model.ProductId});
             }
             catch (ArgumentException argEx)
             {
-                return View("TaskEditor", new TaskEditorViewModel(employeeLogic.GetAllTeamLeadersAndProductionWorkers, model, EditorType.Edit, argEx.Message));
+                return View("TaskEditor", new TaskEditorViewModel(employeeLogic.GetAllTeamLeadersAndProductionWorkers(), model, EditorType.Edit, argEx.Message));
             }
             catch (DBException dbEx)
             {
-                return View("TaskEditor", new TaskEditorViewModel(employeeLogic.GetAllTeamLeadersAndProductionWorkers, model, EditorType.Edit, dbEx.Message));
+                return View("TaskEditor", new TaskEditorViewModel(employeeLogic.GetAllTeamLeadersAndProductionWorkers(), model, EditorType.Edit, dbEx.Message));
             }
         }
 

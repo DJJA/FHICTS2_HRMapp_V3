@@ -13,12 +13,12 @@ namespace HRMapp.Controllers
     public class OrderController : Controller
     {
         private static CrossActionMessageHolder infoMessage = new CrossActionMessageHolder();
-        private OrderLogic orderLogic = OrderFactory.ManageOrders();
-        private ProductLogic productLogic = ProductFactory.ManageProducts();
+        private IOrderLogic orderLogic = new OrderFactory().Manage();
+        private IProductLogic productLogic = new ProductFactory().Manage();
 
         public IActionResult Index(int id)
         {
-            var orders = orderLogic.GetAll.ToList();
+            var orders = orderLogic.GetAll().ToList();
             if (id == 0 && orders.Count > 0)
             {
                 id = orders[0].Id;
@@ -35,7 +35,7 @@ namespace HRMapp.Controllers
 
         public IActionResult New()
         {
-            return View("OrderEditor", new OrderEditorViewModel(productLogic.GetAll));
+            return View("OrderEditor", new OrderEditorViewModel(productLogic.GetAll()));
         }
 
         [HttpPost]
@@ -64,7 +64,7 @@ namespace HRMapp.Controllers
         public IActionResult Edit(int id)
         {
             var order = orderLogic.GetById(id);
-            return View("OrderEditor", new OrderEditorViewModel(order, productLogic.GetAll));
+            return View("OrderEditor", new OrderEditorViewModel(order, productLogic.GetAll()));
         }
 
         [HttpPost]

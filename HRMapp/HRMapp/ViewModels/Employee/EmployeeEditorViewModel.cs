@@ -179,7 +179,7 @@ namespace HRMapp.ViewModels
             }
         }
 
-        public Employee ToEmployee(EmployeeLogic logic) // TODO Should I even pass the logic in here, do I even want to get all the properties of teamleader?
+        public Employee ToEmployee(IEmployeeLogic logic) // TODO Should I even pass the logic in here, do I even want to get all the properties of teamleader?
         {
             if (EmployeeType == EmployeeFunction.ProductionWorker)
             {

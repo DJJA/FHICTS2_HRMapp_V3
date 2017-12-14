@@ -7,7 +7,7 @@ using HRMapp.Models;
 
 namespace HRMapp.Logic
 {
-    public class OrderLogic
+    public class OrderLogic : IOrderLogic
     {
         private OrderRepo repo;
 
@@ -16,7 +16,7 @@ namespace HRMapp.Logic
             this.repo = repo;
         }
 
-        public List<Order> GetAll => repo.GetAll.ToList();
+        public List<Order> GetAll() => repo.GetAll().ToList();
         public Order GetById(int id) => repo.GetById(id);
         public int Add(Order order)
         {

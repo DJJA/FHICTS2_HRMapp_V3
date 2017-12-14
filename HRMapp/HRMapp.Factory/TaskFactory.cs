@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Text;
 using HRMapp.DAL.Repositories;
 using HRMapp.Logic;
+using HRMapp.Models;
 
 namespace HRMapp.Factory
 {
-    public static class TaskFactory
+    public class TaskFactory : IFactory<ITaskLogic>
     {
-        public static TaskLogic ManageTasks()
+        public ITaskLogic Manage()
         {
             return new TaskLogic(new TaskRepo(ContextType.Mssql));
         }

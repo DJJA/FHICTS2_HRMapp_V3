@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using HRMapp.Factory;
 using HRMapp.Logic;
+using HRMapp.Models;
 using HRMapp.Models.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using HRMapp.ViewModels;
@@ -13,11 +14,11 @@ namespace HRMapp.Controllers
     public class EmployeeController : Controller
     {
         private static CrossActionMessageHolder infoMessage = new CrossActionMessageHolder();
-        private EmployeeLogic employeeLogic = EmployeeFactory.ManageEmployees();
+        private IEmployeeLogic employeeLogic = new EmployeeFactory().Manage();
 
         public IActionResult Index(int id)
         {
-            var employees = employeeLogic.GetAll;
+            var employees = employeeLogic.GetAll();
             if (id == 0 && employees.Count > 0)                 // 0 Is the default id, no parameter passed
             {
                 id = employees[0].Id;
@@ -34,7 +35,7 @@ namespace HRMapp.Controllers
 
         public IActionResult New()
         {
-            return View("EmployeeEditor", new EmployeeEditorViewModel(employeeLogic.GetAllTeamLeaders));
+            return View("EmployeeEditor", new EmployeeEditorViewModel(employeeLogic.GetAllTeamLeaders()));
         }
 
         [HttpPost]
@@ -48,18 +49,18 @@ namespace HRMapp.Controllers
             }
             catch (ArgumentException argEx)
             {
-                return View("EmployeeEditor", new EmployeeEditorViewModel(employeeLogic.GetAllTeamLeaders, model, EditorType.Edit, argEx.Message));
+                return View("EmployeeEditor", new EmployeeEditorViewModel(employeeLogic.GetAllTeamLeaders(), model, EditorType.Edit, argEx.Message));
             }
             catch (DBException dbEx)
             {
-                return View("EmployeeEditor", new EmployeeEditorViewModel(employeeLogic.GetAllTeamLeaders, model, EditorType.Edit, dbEx.Message));
+                return View("EmployeeEditor", new EmployeeEditorViewModel(employeeLogic.GetAllTeamLeaders(), model, EditorType.Edit, dbEx.Message));
             }
         }
 
         public IActionResult Edit(int id)
         {
             var employee = employeeLogic.GetById(id);
-            return View("EmployeeEditor", new EmployeeEditorViewModel(employeeLogic.GetAllTeamLeaders, employee));
+            return View("EmployeeEditor", new EmployeeEditorViewModel(employeeLogic.GetAllTeamLeaders(), employee));
         }
 
         [HttpPost]
@@ -73,11 +74,11 @@ namespace HRMapp.Controllers
             }
             catch (ArgumentException argEx)
             {
-                return View("EmployeeEditor", new EmployeeEditorViewModel(employeeLogic.GetAllTeamLeaders, model, EditorType.Edit, argEx.Message));
+                return View("EmployeeEditor", new EmployeeEditorViewModel(employeeLogic.GetAllTeamLeaders(), model, EditorType.Edit, argEx.Message));
             }
             catch (DBException dbEx)
             {
-                return View("EmployeeEditor", new EmployeeEditorViewModel(employeeLogic.GetAllTeamLeaders, model, EditorType.Edit, dbEx.Message));
+                return View("EmployeeEditor", new EmployeeEditorViewModel(employeeLogic.GetAllTeamLeaders(), model, EditorType.Edit, dbEx.Message));
             }
 
         }

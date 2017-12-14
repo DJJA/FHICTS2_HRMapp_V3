@@ -6,7 +6,7 @@ using HRMapp.Models;
 
 namespace HRMapp.DAL.Repositories
 {
-    public class ProductRepo
+    public class ProductRepo : IProductRepo
     {
         private IProductContext context;
 
@@ -21,7 +21,7 @@ namespace HRMapp.DAL.Repositories
             }
         }
 
-        public IEnumerable<Product> GetAll => context.GetAll();
+        public IEnumerable<Product> GetAll() => context.GetAll();
         public Product GetById(int id) => context.GetById(id);
         public int Add(Product product) => context.Add(product);
         public void Update(Product product) => context.Update(product);

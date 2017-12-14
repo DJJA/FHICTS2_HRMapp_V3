@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Text;
 using HRMapp.DAL.Repositories;
 using HRMapp.Logic;
+using HRMapp.Models;
 
 namespace HRMapp.Factory
 {
-    public static class OrderFactory
+    public class OrderFactory : IFactory<IOrderLogic>
     {
-        public static OrderLogic ManageOrders()
+        public IOrderLogic Manage()
         {
             return new OrderLogic(new OrderRepo(ContextType.Mssql));
         }

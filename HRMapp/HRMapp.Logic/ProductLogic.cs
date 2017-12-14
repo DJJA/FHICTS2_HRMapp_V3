@@ -7,7 +7,7 @@ using HRMapp.Models;
 
 namespace HRMapp.Logic
 {
-    public class ProductLogic
+    public class ProductLogic : IProductLogic
     {
         private ProductRepo repo;
 
@@ -16,7 +16,7 @@ namespace HRMapp.Logic
             this.repo = repo;
         }
 
-        public List<Product> GetAll => repo.GetAll.ToList();
+        public List<Product> GetAll() => repo.GetAll().ToList();
         public Product GetById(int id) => repo.GetById(id);
         public int Add(Product product) => repo.Add(product);
         public void Update(Product product) => repo.Update(product);

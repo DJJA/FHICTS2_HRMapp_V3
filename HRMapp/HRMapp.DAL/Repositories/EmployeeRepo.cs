@@ -7,12 +7,12 @@ using HRMapp.Models;
 
 namespace HRMapp.DAL.Repositories
 {
-    public class EmployeeRepo : IRepo
+    public class EmployeeRepo : IEmployeeRepo
     {
-        private IProductionWorkerContext productionWorkerContext = new MssqlProductionWorkerContext();
-        private ITeamLeaderContext teamLeaderContext = new MssqlTeamLeaderContext();
-        private IHRManagerContext hrManagerContext = new MssqlHRManagerContext();
-        private ISalesManagerContext salesManagerContext = new MssqlSalesManagerContext();
+        private IProductionWorkerContext productionWorkerContext;
+        private ITeamLeaderContext teamLeaderContext;
+        private IHRManagerContext hrManagerContext;
+        private ISalesManagerContext salesManagerContext;
 
         public EmployeeRepo(ContextType contextType)
         {

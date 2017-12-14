@@ -6,7 +6,7 @@ using HRMapp.DAL.Contexts;
 
 namespace HRMapp.DAL.Repositories
 {
-    public class TaskRepo : IRepo
+    public class TaskRepo : ITaskRepo
     {
         private ITaskContext context;
 
@@ -29,6 +29,6 @@ namespace HRMapp.DAL.Repositories
         public int Add(ProductionTask task) => context.Add(task);
         public void Update(ProductionTask task) => context.Update(task);
         public void Delete(ProductionTask task) => context.Delete(task);
-        public IEnumerable<ProductionTask> GetByProductId(int id) => context.GetByProductId(id);
+        public IEnumerable<ProductionTask> GetByProductId(int productId) => context.GetByProductId(productId);
     }
 }

@@ -13,11 +13,11 @@ namespace HRMapp.Controllers
     public class ProductController : Controller
     {
         private static CrossActionMessageHolder infoMessage = new CrossActionMessageHolder();
-        private ProductLogic productLogic = ProductFactory.ManageProducts();
+        private IProductLogic productLogic = new ProductFactory().Manage();
 
         public IActionResult Index(int id)
         {
-            var products = productLogic.GetAll;
+            var products = productLogic.GetAll();
             if (id == 0 && products.Count > 0)
             {
                 id = products[0].Id;

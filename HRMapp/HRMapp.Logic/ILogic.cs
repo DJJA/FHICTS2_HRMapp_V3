@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace HRMapp.DAL.Repositories
+namespace HRMapp.Logic
 {
-    public interface IRepo <T>
+    public interface ILogic <T>
     {
-        IEnumerable<T> GetAll();
+        List<T> GetAll();
         T GetById(int id);
         int Add(T value);
         void Update(T value);

@@ -6,9 +6,9 @@ using HRMapp.Models;
 
 namespace HRMapp.DAL.Repositories
 {//TODO Repo context voor generalisatie
-    public class OrderRepo
+    public class OrderRepo : IOrderRepo
     {
-        private IOrderContext context = new MssqlOrderContext();
+        private IOrderContext context;
 
         public OrderRepo(ContextType contextType)
         {
@@ -21,7 +21,7 @@ namespace HRMapp.DAL.Repositories
             }
         }
 
-        public IEnumerable<Order> GetAll => context.GetAll();
+        public IEnumerable<Order> GetAll() => context.GetAll();
         public Order GetById(int id) => context.GetById(id);
         public int Add(Order order) => context.Add(order);
         public void Update(Order order) => context.Update(order);
