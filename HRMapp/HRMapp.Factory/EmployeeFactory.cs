@@ -7,7 +7,7 @@ using HRMapp.Models;
 
 namespace HRMapp.Factory
 {
-    public class EmployeeFactory : IEmployeeFactory
+    public class EmployeeFactory : IFactory<IEmployeeLogic>
     {
         public IEmployeeLogic Manage()
         {
