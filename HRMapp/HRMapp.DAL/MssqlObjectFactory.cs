@@ -98,11 +98,11 @@ namespace HRMapp.DAL
             var entryDate = Convert.ToDateTime(row["EntryDate"]);
             var customer = row["Customer"].ToString();
             return new Order(
-                id: id, 
-                salesManager: new SalesManager(salesManagerId), 
-                deadline: deadline, 
-                entryDate:entryDate, 
-                customer:customer,
+                id: id,
+                salesManager: new SalesManager(salesManagerId),
+                deadline: deadline,
+                entryDate: entryDate,
+                customer: customer,
                 //items: GetOrderItems(id)
                 items: orderItems
                 );
@@ -133,7 +133,7 @@ namespace HRMapp.DAL
             }
             else
             {
-                parameters.Add(new SqlParameter("@EmployeeSalesManagerId", order.SalesManager.Id)); 
+                parameters.Add(new SqlParameter("@EmployeeSalesManagerId", order.SalesManager.Id));
             }
             return parameters;
         }
@@ -234,7 +234,7 @@ namespace HRMapp.DAL
             var houseNumber = row["HouseNumber"].ToString();
             var zipCode = row["ZipCode"].ToString();
             var city = row["City"].ToString();
-            
+
             TeamLeader teamLeader = null;
             if (row["TeamLeaderId"] != DBNull.Value)
             {
@@ -242,7 +242,7 @@ namespace HRMapp.DAL
                 teamLeader = new EmployeeRepo(ContextType.Mssql).GetTeamLeaderById(teamLeaderId); // TODO Dit kan netter, geen repo aanroepen
                 //teamLeader = new TeamLeader(1,"sample","sample");
             }
-            
+
             return new ProductionWorker(
                 id: id,
                 firstName: firstName,
@@ -288,7 +288,14 @@ namespace HRMapp.DAL
             //}
             //return parameters;
             var parameters = GetEmployeeParameters(productionWorker, withId);
-            parameters.Add(new SqlParameter("@TeamLeaderId", productionWorker.TeamLeader.Id));
+            if (productionWorker.TeamLeader == null)
+            {
+                parameters.Add(new SqlParameter("@TeamLeaderId", DBNull.Value));
+            }
+            else
+            {
+                parameters.Add(new SqlParameter("@TeamLeaderId", productionWorker.TeamLeader.Id));
+            }
             return parameters;
         }
 

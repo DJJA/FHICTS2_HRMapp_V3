@@ -130,16 +130,16 @@
         }
     }
 
-    @if (Model.QualifiedEmployees.Count > 0)    // TODO do this everywhere so this is serverside
+    @if (Model.QualifiedEmployees.Count == 0)    // TODO do this everywhere so this is serverside
     {
         //@: $('#specifiedEmployees_yes').prop('checked', true); // TODO Kan hier nog geen jquery gebruiken omdat die als laatste wordt ingeladen
         @: document.getElementById('specifiedEmployees_yes').checked = true;
+        @: document.getElementById('divEmployeeSelector').style.display = "none";
     }
     else
     {
         //@: $('#specifiedEmployees_no').prop('checked', true);
         @: document.getElementById('specifiedEmployees_no').checked = true;
-        @: document.getElementById('divEmployeeSelector').style.display = "none";
     }
     //specifiedEmployeesSelectedChanged();
 
@@ -149,9 +149,9 @@
 
     function specifiedEmployeesSelectedChanged() {
         if ($('#specifiedEmployees_yes').is(':checked')) {
-            $('#divEmployeeSelector').show();
-        } else {
             $('#divEmployeeSelector').hide();
+        } else {
+            $('#divEmployeeSelector').show();
         }
     }
 
