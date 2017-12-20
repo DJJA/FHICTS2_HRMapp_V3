@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HRMapp.Factory\HRMapp.Factory.csproj" />
     <ProjectReference Include="..\HRMapp.Logic\HRMapp.Logic.csproj" />
     <ProjectReference Include="..\HRMapp.Models\HRMapp.Models.csproj" />
   </ItemGroup>

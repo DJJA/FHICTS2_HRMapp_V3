@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using HRMapp.Factory;
 using HRMapp.Logic;
 using HRMapp.Models;
 using HRMapp.Models.Exceptions;
@@ -44,7 +45,7 @@ namespace HRMapp.CLI
             Console.WriteLine($"Adding {firstName} {lastName} to the system...");
             try
             {
-                new EmployeeLogic().Add(new ProductionWorker(0, firstName, lastName));
+                new EmployeeFactory().Manage().Add(new ProductionWorker(0, firstName, lastName));
                 Console.WriteLine($"{firstName} {lastName} was sucessfully added to the system!");
             }
             catch (ArgumentException argEx)
@@ -70,7 +71,7 @@ namespace HRMapp.CLI
             Console.WriteLine("--------------------------------------------------------");
             Console.WriteLine();
 
-            var employees = new EmployeeLogic().GetAll;
+            var employees = new EmployeeFactory().Manage().GetAll();
             foreach (var employee in employees)
             {
                 Console.WriteLine($"{employee.Id.ToString().PadRight(3)} {Employee.GetTypeOfEmployee(employee).PadRight(28)} {employee.FirstName} {employee.LastName}");

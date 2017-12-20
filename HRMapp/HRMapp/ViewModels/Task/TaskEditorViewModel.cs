@@ -155,7 +155,7 @@ namespace HRMapp.ViewModels
         public ProductionTask ToTask(List<ProductionEmployee> employees)
         {
             var qualifiedEmployees = new List<ProductionEmployee>();
-            if (SpecifiedEmployees)
+            if (!SpecifiedEmployees)
             {
                 foreach (var id in LboxQualifiedEmployees)
                 {
