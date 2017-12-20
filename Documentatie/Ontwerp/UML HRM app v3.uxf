@@ -1,0 +1,637 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.2">
+  <zoom_level>8</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1216</x>
+      <y>504</y>
+      <w>152</w>
+      <h>128</h>
+    </coordinates>
+    <panel_attributes>SkillsetRepo
+-
+GetAll() : Skillset[*]
+GetById(Integer) : Skillset
+Add(Skillset) : Bool
+Update(Skillset) : void</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1632</x>
+      <y>760</y>
+      <w>152</w>
+      <h>128</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Interface&gt;&gt;
+IContext
+-
+GetAll() : Object[*]
+GetById(Integer) : Object
+Add(Object) : Bool
+Update(Object) : void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1424</x>
+      <y>760</y>
+      <w>152</w>
+      <h>128</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Interface&gt;&gt;
+ISkillsetContext
+-
+GetAll() : Skillset[*]
+GetById(Integer) : Skillset
+Add(Skillset) : Bool
+Update(Skillset) : void</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1632</x>
+      <y>504</y>
+      <w>152</w>
+      <h>128</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Interface&gt;&gt;
+IRepo
+-
+GetAll() : Object[*]
+GetById(Integer) : Object
+Add(Object) : Bool
+Update(Object) : void</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1568</x>
+      <y>808</y>
+      <w>80</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>80.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1360</x>
+      <y>560</y>
+      <w>80</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>80.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1216</x>
+      <y>760</y>
+      <w>152</w>
+      <h>128</h>
+    </coordinates>
+    <panel_attributes>MssqlSkillsetContext
+-
+GetAll() : Skillset[*]
+GetById(Integer) : Skillset
+Add(Skillset) : Bool
+Update(Skillset) : void</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1360</x>
+      <y>808</y>
+      <w>80</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>80.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>0</x>
+      <y>680</y>
+      <w>184</w>
+      <h>152</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Abstract&gt;&gt;
+Employee
+-
+Id : Integer
+FirstName : String
+LastName : String
+PhoneNumber : Integer
+EmailAddress : String
+Street : String
+HouseNumber : String
+ZipCode : String
+City : String</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1424</x>
+      <y>912</y>
+      <w>376</w>
+      <h>144</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Abstract&gt;&gt;
+MssqlDatabase
+-
+connectionString : String
+-
+GetDataViaProcedure(String, SqlParameter[*]) : DataTable
+ExecuteProcedure(String, SqlParameter[*]) : void
+ExecuteProcedureWithReturnValue(String, SqlParameter[*]) : Integer
+HandleGenericSqlException(SqlException) : void
+GetDataByView(String) : DataTable
+ExecuteSelectQuery(String, SqlParameter[*]) : DataTable</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>344</x>
+      <y>728</y>
+      <w>184</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>SalesManager
+-</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>344</x>
+      <y>656</y>
+      <w>184</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>HRManager
+-</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>536</x>
+      <y>960</y>
+      <w>184</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>ProductionWorker
+-</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>168</x>
+      <y>960</y>
+      <w>184</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>TeamLeader
+-
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>264</x>
+      <y>680</y>
+      <w>96</w>
+      <h>168</h>
+    </coordinates>
+    <panel_attributes>lt=-</panel_attributes>
+    <additional_attributes>10.0;190.0;10.0;10.0;100.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>176</x>
+      <y>752</y>
+      <w>184</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;210.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>520</x>
+      <y>816</y>
+      <w>248</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m1=0..*
+m2=
+r1=ProductionWorkers
+r2=</panel_attributes>
+    <additional_attributes>10.0;20.0;290.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>344</x>
+      <y>976</y>
+      <w>208</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=0..*
+m2=0..1
+r1=TeamMembers
+r2=TeamLeader</panel_attributes>
+    <additional_attributes>240.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1216</x>
+      <y>248</y>
+      <w>152</w>
+      <h>128</h>
+    </coordinates>
+    <panel_attributes>SkillsetLogic
+-
+GetAll() : Skillset[*]
+GetById(Integer) : Skillset
+Add(Skillset) : Bool
+Update(Skillset) : void</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1320</x>
+      <y>880</y>
+      <w>120</w>
+      <h>104</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>130.0;110.0;10.0;110.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1288</x>
+      <y>624</y>
+      <w>264</w>
+      <h>152</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;
+m1=
+m2=context
+r1=
+r2=1..1</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;90.0;260.0;90.0;260.0;170.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>248</x>
+      <y>912</y>
+      <w>392</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>lt=-</panel_attributes>
+    <additional_attributes>470.0;60.0;470.0;10.0;10.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>264</x>
+      <y>824</y>
+      <w>96</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=-</panel_attributes>
+    <additional_attributes>100.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>752</x>
+      <y>792</y>
+      <w>176</w>
+      <h>88</h>
+    </coordinates>
+    <panel_attributes>Task
+-
+Id : Integer
+Name : String
+Description : String
+Duration : TimeSpan</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>752</x>
+      <y>616</y>
+      <w>176</w>
+      <h>88</h>
+    </coordinates>
+    <panel_attributes>Product
+-
+Id : Integer
+Name : String
+Description : String
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>832</x>
+      <y>696</y>
+      <w>64</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1..1
+m2=0..*
+r1=Product
+r2=Tasks</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;120.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>752</x>
+      <y>248</y>
+      <w>176</w>
+      <h>104</h>
+    </coordinates>
+    <panel_attributes>Order
+-
+Id : Integer
+SalesManager : SalesManager
+Deadline : DateTime
+EntryDate : DateTime
+Customer : String</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>832</x>
+      <y>344</y>
+      <w>80</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;
+m1=
+m2=1..*
+r1=
+r2=OrderItems</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;120.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>344</x>
+      <y>800</y>
+      <w>184</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Abstract&gt;&gt;
+ProductionEmployee
+-</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>432</x>
+      <y>848</y>
+      <w>24</w>
+      <h>88</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>752</x>
+      <y>440</y>
+      <w>176</w>
+      <h>88</h>
+    </coordinates>
+    <panel_attributes>OrderItem
+-
+Amount : Integer
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>832</x>
+      <y>520</y>
+      <w>64</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;
+m1=
+m2=1..1
+r1=
+r2=Product</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;120.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1424</x>
+      <y>504</y>
+      <w>152</w>
+      <h>128</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Interface&gt;&gt;
+ISkillsetRepo
+-
+GetAll() : Skillset[*]
+GetById(Integer) : Skillset
+Add(Skillset) : Bool
+Update(Skillset) : void</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1568</x>
+      <y>560</y>
+      <w>80</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>80.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1360</x>
+      <y>304</y>
+      <w>88</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>90.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1640</x>
+      <y>248</y>
+      <w>152</w>
+      <h>128</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Interface&gt;&gt;
+ILogic
+-
+GetAll() : Object[*]
+GetById(Integer) : Object
+Add(Object) : Bool
+Update(Object) : void</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1432</x>
+      <y>248</y>
+      <w>152</w>
+      <h>128</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Interface&gt;&gt;
+ISkillsetLogic
+-
+GetAll() : Skillset[*]
+GetById(Integer) : Skillset
+Add(Skillset) : Bool
+Update(Skillset) : void</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1576</x>
+      <y>304</y>
+      <w>80</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>80.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1280</x>
+      <y>368</y>
+      <w>256</w>
+      <h>152</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m1=1..1
+m2=
+r1=repo
+r2=</panel_attributes>
+    <additional_attributes>270.0;170.0;270.0;80.0;10.0;80.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>1184</x>
+      <y>448</y>
+      <w>640</w>
+      <h>624</h>
+    </coordinates>
+    <panel_attributes>Data Access Layer
+--
+bg=green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>1184</x>
+      <y>216</y>
+      <w>640</w>
+      <h>192</h>
+    </coordinates>
+    <panel_attributes>Logic Layer
+--
+bg=yellow</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1640</x>
+      <y>32</y>
+      <w>152</w>
+      <h>128</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Interface&gt;&gt;
+IFactory
+-
+Manage() : Object</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1216</x>
+      <y>32</y>
+      <w>152</w>
+      <h>128</h>
+    </coordinates>
+    <panel_attributes>SkillsetFactory
+-
+Manage() : ISkillsetLogic</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1360</x>
+      <y>96</y>
+      <w>296</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>350.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>1184</x>
+      <y>0</y>
+      <w>640</w>
+      <h>176</h>
+    </coordinates>
+    <panel_attributes>Factory
+--
+bg=cyan</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

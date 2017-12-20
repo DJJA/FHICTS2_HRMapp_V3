@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.2">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>830</x>
+      <y>290</y>
+      <w>230</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>Task
+-
+Id : Integer
+Name : String
+Description : String
+Duration : TimeSpan</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>830</x>
+      <y>520</y>
+      <w>220</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>Skillset
+-
+Id : Integer
+Name : String
+Description : String
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1390</x>
+      <y>240</y>
+      <w>190</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>SkillsetRepo
+-
+context : ISkillsetContext
+-
+GetAll() : Skillset[*]
+GetById(Integer) : Skillset
+Add(Skillset) : Bool
+DeleteById(Integer) : Bool
+Update(Skillset) : Bool</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1770</x>
+      <y>610</y>
+      <w>190</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Interface&gt;&gt;
+IContext
+-
+GetAll() : Object[*]
+GetById(Integer) : Object
+Add(Object) : Bool
+//Delete(Integer) : Bool
+Update(Object) : Bool
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1410</x>
+      <y>610</y>
+      <w>290</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Interface&gt;&gt;
+ISkillsetContext
+-
+GetAll() : Skillset[*]
+GetById(Integer) : Skillset
+Add(Skillset) : Bool
+//Delete(Integer) : Bool
+Update(Skillset) : Bool</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1690</x>
+      <y>240</y>
+      <w>190</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Interface&gt;&gt;
+IRepo
+-
+context : IContext
+-
+GetAll() : Object[*]
+GetById(Integer) : Object
+Add(Object) : Bool
+DeleteById(Integer) : Bool
+Update(Object) : Bool</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1690</x>
+      <y>670</y>
+      <w>100</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>80.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1570</x>
+      <y>310</y>
+      <w>140</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>120.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1410</x>
+      <y>790</y>
+      <w>290</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Interface&gt;&gt;
+ITaskContext
+-
+GetAll() : Task[*]
+GetById(Integer) : Task
+Add(Task) : Bool
+//Delete(Integer) : Bool
+Update(Task) : Bool
+GetRequiredSkillsets(Integer) : Skillset[*]
+UpdateRequiredSkillsets(Task) : Bool</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1690</x>
+      <y>690</y>
+      <w>100</w>
+      <h>210</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>80.0;10.0;10.0;190.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1060</x>
+      <y>610</y>
+      <w>290</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>MssqlSkillsetContext
+-
+GetAll() : Skillset[*]
+GetById(Integer) : Skillset
+Add(Skillset) : Bool
+//Delete(Integer) : Bool
+Update(Skillset) : Bool</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1060</x>
+      <y>790</y>
+      <w>290</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>MssqlTaskContext
+-
+GetAll() : Task[*]
+GetById(Integer) : Task
+Add(Task) : Bool
+//Delete(Integer) : Bool
+Update(Task) : Bool
+GetRequiredSkillsets(Integer) : Skillset[*]
+UpdateRequiredSkillsets(Task) : Bool</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1340</x>
+      <y>670</y>
+      <w>90</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>70.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1340</x>
+      <y>850</y>
+      <w>90</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>70.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>0</x>
+      <y>460</y>
+      <w>230</w>
+      <h>190</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Abstract&gt;&gt;
+Employee
+-
+Id : Integer
+FirstName : String
+LastName : String
+PhoneNumber : Integer
+EmailAddress : String
+Street : String
+HouseNumber : String
+ZipCode : String
+City : String</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2300</x>
+      <y>840</y>
+      <w>230</w>
+      <h>190</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Abstract&gt;&gt;
+MssqlDatabase
+-
+- connectionString : String
+-
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>400</x>
+      <y>470</y>
+      <w>230</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>SalesManager
+-</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>400</x>
+      <y>380</y>
+      <w>230</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>HRManager
+-</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>400</x>
+      <y>560</y>
+      <w>230</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>ProductionWorker
+-</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>400</x>
+      <y>740</y>
+      <w>230</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>TeamLeader
+-
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>220</x>
+      <y>410</y>
+      <w>200</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;120.0;180.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>220</x>
+      <y>500</y>
+      <w>200</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;70.0;180.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>220</x>
+      <y>590</y>
+      <w>200</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;180.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>220</x>
+      <y>620</y>
+      <w>200</w>
+      <h>180</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;180.0;160.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>620</x>
+      <y>570</y>
+      <w>230</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;
+m1=
+m2=0..*
+r1=
+r2=Skillsets</panel_attributes>
+    <additional_attributes>10.0;20.0;210.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>930</x>
+      <y>390</y>
+      <w>140</w>
+      <h>150</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;
+m1=
+m2=0..*
+r1=
+r2=RequiredSkillsets</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;130.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>510</x>
+      <y>620</y>
+      <w>130</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=0..*
+m2=0..1
+r1=TeamMembers
+r2=TeamLeader</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;120.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1060</x>
+      <y>970</y>
+      <w>290</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>MssqlEmployeeContext
+-
+GetAll() : Employee[*]
+GetById(Integer) : Employee
+Add(Employee) : Bool
+//Delete(Integer) : Bool
+Update(Employee) : Bool</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1410</x>
+      <y>970</y>
+      <w>290</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Interface&gt;&gt;
+IEmployeeContext
+-
+GetAll() : Employee[*]
+GetById(Integer) : Employee
+Add(Employee) : Bool
+//Delete(Integer) : Bool
+Update(Employee) : Bool</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1340</x>
+      <y>1030</y>
+      <w>90</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>70.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1690</x>
+      <y>710</y>
+      <w>100</w>
+      <h>350</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>80.0;10.0;10.0;330.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1390</x>
+      <y>70</y>
+      <w>190</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>SkillsetLogic
+-
+repo : SkillsetRepo
+-
+GetAll() : Skillset[*]
+GetById(Integer) : Skillset
+Add(Skillset) : Bool
+DeleteById(Integer) : Bool
+Update(Skillset) : Bool</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>
