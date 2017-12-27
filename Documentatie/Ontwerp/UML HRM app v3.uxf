@@ -28,10 +28,10 @@ Update(Skillset) : void</panel_attributes>
     <panel_attributes>&lt;&lt;Interface&gt;&gt;
 IContext
 -
-GetAll() : Object[*]
-GetById(Integer) : Object
-Add(Object) : Bool
-Update(Object) : void
+GetAll() : T[*]
+GetById(Integer) : T
+Add(T) : Bool
+Update(T) : void
 </panel_attributes>
     <additional_attributes/>
   </element>
@@ -63,10 +63,10 @@ Update(Skillset) : void</panel_attributes>
     <panel_attributes>&lt;&lt;Interface&gt;&gt;
 IRepo
 -
-GetAll() : Object[*]
-GetById(Integer) : Object
-Add(Object) : Bool
-Update(Object) : void</panel_attributes>
+GetAll() : T[*]
+GetById(Integer) : T
+Add(T) : Bool
+Update(T) : void</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -508,10 +508,10 @@ Update(Skillset) : void</panel_attributes>
     <panel_attributes>&lt;&lt;Interface&gt;&gt;
 ILogic
 -
-GetAll() : Object[*]
-GetById(Integer) : Object
-Add(Object) : Bool
-Update(Object) : void</panel_attributes>
+GetAll() : T[*]
+GetById(Integer) : T
+Add(T) : Bool
+Update(T) : void</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -594,7 +594,7 @@ bg=yellow</panel_attributes>
     <panel_attributes>&lt;&lt;Interface&gt;&gt;
 IFactory
 -
-Manage() : Object</panel_attributes>
+Manage() : T</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
